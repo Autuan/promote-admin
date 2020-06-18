@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.salesman.mapper.SalesmanMapper">
+    
+    <resultMap type="Salesman" id="SalesmanResult">
+        <result property="id"    column="id"    />
+        <result property="brokerageBankNo"    column="brokerage_bank_no"    />
+        <result property="brokerageBankName"    column="brokerage_bank_name"    />
+        <result property="brokerageBankAddress"    column="brokerage_bank_address"    />
+        <result property="name"    column="name"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="password"    column="password"    />
+        <result property="identifyNumber"    column="identify_number"    />
+        <result property="applyTime"    column="apply_time"    />
+        <result property="level"    column="level"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="education"    column="education"    />
+    </resultMap>
+
+    <sql id="selectSalesmanVo">
+        select id, brokerage_bank_no, brokerage_bank_name, brokerage_bank_address, name, mobile, create_time, update_time, create_by, update_by, password, identify_number, apply_time, level, group_id, education from tab_salesman
+    </sql>
+
+    <select id="selectSalesmanList" parameterType="Salesman" resultMap="SalesmanResult">
+        <include refid="selectSalesmanVo"/>
+        <where>  
+            <if test="brokerageBankNo != null  and brokerageBankNo != ''"> and brokerage_bank_no = #{brokerageBankNo}</if>
+            <if test="brokerageBankName != null  and brokerageBankName != ''"> and brokerage_bank_name like concat('%', #{brokerageBankName}, '%')</if>
+            <if test="brokerageBankAddress != null  and brokerageBankAddress != ''"> and brokerage_bank_address = #{brokerageBankAddress}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="identifyNumber != null  and identifyNumber != ''"> and identify_number = #{identifyNumber}</if>
+            <if test="applyTime != null "> and apply_time = #{applyTime}</if>
+            <if test="level != null  and level != ''"> and level = #{level}</if>
+            <if test="groupId != null  and groupId != ''"> and group_id = #{groupId}</if>
+            <if test="education != null  and education != ''"> and education = #{education}</if>
+        </where>
+    </select>
+    
+    <select id="selectSalesmanById" parameterType="String" resultMap="SalesmanResult">
+        <include refid="selectSalesmanVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSalesman" parameterType="Salesman">
+        insert into tab_salesman
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="brokerageBankNo != null  and brokerageBankNo != ''">brokerage_bank_no,</if>
+            <if test="brokerageBankName != null  and brokerageBankName != ''">brokerage_bank_name,</if>
+            <if test="brokerageBankAddress != null  and brokerageBankAddress != ''">brokerage_bank_address,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="mobile != null  and mobile != ''">mobile,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="password != null  and password != ''">password,</if>
+            <if test="identifyNumber != null  and identifyNumber != ''">identify_number,</if>
+            <if test="applyTime != null ">apply_time,</if>
+            <if test="level != null  and level != ''">level,</if>
+            <if test="groupId != null  and groupId != ''">group_id,</if>
+            <if test="education != null  and education != ''">education,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="brokerageBankNo != null  and brokerageBankNo != ''">#{brokerageBankNo},</if>
+            <if test="brokerageBankName != null  and brokerageBankName != ''">#{brokerageBankName},</if>
+            <if test="brokerageBankAddress != null  and brokerageBankAddress != ''">#{brokerageBankAddress},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="mobile != null  and mobile != ''">#{mobile},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="password != null  and password != ''">#{password},</if>
+            <if test="identifyNumber != null  and identifyNumber != ''">#{identifyNumber},</if>
+            <if test="applyTime != null ">#{applyTime},</if>
+            <if test="level != null  and level != ''">#{level},</if>
+            <if test="groupId != null  and groupId != ''">#{groupId},</if>
+            <if test="education != null  and education != ''">#{education},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSalesman" parameterType="Salesman">
+        update tab_salesman
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brokerageBankNo != null  and brokerageBankNo != ''">brokerage_bank_no = #{brokerageBankNo},</if>
+            <if test="brokerageBankName != null  and brokerageBankName != ''">brokerage_bank_name = #{brokerageBankName},</if>
+            <if test="brokerageBankAddress != null  and brokerageBankAddress != ''">brokerage_bank_address = #{brokerageBankAddress},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="mobile != null  and mobile != ''">mobile = #{mobile},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="password != null  and password != ''">password = #{password},</if>
+            <if test="identifyNumber != null  and identifyNumber != ''">identify_number = #{identifyNumber},</if>
+            <if test="applyTime != null ">apply_time = #{applyTime},</if>
+            <if test="level != null  and level != ''">level = #{level},</if>
+            <if test="groupId != null  and groupId != ''">group_id = #{groupId},</if>
+            <if test="education != null  and education != ''">education = #{education},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSalesmanById" parameterType="String">
+        delete from tab_salesman where id = #{id}
+    </delete>
+
+    <delete id="deleteSalesmanByIds" parameterType="String">
+        delete from tab_salesman where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
