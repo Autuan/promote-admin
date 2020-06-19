@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  * 业务员对象 tab_salesman
  * 
  * @author autuan
- * @date 2020-06-18
+ * @date 2020-06-19
  */
 
 @Data
@@ -60,6 +60,9 @@ public class Salesman extends BaseEntity
     /** 学历 */
     @Excel(name = "学历")
     private String education;
+    /** 0 男 1女 */
+    @Excel(name = "0 男 1女")
+    private Integer gender;
 
 
 }

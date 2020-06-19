@@ -7,8 +7,6 @@ import cn.hutool.core.util.IdUtil;
 import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 
-import cn.hutool.crypto.SecureUtil;
-import com.autuan.common.utils.Md5Utils;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.common.utils.security.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,7 @@ import com.autuan.common.utils.text.Convert;
  * 业务员Service业务层处理
  *
  * @author autuan
- * @date 2020-06-18
+ * @date 2020-06-19
  */
 @Service
 public class SalesmanServiceImpl implements ISalesmanService {
@@ -62,13 +60,6 @@ public class SalesmanServiceImpl implements ISalesmanService {
         salesman.setCreateTime(LocalDateTime.now());
         salesman.setCreateBy(ShiroUtils.getLoginName());
         salesman.setId(IdUtil.simpleUUID());
-        // 申请日期
-        salesman.setApplyTime(LocalDateTime.now());
-        // 默认密码 & 密码加密
-        String pwd = Md5Utils.hash("123456");
-//        byte[] key = SecureUtil.generateKey(salesman.getMobile()).getEncoded();
-//        String pwd = SecureUtil.aes(key).encryptHex("123456");
-        salesman.setPassword(pwd);
         return salesmanMapper.insertSalesman(salesman);
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
  * 小组Mapper接口
  * 
  * @author autuan
- * @date 2020-06-18
+ * @date 2020-06-19
  */
 public interface GroupMapper 
 {

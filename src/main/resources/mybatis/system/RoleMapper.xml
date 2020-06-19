@@ -45,17 +45,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="roleKey != null and roleKey != ''">
 			AND r.role_key like concat('%', #{roleKey}, '%')
 		</if>
-		<if test="dataScope != null and dataScope != ''">
+		<if test="null != dataScope and dataScope != ''">
 			AND r.data_scope = #{dataScope}
 		</if>
-		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+		<if test="params != null and params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
 			and date_format(r.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
 		</if>
-		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+		<if test="params != null and params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
 			and date_format(r.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
 		</if>
 		<!-- 数据范围过滤 -->
+		<if test="params != null and null != params.dataScope and params.dataScope != ''">
 		${params.dataScope}
+		</if>
 	</select>
 
 	<select id="selectRolesByUserId" parameterType="Long" resultMap="RoleResult">

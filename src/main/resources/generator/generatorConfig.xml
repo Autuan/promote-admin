@@ -69,7 +69,7 @@
         <!--数据库链接URL，用户名、密码 -->
         <jdbcConnection
                 driverClass="com.mysql.jdbc.Driver"
-                connectionURL="jdbc:mysql://${jdbc.url}/${jdbc.database}?nullCatalogMeansCurrent=true"
+                connectionURL="jdbc:mysql://${jdbc.url}/${jdbc.database}?nullCatalogMeansCurrent=true&amp;serverTimezone=UTC"
                 userId="${jdbc.user}" password="${jdbc.pwd}">
         </jdbcConnection>
 
@@ -79,16 +79,16 @@
         </javaTypeResolver>
 
         <!-- 生成模型的包名和位置-->
-        <javaModelGenerator targetPackage="${jdbc.modular.path}.${jdbc.modular.name}.entity" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="${jdbc.modular.path}.${jdbc.modular.name}.domain" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!-- 生成映射文件的包名和位置-->
-        <sqlMapGenerator targetPackage="${jdbc.modular.path}.${jdbc.modular.name}.mapper.xml" targetProject="src/main/java">
+        <sqlMapGenerator targetPackage="mybatis.promote.${jdbc.modular.name}.mapper.xml" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="${jdbc.modular.path}.${jdbc.modular.name}.mapper" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="${jdbc.modular.path}.${jdbc.modular.name}.mapper" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->

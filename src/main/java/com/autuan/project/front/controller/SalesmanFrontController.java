@@ -2,13 +2,12 @@ package com.autuan.project.front.controller;
 
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.salesman.domain.Salesman;
+import com.autuan.project.promote.salesman.domain.TabSalesman;
+import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
 import com.autuan.project.promote.salesman.service.ISalesmanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author : Autuan.Yu
@@ -21,17 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/front/salesman")
 public class SalesmanFrontController {
     @Autowired
-    private ISalesmanService salesmanService;
+    private ISalesmanCustomService salesmanCustomService;
 
     /**
      * 修改业务员
      */
-    @RequestMapping("/{id}")
-    public Object getById(@PathVariable("id") String id)
-    {
-        Salesman salesman = salesmanService.selectSalesmanById(id);
-        return ReturnResult.ok(salesman);
-//        mmap.put("salesman", salesman);
-//        return prefix + "/edit";
+    @RequestMapping("/login")
+    public Object login(@RequestBody TabSalesman salesman) {
+        TabSalesman result = salesmanCustomService.login(salesman);
+        return null==result?ReturnResult.error("账户或密码错误"): ReturnResult.ok(result);
+    }
+
+    @RequestMapping("/register")
+    public Object register(@RequestBody TabSalesman salesman) {
+        boolean result = salesmanCustomService.register(salesman);
+        return result? ReturnResult.ok(salesman) : ReturnResult.error("注册失败,请稍后重试!");
     }
 }

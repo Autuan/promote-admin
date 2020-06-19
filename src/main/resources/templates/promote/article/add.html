@@ -2,6 +2,8 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <th:block th:include="include :: header('新增文章')" />
+    <th:block th:include="include :: summernote-css" />
+    <th:block th:include="include :: bootstrap-fileinput-css" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
@@ -12,22 +14,37 @@
                     <input name="title" class="form-control" type="text">
                 </div>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">内容：</label>
-                <div class="col-sm-8">
-                    <input name="content" class="form-control" type="text">
-                </div>
-            </div>
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">内容：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <input name="content" class="form-control" type="text">-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <hr>-->
+
             <div class="form-group">    
                 <label class="col-sm-3 control-label">轮播图：</label>
                 <div class="col-sm-8">
                     <input name="courseImg" class="form-control" type="text">
                 </div>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">缩略图：</label>
-                <div class="col-sm-8">
-                    <input name="image" class="form-control" type="text">
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">缩略图：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <input name="image" class="form-control" type="text">-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="form-group">
+                <label class="font-noraml">缩略图</label>
+                <div class="file-loading">
+                    <input class="file" type="file" multiple data-min-file-count="1" data-theme="fas">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="font-noraml">轮播图</label>
+                <div class="file-loading">
+                    <input id="fileinput-demo-1" type="file" name="file" multiple>
                 </div>
             </div>
             <div class="form-group">    
@@ -36,9 +53,18 @@
                     <input name="tags" class="form-control" type="text">
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">公告内容：</label>
+                <div class="col-sm-10">
+                    <input id="content" name="content" type="hidden">
+                    <div class="summernote"></div>
+                </div>
+            </div>
         </form>
     </div>
     <th:block th:include="include :: footer" />
+    <th:block th:include="include :: summernote-js" />
+    <th:block th:include="include :: bootstrap-fileinput-js" />
     <script type="text/javascript">
         var prefix = ctx + "promote/article"
         $("#form-article-add").validate({
@@ -47,9 +73,64 @@
 
         function submitHandler() {
             if ($.validate.form()) {
+                var sHTML = $('.summernote').summernote('code');
+                $("#content").val(sHTML);
                 $.operate.save(prefix + "/add", $('#form-article-add').serialize());
             }
         }
+
+        $('.summernote').summernote({
+            placeholder: '请输入内容',
+            height : 192,
+            lang : 'zh-CN',
+            followingToolbar: false,
+            callbacks: {
+                onImageUpload: function (files) {
+                    sendFile(files[0], this);
+                }
+            }
+        });
+
+        function sendFile(file, obj) {
+            var data = new FormData();
+            data.append("file", file);
+            $.ajax({
+                type: "POST",
+                url: ctx + "common/upload",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.code == web_status.SUCCESS) {
+                        $(obj).summernote('editor.insertImage', result.url, result.fileName);
+                    } else {
+                        $.modal.alertError(result.msg);
+                    }
+                },
+                error: function(error) {
+                    $.modal.alertWarning("图片上传失败。");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $("#fileinput-demo-1").on("fileuploaded", function(event, data, previewId, index) {
+                console.info(data)
+                console.info(data.response.url)
+            });
+            $("#fileinput-demo-1").fileinput({
+                'theme': 'explorer-fas',
+                // 'uploadUrl': '#',
+                'uploadUrl': '/common/upload',
+                overwriteInitial: false,
+                initialPreviewAsData: true,
+                initialPreview: [
+                    // "/img/profile.jpg"
+                ],
+            });
+        });
     </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.autuan.project.promote.salesman.service;
 
 import com.autuan.project.promote.salesman.domain.Salesman;
+import com.autuan.project.promote.salesman.domain.TabSalesman;
 
 /**
  * @author : Autuan.Yu
@@ -18,5 +19,15 @@ public interface ISalesmanCustomService {
      * @return: com.autuan.project.promote.salesman.domain.Salesman
      * @since : 2020/6/18 16:44
      */
-    Salesman login(Salesman salesman);
+    TabSalesman login(TabSalesman salesman);
+
+    /**
+     * 注册用户
+     * @param salesman
+     * @throws
+     * @author : Autuan.Yu
+     * @return: com.autuan.project.promote.salesman.domain.TabSalesman
+     * @since : 2020/6/19 15:24
+     */
+    boolean register(TabSalesman salesman);
 }
