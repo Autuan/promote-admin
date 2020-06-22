@@ -30,4 +30,13 @@ public interface ISalesmanCustomService {
      * @since : 2020/6/19 15:24
      */
     boolean register(TabSalesman salesman);
+
+    /**
+     * 根据手机号查询用户
+     * @param salesman
+     * @throws
+     * @author : Autuan.Yu
+     * @return: com.autuan.project.promote.salesman.domain.TabSalesman
+     */
+    TabSalesman selectByMobile(String mobile);
 }

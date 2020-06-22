@@ -64,4 +64,16 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         // todo 用户手机号唯一验证
         return  salesmanMapper.insertSelective(salesman) == 1;
     }
+
+    @Override
+    public TabSalesman selectByMobile(String mobile) {
+        TabSalesmanExample example = new TabSalesmanExample();
+        example.createCriteria()
+//                .andMobileLike("%"+mobile+"%")
+                .andMobileEqualTo(mobile)
+        ;
+        TabSalesman tabSalesman = salesmanMapper.selectOneByExample(example);
+        log.info("selectByMobile -> response -> {}",tabSalesman);
+        return tabSalesman;
+    }
 }
