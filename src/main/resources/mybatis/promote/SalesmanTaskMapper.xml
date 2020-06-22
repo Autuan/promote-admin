@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.link.linkSalesmanTask.mapper.SalesmanTaskMapper">
+    
+    <resultMap type="SalesmanTask" id="SalesmanTaskResult">
+        <result property="id"    column="id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="salesmanId"    column="salesman_id"    />
+        <result property="code"    column="code"    />
+        <result property="link"    column="link"    />
+        <result property="reward"    column="reward"    />
+        <result property="rewardBeginTime"    column="reward_begin_time"    />
+        <result property="rewardStopTime"    column="reward_stop_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectSalesmanTaskVo">
+        select id, task_id, salesman_id, code, link, reward, reward_begin_time, reward_stop_time, create_time, update_time, create_by, update_by from tab_salesman_task
+    </sql>
+
+    <select id="selectSalesmanTaskList" parameterType="SalesmanTask" resultMap="SalesmanTaskResult">
+        <include refid="selectSalesmanTaskVo"/>
+        <where>  
+            <if test="taskId != null  and taskId != ''"> and task_id = #{taskId}</if>
+            <if test="salesmanId != null  and salesmanId != ''"> and salesman_id = #{salesmanId}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="link != null  and link != ''"> and link = #{link}</if>
+            <if test="reward != null "> and reward = #{reward}</if>
+            <if test="rewardBeginTime != null "> and reward_begin_time = #{rewardBeginTime}</if>
+            <if test="rewardStopTime != null "> and reward_stop_time = #{rewardStopTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSalesmanTaskById" parameterType="String" resultMap="SalesmanTaskResult">
+        <include refid="selectSalesmanTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSalesmanTask" parameterType="SalesmanTask">
+        insert into tab_salesman_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="taskId != null  and taskId != ''">task_id,</if>
+            <if test="salesmanId != null  and salesmanId != ''">salesman_id,</if>
+            <if test="code != null  and code != ''">code,</if>
+            <if test="link != null  and link != ''">link,</if>
+            <if test="reward != null ">reward,</if>
+            <if test="rewardBeginTime != null ">reward_begin_time,</if>
+            <if test="rewardStopTime != null ">reward_stop_time,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="taskId != null  and taskId != ''">#{taskId},</if>
+            <if test="salesmanId != null  and salesmanId != ''">#{salesmanId},</if>
+            <if test="code != null  and code != ''">#{code},</if>
+            <if test="link != null  and link != ''">#{link},</if>
+            <if test="reward != null ">#{reward},</if>
+            <if test="rewardBeginTime != null ">#{rewardBeginTime},</if>
+            <if test="rewardStopTime != null ">#{rewardStopTime},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSalesmanTask" parameterType="SalesmanTask">
+        update tab_salesman_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null  and taskId != ''">task_id = #{taskId},</if>
+            <if test="salesmanId != null  and salesmanId != ''">salesman_id = #{salesmanId},</if>
+            <if test="code != null  and code != ''">code = #{code},</if>
+            <if test="link != null  and link != ''">link = #{link},</if>
+            <if test="reward != null ">reward = #{reward},</if>
+            <if test="rewardBeginTime != null ">reward_begin_time = #{rewardBeginTime},</if>
+            <if test="rewardStopTime != null ">reward_stop_time = #{rewardStopTime},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSalesmanTaskById" parameterType="String">
+        delete from tab_salesman_task where id = #{id}
+    </delete>
+
+    <delete id="deleteSalesmanTaskByIds" parameterType="String">
+        delete from tab_salesman_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.param.mapper.ParamMapper">
+    
+    <resultMap type="Param" id="ParamResult">
+        <result property="id"    column="id"    />
+        <result property="key"    column="key"    />
+        <result property="value"    column="value"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectParamVo">
+        select id, key, value, type, create_time, update_time, create_by, update_by from tab_param
+    </sql>
+
+    <select id="selectParamList" parameterType="Param" resultMap="ParamResult">
+        <include refid="selectParamVo"/>
+        <where>  
+            <if test="key != null  and key != ''"> and key = #{key}</if>
+            <if test="value != null  and value != ''"> and value = #{value}</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectParamById" parameterType="String" resultMap="ParamResult">
+        <include refid="selectParamVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertParam" parameterType="Param">
+        insert into tab_param
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="key != null  and key != ''">key,</if>
+            <if test="value != null  and value != ''">value,</if>
+            <if test="type != null ">type,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="key != null  and key != ''">#{key},</if>
+            <if test="value != null  and value != ''">#{value},</if>
+            <if test="type != null ">#{type},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateParam" parameterType="Param">
+        update tab_param
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="key != null  and key != ''">key = #{key},</if>
+            <if test="value != null  and value != ''">value = #{value},</if>
+            <if test="type != null ">type = #{type},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteParamById" parameterType="String">
+        delete from tab_param where id = #{id}
+    </delete>
+
+    <delete id="deleteParamByIds" parameterType="String">
+        delete from tab_param where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

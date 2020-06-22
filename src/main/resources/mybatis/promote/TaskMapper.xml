@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.task.mapper.TaskMapper">
+    
+    <resultMap type="Task" id="TaskResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="prefix"    column="prefix"    />
+        <result property="paramId"    column="param_id"    />
+        <result property="reward"    column="reward"    />
+        <result property="rewardBeginTime"    column="reward_begin_time"    />
+        <result property="rewardStopTime"    column="reward_stop_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="tags"    column="tags"    />
+        <result property="articleId"    column="article_id"    />
+        <result property="priority"    column="priority"    />
+    </resultMap>
+
+    <sql id="selectTaskVo">
+        select id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, update_time, create_by, update_by, tags, article_id, priority from tab_task
+    </sql>
+
+    <select id="selectTaskList" parameterType="Task" resultMap="TaskResult">
+        <include refid="selectTaskVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="prefix != null  and prefix != ''"> and prefix = #{prefix}</if>
+            <if test="paramId != null  and paramId != ''"> and param_id = #{paramId}</if>
+            <if test="reward != null "> and reward = #{reward}</if>
+            <if test="rewardBeginTime != null "> and reward_begin_time = #{rewardBeginTime}</if>
+            <if test="rewardStopTime != null "> and reward_stop_time = #{rewardStopTime}</if>
+            <if test="tags != null  and tags != ''"> and tags = #{tags}</if>
+            <if test="articleId != null  and articleId != ''"> and article_id = #{articleId}</if>
+            <if test="priority != null "> and priority = #{priority}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskById" parameterType="String" resultMap="TaskResult">
+        <include refid="selectTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTask" parameterType="Task">
+        insert into tab_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="prefix != null  and prefix != ''">prefix,</if>
+            <if test="paramId != null  and paramId != ''">param_id,</if>
+            <if test="reward != null ">reward,</if>
+            <if test="rewardBeginTime != null ">reward_begin_time,</if>
+            <if test="rewardStopTime != null ">reward_stop_time,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="tags != null  and tags != ''">tags,</if>
+            <if test="articleId != null  and articleId != ''">article_id,</if>
+            <if test="priority != null ">priority,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="prefix != null  and prefix != ''">#{prefix},</if>
+            <if test="paramId != null  and paramId != ''">#{paramId},</if>
+            <if test="reward != null ">#{reward},</if>
+            <if test="rewardBeginTime != null ">#{rewardBeginTime},</if>
+            <if test="rewardStopTime != null ">#{rewardStopTime},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="tags != null  and tags != ''">#{tags},</if>
+            <if test="articleId != null  and articleId != ''">#{articleId},</if>
+            <if test="priority != null ">#{priority},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTask" parameterType="Task">
+        update tab_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="prefix != null  and prefix != ''">prefix = #{prefix},</if>
+            <if test="paramId != null  and paramId != ''">param_id = #{paramId},</if>
+            <if test="reward != null ">reward = #{reward},</if>
+            <if test="rewardBeginTime != null ">reward_begin_time = #{rewardBeginTime},</if>
+            <if test="rewardStopTime != null ">reward_stop_time = #{rewardStopTime},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="tags != null  and tags != ''">tags = #{tags},</if>
+            <if test="articleId != null  and articleId != ''">article_id = #{articleId},</if>
+            <if test="priority != null ">priority = #{priority},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTaskById" parameterType="String">
+        delete from tab_task where id = #{id}
+    </delete>
+
+    <delete id="deleteTaskByIds" parameterType="String">
+        delete from tab_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

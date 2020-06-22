@@ -241,6 +241,8 @@ public class ShiroConfig
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 不拦截前置'/front'请求
         filterChainDefinitionMap.put("/front/**", "anon");
+        // 不攔截圖片資源
+        filterChainDefinitionMap.put("/profile/upload/**", "anon");
         // 对静态资源设置匿名访问
         filterChainDefinitionMap.put("/favicon.ico**", "anon");
         filterChainDefinitionMap.put("/ruoyi.png**", "anon");
