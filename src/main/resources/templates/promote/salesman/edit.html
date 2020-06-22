@@ -50,15 +50,7 @@
                     <input name="identifyNumber" th:field="*{identifyNumber}" class="form-control" type="text">
                 </div>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">申请日期：</label>
-                <div class="col-sm-8">
-                    <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="applyTime" th:value="${#dates.format(salesman.applyTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                    </div>
-                </div>
-            </div>
+
             <div class="form-group">    
                 <label class="col-sm-3 control-label">等级展示：</label>
                 <div class="col-sm-8">

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author : Autuan.Yu
  * @description :  描述
@@ -48,5 +50,13 @@ public class GroupCustomController {
     public ReturnResult edit(TabGroup group) {
         groupCustomService.edit(group);
         return ReturnResult.ok();
+    }
+
+    @RequiresPermissions("promote:group:list")
+    @PostMapping("/list")
+    @ResponseBody
+    public ReturnResult list() {
+        List<TabGroup> list = groupCustomService.list();
+        return ReturnResult.ok(list);
     }
 }

@@ -21,14 +21,13 @@ import java.util.List;
 
 /**
  * 业务员Controller
- * 
+ *
  * @author autuan
  * @date 2020-06-19
  */
 @Controller
 @RequestMapping("/promote/salesman/custom")
-public class SalesmanCustomController extends BaseController
-{
+public class SalesmanCustomController extends BaseController {
     private String prefix = "promote/salesman";
 
     @Autowired
@@ -40,12 +39,17 @@ public class SalesmanCustomController extends BaseController
     @RequiresPermissions("promote:salesman:list")
     @PostMapping("/selectByMobile/{mobile}")
     @ResponseBody
-    public ReturnResult selectByMobile(@PathVariable("mobile") String mobile)
-    {
-//        startPage();
+    public ReturnResult selectByMobile(@PathVariable("mobile") String mobile) {
         TabSalesman tabSalesman = salesmanService.selectByMobile(mobile);
         return ReturnResult.ok(tabSalesman);
-//        return getDataTable(list);
     }
 
+    @RequiresPermissions("promote:salesman:edit")
+    @PostMapping("/resetPwd")
+    @Log(title = "业务员重置密码", businessType = BusinessType.UPDATE)
+    @ResponseBody
+    public ReturnResult resetPwd(String ids) {
+        salesmanService.resetPwd(ids);
+        return ReturnResult.ok();
+    }
 }

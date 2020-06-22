@@ -39,4 +39,14 @@ public interface ISalesmanCustomService {
      * @return: com.autuan.project.promote.salesman.domain.TabSalesman
      */
     TabSalesman selectByMobile(String mobile);
+
+    /**
+     * 重置密码
+     * @param ids
+     * @throws
+     * @author : Autuan.Yu
+     * @return: void
+     * @since : 2020/6/22 16:51
+     */
+    void resetPwd(String ids);
 }

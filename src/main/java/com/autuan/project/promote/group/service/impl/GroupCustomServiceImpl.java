@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author : Autuan.Yu
@@ -130,5 +131,18 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
                         .id(group.getGroupHeader())
                         .groupId(group.getId())
                         .build());
+    }
+
+    /**
+     * 获取列表集合
+     *
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.util.List<com.autuan.project.promote.group.domain.TabGroup>
+     * @since : 2020/6/22 16:24
+     */
+    @Override
+    public List<TabGroup> list() {
+        return groupMapper.selectByExample(null);
     }
 }

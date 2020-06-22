@@ -3,17 +3,22 @@ package com.autuan.project.promote.salesman.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.autuan.common.utils.Md5Utils;
 import com.autuan.common.utils.security.ShiroUtils;
+import com.autuan.common.utils.text.Convert;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.salesman.domain.TabSalesmanExample;
 import com.autuan.project.promote.salesman.mapper.SalesmanMapper;
 import com.autuan.project.promote.salesman.mapper.TabSalesmanMapper;
 import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author : Autuan.Yu
@@ -27,6 +32,7 @@ import java.time.LocalDateTime;
 public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     @Autowired
     private TabSalesmanMapper salesmanMapper;
+
     /**
      * 登录方法(返回用户信息)
      *
@@ -62,7 +68,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         salesman.setCreateBy("用户注册");
         salesman.setId(IdUtil.simpleUUID());
         // todo 用户手机号唯一验证
-        return  salesmanMapper.insertSelective(salesman) == 1;
+        return salesmanMapper.insertSelective(salesman) == 1;
     }
 
     @Override
@@ -73,7 +79,29 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .andMobileEqualTo(mobile)
         ;
         TabSalesman tabSalesman = salesmanMapper.selectOneByExample(example);
-        log.info("selectByMobile -> response -> {}",tabSalesman);
+        log.info("selectByMobile -> response -> {}", tabSalesman);
         return tabSalesman;
+    }
+
+    /**
+     * 重置密码
+     *
+     * @param ids
+     * @throws
+     * @author : Autuan.Yu
+     * @return: void
+     * @since : 2020/6/22 16:51
+     */
+    @Override
+    public void resetPwd(String ids) {
+        List<String> idList = Arrays.asList(Convert.toStrArray(ids));
+        TabSalesmanExample example = new TabSalesmanExample();
+        example.createCriteria()
+                .andIdIn(idList);
+        TabSalesman salesman =
+                TabSalesman.builder()
+                        .password(Md5Utils.hash("123456"))
+                        .build();
+        salesmanMapper.updateByExampleSelective(salesman,example);
     }
 }

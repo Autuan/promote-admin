@@ -2,6 +2,8 @@ package com.autuan.project.promote.group.service;
 
 import com.autuan.project.promote.group.domain.TabGroup;
 
+import java.util.List;
+
 /**
  * @author : Autuan.Yu
  * @description :  描述
@@ -48,4 +50,14 @@ public interface IGroupCustomService {
      * @since : 2020/6/22 15:40
      */
     void edit(TabGroup group);
+
+    /**
+     * 获取列表集合  
+     * @param  
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: java.util.List<com.autuan.project.promote.group.domain.TabGroup>
+     * @since : 2020/6/22 16:28
+     */
+    List<TabGroup> list();
 }

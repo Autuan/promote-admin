@@ -5,7 +5,9 @@ import com.autuan.framework.web.domain.BaseEntity;
 import java.time.LocalDateTime;
     import java.time.LocalDateTime;
     import java.time.LocalDateTime;
-    import lombok.Builder;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -50,6 +52,7 @@ public class Salesman extends BaseEntity
     private String identifyNumber;
     /** 申请日期 */
     @Excel(name = "申请日期", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime applyTime;
     /** 等级展示 */
     @Excel(name = "等级展示")

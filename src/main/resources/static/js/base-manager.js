@@ -101,8 +101,8 @@
         copy: function (sourceArray) {
             return JSON.parse(JSON.stringify(sourceArray));
         },
-        empty:function (array) {
-            array.splice(0,array.length);
+        empty: function (array) {
+            array.splice(0, array.length);
         }
     };
     // switch 控件
@@ -264,7 +264,7 @@
             });
             var param = {
                 memberNo: $('#memberNo').val(),
-                pageSize:1000,
+                pageSize: 1000,
             };
             ajax.set(param);
             ajax.start();
@@ -301,11 +301,11 @@
             ajax.start();
         },
         // 填充单位
-        appendUnitSelect:function(){
+        appendUnitSelect: function () {
             let ajax = new $ax(Feng.ctxPath + "/unit/list", function (data) {
                 let str = "<option value=''>---请选择单位---</option>";
                 data.rows.forEach(function (valRow) {
-                    str += "<option value='" + valRow.name + "'>" +valRow.name + "</option>";
+                    str += "<option value='" + valRow.name + "'>" + valRow.name + "</option>";
                 });
                 let idEle = $('#unitSelect');
                 if (idEle.length > 0) {
@@ -432,13 +432,25 @@
             }
         },
         //
-        multipleCheck : function(id,array){
-            // $.each(res.rows, function (i, row) {
-            //     //判断当前行的数据id是否存在与选中的数组，存在则将多选框状态变为true
-            //     row.checkStatus = $.inArray(row.id, selectionIds) != -1;
-            // });
-            // return res;
-            array.push(id);
+        formatterDate: function (value) {
+            var arr = value;
+            if (arr == null || arr == "") {
+                return "-";
+            } else {
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i].length == 1) {
+                        arr[i] = "0" + arr[i];
+                    }
+                }
+                if (arr.length == 5) {
+                    var getFormatTime = arr[0] + "-" + arr[1] + "-" + arr[2] + "\t" + arr[3] + ":" + arr[4] + ":" + "00";
+                } else {
+                    var getFormatTime = arr[0] + "-" + arr[1] + "-" + arr[2] + "\t" + arr[3] + ":" + arr[4] + ":" + arr[5];
+                }
+
+                return getFormatTime;
+            }
+
         },
         // 表格多选检查
         hasChoseMultiple: function (thisObj, min, max) {
@@ -515,29 +527,34 @@
     };
     // 常量
     Base.Constant = {
-        JSON_CONTENT_TYPE : 'application/json;charset=utf-8',
-        URL_CONTENT_TYPE : 'application/x-www-form-urlencoded;charset=utf-8',
+        JSON_CONTENT_TYPE: 'application/json;charset=utf-8',
+        URL_CONTENT_TYPE: 'application/x-www-form-urlencoded;charset=utf-8',
     };
     Base.Network = {
         post: function (opt) {
             let url = opt.url
-            let successParse = opt.successParse || function(){};
-            let failParse = opt.failParse || function(data){console.error(data.msg);$.modal.msgError(data.msg)};
+            let successParse = opt.successParse || function () {
+            };
+            let failParse = opt.failParse || function (data) {
+                console.error(data);
+                console.error(data.msg);
+                $.modal.msgError(data.msg)
+            };
             let type = opt.type || 'post'
             $.ajax({
-                url : opt.url,
-                data : opt.data,
-                type : type,
-                async: false , //改为同步
-                success : function(httpResponse) {
-                    if(httpResponse.code === '000000') {
+                url: opt.url,
+                data: opt.data,
+                type: type,
+                async: false, //改为同步
+                success: function (httpResponse) {
+                    if (httpResponse.code === '000000') {
                         let data = httpResponse.data
                         successParse(data);
                     } else {
                         failParse(httpResponse);
                     }
                 },
-                error:function(data){
+                error: function (data) {
                     console.log(data);
                 },
             });
