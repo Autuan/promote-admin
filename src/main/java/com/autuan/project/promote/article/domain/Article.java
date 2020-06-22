@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  * 文章对象 tab_article
  * 
  * @author autuan
- * @date 2020-06-18
+ * @date 2020-06-22
  */
 
 @Data
@@ -41,6 +41,9 @@ public class Article extends BaseEntity
     /** 标签 */
     @Excel(name = "标签")
     private String tags;
+    /** 展示方式 0-不展示  1-首页轮播 2-首页推荐 */
+    @Excel(name = "展示方式 0-不展示  1-首页轮播 2-首页推荐")
+    private Integer type;
 
 
 }

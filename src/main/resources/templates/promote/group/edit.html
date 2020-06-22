@@ -7,16 +7,28 @@
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-group-edit" th:object="${group}">
             <input name="id" th:field="*{id}" type="hidden">
+            <input type="hidden" name="groupHeader" id="groupHeader" th:field="*{groupHeader}">
+            <input type="hidden" name="headerName" id="headerName" th:field="*{headerName}">
+            <input type="hidden" name="headerMobile" id="headerMobile" th:field="*{headerMobile}">
             <div class="form-group">    
                 <label class="col-sm-3 control-label">小组名称：</label>
                 <div class="col-sm-8">
                     <input name="name" th:field="*{name}" class="form-control" type="text">
                 </div>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">小组组长：</label>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">当前小组组长：</label>
                 <div class="col-sm-8">
-                    <input name="groupHeader" th:field="*{groupHeader}" class="form-control" type="text">
+                    <input id="groupHeaderShow" th:value="*{headerName}+'('+*{headerMobile}+')'" class="form-control" type="text" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">修改组长：</label>
+                <div class="col-sm-7">
+                    <input id="groupHeaderMobile"  class="form-control" type="text" placeholder="输入手机号查询">
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn" id="confirmHeaderMobile" onclick="javascript:void(0)">查询销售员</a>
                 </div>
             </div>
         </form>
@@ -30,9 +42,28 @@
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/edit", $('#form-group-edit').serialize());
+                $.operate.save(prefix + "/custom/edit", $('#form-group-edit').serialize());
             }
         }
+
+        $(function () {
+            $('#confirmHeaderMobile').click(function () {
+                let mobile =$('#groupHeaderMobile').val();
+                Base.Network.post({
+                    url : ctx + `promote/salesman/custom/selectByMobile/${mobile}`,
+                    successParse:function (data) {
+                        if(data) {
+                            $('#groupHeaderShow').val(`${data.name} (${data.mobile})`)
+                            $('#groupHeader').val(data.id);
+                            $('#headerMobile').val(data.mobile);
+                            $('#headerName').val(data.name);
+                        } else {
+                            $.modal.msgError("未检索到符号条件的业务员")
+                        }
+                    }
+                })
+            });
+        })
     </script>
 </body>
 </html>

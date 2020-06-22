@@ -7,7 +7,10 @@
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-group-add">
-            <div class="form-group">    
+            <input type="hidden" name="groupHeader" id="groupHeader">
+            <input type="hidden" name="headerName" id="headerName">
+            <input type="hidden" name="headerMobile" id="headerMobile">
+            <div class="form-group">
                 <label class="col-sm-3 control-label">小组名称：</label>
                 <div class="col-sm-8">
                     <input name="name" class="form-control" type="text">
@@ -16,16 +19,17 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">当前小组组长：</label>
                 <div class="col-sm-8">
-                    <input name="groupHeader" class="form-control" type="text" disabled>
+                    <input id="groupHeaderShow" class="form-control" type="text" disabled>
                 </div>
             </div>
+
             <div class="form-group">
                 <label class="col-sm-3 control-label">设置组长：</label>
                 <div class="col-sm-7">
                     <input id="groupHeaderMobile"  class="form-control" type="text" placeholder="输入手机号查询">
                 </div>
                 <div class="col-sm-2">
-                    <button id="confirmHeaderMobile">查询并确认</button>
+                    <a class="btn" id="confirmHeaderMobile" onclick="javascript:void(0)">查询销售员</a>
                 </div>
             </div>
         </form>
@@ -39,42 +43,26 @@
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/add", $('#form-group-add').serialize());
+                $.operate.save(prefix + "/custom/add", $('#form-group-add').serialize());
             }
         }
 
         $(function () {
             $('#confirmHeaderMobile').click(function () {
-                console.info('groupHeaderMobile 21')
                 let mobile =$('#groupHeaderMobile').val();
-                // $.post(`/promote/salesman/custom/selectByMobile/${mobile}`,function (data) {
-                //     console.info('groupHeaderMobile 3')
-                //     console.info(data)
-                // })
-
-                // $.post("/promote/salesman/custom/selectByMobile/15551385182",{suggest:'12'},function(result){
-                //     // $("span").html(result);
-                //     alert(result)
-                // });
-
-
                 Base.Network.post({
-                    url : "/promote/salesman/custom/selectByMobile/15551385182",
+                    url : ctx + `promote/salesman/custom/selectByMobile/${mobile}`,
                     successParse:function (data) {
-                        console.info('the data is')
+                        if(data) {
+                        $('#groupHeaderShow').val(`${data.name} (${data.mobile})`)
+                        $('#groupHeader').val(data.id);
+                        $('#headerMobile').val(data.mobile);
+                        $('#headerName').val(data.name);
+                        } else {
+                            $.modal.msgError("未检索到符号条件的业务员")
+                        }
                     }
                 })
-                $.ajax({
-                    url : "/promote/salesman/custom/selectByMobile/15551385182",
-                    type : "post",
-                    async: false , //改为同步
-                    success : function(result) {
-                        console.info(result)
-                    },
-                    error:function(data){
-                        console.log(data);
-                    },
-                });
             });
         })
     </script>

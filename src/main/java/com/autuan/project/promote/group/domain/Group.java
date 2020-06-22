@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  * 小组对象 tab_group
  * 
  * @author autuan
- * @date 2020-06-19
+ * @date 2020-06-22
  */
 
 @Data
@@ -32,6 +32,12 @@ public class Group extends BaseEntity
     /** 小组组长 */
     @Excel(name = "小组组长")
     private String groupHeader;
+    /** 组长名称(冗余) */
+    @Excel(name = "组长名称(冗余)")
+    private String headerName;
+    /** 组长手机号(冗余) */
+    @Excel(name = "组长手机号(冗余)")
+    private String headerMobile;
 
 
 }

@@ -23,7 +23,7 @@ import com.autuan.framework.web.page.TableDataInfo;
  * 文章Controller
  * 
  * @author autuan
- * @date 2020-06-18
+ * @date 2020-06-22
  */
 @Controller
 @RequestMapping("/promote/article")

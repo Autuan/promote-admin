@@ -7,7 +7,7 @@ import java.util.List;
  * 小组Service接口
  * 
  * @author autuan
- * @date 2020-06-19
+ * @date 2020-06-22
  */
 public interface IGroupService 
 {

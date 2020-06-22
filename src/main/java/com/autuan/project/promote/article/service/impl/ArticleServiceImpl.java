@@ -6,7 +6,7 @@ import cn.hutool.core.util.IdUtil;
     import java.time.LocalDateTime;
                     import com.autuan.common.utils.security.ShiroUtils;
             import com.autuan.common.utils.security.ShiroUtils;
-        import org.springframework.beans.factory.annotation.Autowired;
+            import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.autuan.project.promote.article.mapper.ArticleMapper;
 import com.autuan.project.promote.article.domain.Article;
@@ -17,7 +17,7 @@ import com.autuan.common.utils.text.Convert;
  * 文章Service业务层处理
  * 
  * @author autuan
- * @date 2020-06-18
+ * @date 2020-06-22
  */
 @Service
 public class ArticleServiceImpl implements IArticleService 
@@ -60,7 +60,7 @@ public class ArticleServiceImpl implements IArticleService
     {
                     article.setCreateTime(LocalDateTime.now());
                             article.setCreateBy(ShiroUtils.getLoginName());
-                    article.setId(IdUtil.simpleUUID());
+                        article.setId(IdUtil.simpleUUID());
         return articleMapper.insertArticle(article);
     }
 
@@ -75,7 +75,7 @@ public class ArticleServiceImpl implements IArticleService
     {
                     article.setUpdateTime(LocalDateTime.now());
                                 article.setUpdateBy(ShiroUtils.getLoginName());
-                return articleMapper.updateArticle(article);
+                    return articleMapper.updateArticle(article);
     }
 
     /**

@@ -15,8 +15,12 @@
                                 <input type="text" name="name"/>
                             </li>
                             <li>
-                                <p>小组组长：</p>
-                                <input type="text" name="groupHeader"/>
+                                <p>组长姓名：</p>
+                                <input type="text" name="headerName"/>
+                            </li>
+                            <li>
+                                <p>组长手机号：</p>
+                                <input type="text" name="headerMobile"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -73,8 +77,12 @@
                     title : '小组名称'
                 },
                 {
-                    field : 'groupHeader', 
-                    title : '小组组长'
+                    field : 'headerName', 
+                    title : '组长名称'
+                },
+                {
+                    field : 'headerMobile', 
+                    title : '组长手机号'
                 },
                 {
                     title: '操作',

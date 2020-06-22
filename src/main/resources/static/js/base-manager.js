@@ -27,7 +27,7 @@
             console.info(obj)
             console.info("--->>>" + currentTime + "--->>> 控制台打印结束-↑↑")
         },
-        into: function (name, obj) {
+        intoObj: function (name, obj) {
             var currentTime = Bee.DateUtils.getCurrentTime();
             console.info("--->>>" + currentTime + "--->>> 进入了条件/循环--->>>" + name + "---|||条件值是--->>" + obj);
         },
@@ -522,15 +522,15 @@
         post: function (opt) {
             let url = opt.url
             let successParse = opt.successParse || function(){};
-            let failParse = opt.failParse || function(data){console.error(data.msg)};
+            let failParse = opt.failParse || function(data){console.error(data.msg);$.modal.msgError(data.msg)};
             let type = opt.type || 'post'
             $.ajax({
                 url : opt.url,
                 data : opt.data,
                 type : type,
                 async: false , //改为同步
-                success : function(result) {
-                    if(httpResponse === '000000') {
+                success : function(httpResponse) {
+                    if(httpResponse.code === '000000') {
                         let data = httpResponse.data
                         successParse(data);
                     } else {
