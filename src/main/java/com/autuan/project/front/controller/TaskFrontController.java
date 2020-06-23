@@ -27,11 +27,27 @@ public class TaskFrontController {
     @Autowired
     ITaskCustomService taskCustomService;
 
-    @PostMapping(value = "/qrcode/{taskId}/{salesmanId}",produces = MediaType.IMAGE_JPEG_VALUE)
+    /***
+     * 获取二维码
+     * @param taskId
+ * @param response 
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : void
+     * @since: 19:32 2020/6/23
+     */
+    @RequestMapping(value = "/qrcode/{taskId}/{salesmanId}",produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
-    public void qrcode(String taskId, HttpServletResponse response) throws IOException {
+    public void qrcode(@PathVariable("taskId") String taskId,
+                       @PathVariable("salesmanId") String salesmanId,
+                       HttpServletResponse response) throws IOException {
         ServletOutputStream outputStream = response.getOutputStream();
 //        return taskCustomService.generatorQrcode(outputStream);
-         taskCustomService.generatorQrcode(outputStream);
+        GeneratorQrCodeVO vo = GeneratorQrCodeVO.builder()
+                .salesmanId(salesmanId)
+                .taskId(taskId)
+                .build();
+        taskCustomService.generatorQrcode(vo,outputStream);
     }
 }

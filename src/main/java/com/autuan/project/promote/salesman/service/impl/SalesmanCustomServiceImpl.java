@@ -104,4 +104,11 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                         .build();
         salesmanMapper.updateByExampleSelective(salesman,example);
     }
+
+    @Override
+    public List<TabSalesman> listSalesmanThousand() {
+        TabSalesmanExample example = new TabSalesmanExample();
+        example.limit(1000);
+        return salesmanMapper.selectByExample(example);
+    }
 }

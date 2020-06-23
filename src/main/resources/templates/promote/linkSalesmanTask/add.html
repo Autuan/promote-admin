@@ -1,87 +1,158 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="include :: header('新增业务员-任务中间')" />
-    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: header('新增业务员-任务中间')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
 </head>
 <body class="white-bg">
-    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-linkSalesmanTask-add">
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">任务id：</label>
-                <div class="col-sm-8">
-                    <input name="taskId" class="form-control" type="text" required>
-                </div>
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-linkSalesmanTask-add">
+        <!--<div class="form-group">    -->
+        <!--<label class="col-sm-3 control-label">任务id：</label>-->
+        <!--<div class="col-sm-8">-->
+        <!--<input name="taskId" class="form-control" type="text" required>-->
+        <!--</div>-->
+        <!--</div>-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">檢索任务：</label>
+            <div class="col-sm-2">
+                <input id="taskNameInput" class="form-control" type="text" placeholder="任务名称">
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">业务员id：</label>
-                <div class="col-sm-8">
-                    <input name="salesmanId" class="form-control" type="text" required>
-                </div>
+            <a id="searchTask" class="btn btn-info col-sm-2" href="javascript:void(0);">检索</a>
+            <div class="col-sm-4">
+                <select class="form-control m-b" id="taskSelect" name="taskId">
+                    <option value="">==请检索==</option>
+                </select>
             </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">任务员对应专属code：</label>
-                <div class="col-sm-8">
-                    <input name="code" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">专属链接：</label>
-                <div class="col-sm-8">
-                    <input name="link" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">奖励额：</label>
-                <div class="col-sm-8">
-                    <input name="reward" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">奖励开始时间：</label>
-                <div class="col-sm-8">
-                    <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="rewardBeginTime" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">    
-                <label class="col-sm-3 control-label">奖励结束时间：</label>
-                <div class="col-sm-8">
-                    <div class="input-group date">
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                        <input name="rewardStopTime" class="form-control" placeholder="yyyy-MM-dd" type="text">
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-    <th:block th:include="include :: footer" />
-    <th:block th:include="include :: datetimepicker-js" />
-    <script type="text/javascript">
-        var prefix = ctx + "promote/linkSalesmanTask"
-        $("#form-linkSalesmanTask-add").validate({
-            focusCleanup: true
-        });
+        </div>
 
-        function submitHandler() {
-            if ($.validate.form()) {
-                $.operate.save(prefix + "/add", $('#form-linkSalesmanTask-add').serialize());
-            }
+        <!--<div class="form-group">-->
+            <!--<label class="col-sm-3 control-label">业务员id：</label>-->
+            <!--<div class="col-sm-8">-->
+                <!--<input name="salesmanId" class="form-control" type="text" required>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">檢索业务员：</label>
+            <div class="col-sm-2">
+                <input id="salesanNameInput" class="form-control" type="text" placeholder="业务员姓名">
+            </div>
+            <a id="searchSalesman" class="btn btn-info col-sm-2" href="javascript:void(0);">检索</a>
+            <div class="col-sm-4">
+                <select class="form-control m-b" id="salesmanSelect" name="salesmanId">
+                    <option value="">==请检索==</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">业务员专属code：</label>
+            <div class="col-sm-8">
+                <input name="code" class="form-control" type="text">
+            </div>
+        </div>
+        <!--<div class="form-group">    -->
+        <!--<label class="col-sm-3 control-label">专属链接：</label>-->
+        <!--<div class="col-sm-8">-->
+        <!--<input name="link" class="form-control" type="text">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">    -->
+        <!--<label class="col-sm-3 control-label">奖励额：</label>-->
+        <!--<div class="col-sm-8">-->
+        <!--<input name="reward" class="form-control" type="text">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">    -->
+        <!--<label class="col-sm-3 control-label">奖励开始时间：</label>-->
+        <!--<div class="col-sm-8">-->
+        <!--<div class="input-group date">-->
+        <!--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>-->
+        <!--<input name="rewardBeginTime" class="form-control" placeholder="yyyy-MM-dd" type="text">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">    -->
+        <!--<label class="col-sm-3 control-label">奖励结束时间：</label>-->
+        <!--<div class="col-sm-8">-->
+        <!--<div class="input-group date">-->
+        <!--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>-->
+        <!--<input name="rewardStopTime" class="form-control" placeholder="yyyy-MM-dd" type="text">-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<script type="text/javascript">
+    var prefix = ctx + "promote/linkSalesmanTask"
+    $("#form-linkSalesmanTask-add").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-linkSalesmanTask-add').serialize());
         }
+    }
 
-        $("input[name='rewardBeginTime']").datetimepicker({
-            format: "yyyy-mm-dd",
-            minView: "month",
-            autoclose: true
-        });
+    $("input[name='rewardBeginTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
 
-        $("input[name='rewardStopTime']").datetimepicker({
-            format: "yyyy-mm-dd",
-            minView: "month",
-            autoclose: true
-        });
-    </script>
+    $("input[name='rewardStopTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    $(function () {
+        let taskList = [];
+        let salesmanList = [];
+
+
+        $('#searchTask').click(function () {
+            let list = taskList;
+            let name = $('#taskNameInput').val()
+            if (Bee.StringUtils.isNotBlank(name)) {
+                list = list.filter(task => {
+                    return Bee.StringUtils.contains(task.name, name)
+                })
+            }
+            let str = '<option value="">---请选择任务---</option>';
+            for (let i = 0; i < list.length; i++) {
+                str += `<option value="${list[i].id}">${list[i].name}</option>`
+            }
+            $('#taskSelect').empty();
+            $('#taskSelect').append($(str));
+        })
+
+        $('#searchSalesman').click(function () {
+            let list = salesmanList;
+            let name = $('#salesanNameInput').val()
+            if (Bee.StringUtils.isNotBlank(name)) {
+                list = list.filter(item => {
+                    return Bee.StringUtils.contains(item.name, name)
+                })
+            }
+            let str = '<option value="">---请选择业务员---</option>';
+            for (let i = 0; i < list.length; i++) {
+                str += `<option value="${list[i].id}">${list[i].name}</option>`
+            }
+            $('#salesmanSelect').empty();
+            $('#salesmanSelect').append($(str));
+        })
+
+        Base.Network.post({
+            url: ctx + 'promote/linkSalesmanTask/custom/list',
+            successParse: function (data) {
+                taskList = data.taskList;
+                salesmanList = data.salesmanList;
+            }
+        })
+    })
+</script>
 </body>
 </html>

@@ -1,11 +1,13 @@
 package com.autuan.project.promote.task.service.impl;
 
 import cn.hutool.core.img.ImgUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.autuan.common.utils.security.ShiroUtils;
+import com.autuan.project.front.entity.GeneratorQrCodeVO;
+import com.autuan.project.promote.link.linkSalesmanTask.service.ISalesmanTaskCustomService;
 import com.autuan.project.promote.param.domain.TabParam;
 import com.autuan.project.promote.param.domain.TabParamExample;
 import com.autuan.project.promote.param.mapper.TabParamMapper;
@@ -19,12 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.imageio.stream.FileCacheImageOutputStream;
-import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.ServletOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class TabCustomServiceImpl implements ITaskCustomService {
+public class TaskCustomServiceImpl implements ITaskCustomService {
     @Autowired
     private TabParamMapper paramMapper;
     @Autowired
@@ -112,22 +112,45 @@ public class TabCustomServiceImpl implements ITaskCustomService {
      * @since : 2020/6/23 16:31
      */
     @Override
-    public void generatorQrcode(ServletOutputStream outputStream) {
+    public void generatorQrcode(GeneratorQrCodeVO vo, ServletOutputStream outputStream) {
+        try {
+        String taskId = vo.getTaskId();
+        TabTask task = tabTaskMapper.selectByPrimaryKey(taskId);
             // 获取背景图片
-            Image src =ImgUtil.read("E:/temp/1.jpg");
+//            Image src =ImgUtil.read("E:/temp/1.jpg");
+            BufferedImage  src = ImgUtil.read(new URL(task.getBgImg()));
+//        task.getBgImg()
+
             // 生成二维码
             //      获取内容
-            String content = "Hello Autuan 2020";
-            QrConfig config = new QrConfig(300, 300);
+//            String content = "Hello Autuan 2020";
+            TabParamExample paramExample = new TabParamExample();
+            paramExample.createCriteria()
+                    .andTaskIdEqualTo(taskId);
+            List<TabParam> paramList = paramMapper.selectByExample(paramExample);
+            StringBuilder content = new StringBuilder("");
+            for (TabParam param : paramList) {
+//                content += param.getParamKey() + '=' + param.getValue() + '&';
+                content = content.append(param.getParamKey()).append("=").append(param.getValue()).append("&");
+                // todo type 为自定义时 content 值
+            }
+            StringBuilder prefix = new StringBuilder(task.getPrefix());
+            if(StrUtil.contains(prefix,"?")){
+                content = prefix.append("&").append(content);
+            } else {
+                content = prefix.append("?").append(content);
+            }
+
+            QrConfig config = new QrConfig(130, 130);
             // 设置边距，既二维码和背景之间的边距
-            config.setMargin(3);
+            config.setMargin(1);
             // 设置前景色，既二维码颜色（青色）
             config.setForeColor(Color.BLACK);
             // 设置背景色（灰色）
             config.setBackColor(Color.WHITE);
-            BufferedImage qrCodeImg = QrCodeUtil.generate(content, config);
+            BufferedImage qrCodeImg = QrCodeUtil.generate(content.substring(0, content.length() - 1), config);
             // 合成图片
-            Rectangle rectangle = new Rectangle();
+//            Rectangle rectangle = new Rectangle();
             ImgUtil.pressImage(
                     // 背景图
                     src,
@@ -138,7 +161,7 @@ public class TabCustomServiceImpl implements ITaskCustomService {
                     //x坐标修正值。 默认在中间，偏移量相对于中间偏移
                     0,
                     //y坐标修正值。 默认在中间，偏移量相对于中间偏移
-                    700,
+                    290,
                     1f
             );
 //            outputStream.
@@ -148,5 +171,24 @@ public class TabCustomServiceImpl implements ITaskCustomService {
 //            return test;
 //            return bytes;
 //        return new byte[0];
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /***
+     * 获取一千条任务
+     * @param
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.util.List<com.autuan.project.promote.task.domain.TabTask>
+     * @since: 20:28 2020/6/23
+     */
+    @Override
+    public List<TabTask> listTaskThousand() {
+        TabTaskExample example = new TabTaskExample();
+        example.limit(1000);
+        return tabTaskMapper.selectByExample(example);
     }
 }

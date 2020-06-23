@@ -1,6 +1,9 @@
 package com.autuan.project.front.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author : Autuan.Yu
@@ -10,6 +13,10 @@ import lombok.Data;
  * @company : 上海奥若拉信息科技集团有限公司
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GeneratorQrCodeVO {
     private String taskId;
+    private String salesmanId;
 }

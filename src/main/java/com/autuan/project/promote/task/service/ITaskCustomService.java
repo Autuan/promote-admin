@@ -1,5 +1,6 @@
 package com.autuan.project.promote.task.service;
 
+import com.autuan.project.front.entity.GeneratorQrCodeVO;
 import com.autuan.project.promote.param.domain.TabParam;
 import com.autuan.project.promote.task.domain.SetTaskParamAO;
 import com.autuan.project.promote.task.domain.TabTask;
@@ -54,5 +55,16 @@ public interface ITaskCustomService {
      * @return: byte[]
      * @since : 2020/6/23 16:31  
      */
-    void generatorQrcode(ServletOutputStream outputStream);
+    void generatorQrcode(GeneratorQrCodeVO vo, ServletOutputStream outputStream);
+
+    /***
+     * 获取一千条任务
+     * @param
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.util.List<com.autuan.project.promote.task.domain.TabTask>
+     * @since: 20:28 2020/6/23
+     */
+    List<TabTask> listTaskThousand();
 }

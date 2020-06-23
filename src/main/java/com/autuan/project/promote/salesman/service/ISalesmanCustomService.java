@@ -3,6 +3,8 @@ package com.autuan.project.promote.salesman.service;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 
+import java.util.List;
+
 /**
  * @author : Autuan.Yu
  * @description :  描述
@@ -49,4 +51,6 @@ public interface ISalesmanCustomService {
      * @since : 2020/6/22 16:51
      */
     void resetPwd(String ids);
+
+    List<TabSalesman> listSalesmanThousand();
 }
