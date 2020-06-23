@@ -292,6 +292,12 @@
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+
         <!-- mybatis generator -->
         <dependency>
             <groupId>com.itfsw</groupId>

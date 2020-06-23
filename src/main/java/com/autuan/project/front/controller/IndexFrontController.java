@@ -5,6 +5,8 @@ import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.article.domain.TabArticle;
 import com.autuan.project.promote.article.service.IArticleCustomService;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
+import com.autuan.project.promote.task.domain.TabTask;
+import com.autuan.project.promote.task.service.ITaskCustomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,8 @@ import java.util.List;
 public class IndexFrontController {
     @Autowired
     private IArticleCustomService articleCustomService;
+    @Autowired
+    private ITaskCustomService taskCustomService;
 
     /***
      * 獲取首頁信息
@@ -37,13 +41,16 @@ public class IndexFrontController {
     public ReturnResult info() {
         // 文章輪播
         List<TabArticle> articles = articleCustomService.getCarouselArticle();
-
         // 圖片輪播
         List<TabArticle> images = articleCustomService.getCarouselImg();
+        // 任务
+        List<TabTask> tasks = taskCustomService.getIndexTask();
         IndexVO result = IndexVO.builder()
                 .articles(articles)
                 .images(images)
+                .tasks(tasks)
                 .build();
+
         return ReturnResult.ok(result);
     }
 }

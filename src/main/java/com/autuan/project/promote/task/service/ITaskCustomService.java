@@ -2,8 +2,10 @@ package com.autuan.project.promote.task.service;
 
 import com.autuan.project.promote.param.domain.TabParam;
 import com.autuan.project.promote.task.domain.SetTaskParamAO;
+import com.autuan.project.promote.task.domain.TabTask;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.ServletOutputStream;
 import java.util.List;
 
 /**
@@ -33,4 +35,24 @@ public interface ITaskCustomService {
      * @since : 2020/6/23 14:49
      */
     List<TabParam> getParamList(String taskId);
+
+    /**
+     * 获取首页task  
+     * @param  
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: java.util.List<com.autuan.project.promote.task.domain.TabTask>
+     * @since : 2020/6/23 16:30
+     */
+    List<TabTask> getIndexTask();
+    
+    /**
+     * 生成二维码  
+     * @param  
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: byte[]
+     * @since : 2020/6/23 16:31  
+     */
+    void generatorQrcode(ServletOutputStream outputStream);
 }

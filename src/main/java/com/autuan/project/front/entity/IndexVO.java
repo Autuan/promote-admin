@@ -1,6 +1,7 @@
 package com.autuan.project.front.entity;
 
 import com.autuan.project.promote.article.domain.TabArticle;
+import com.autuan.project.promote.task.domain.TabTask;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,5 @@ import java.util.List;
 public class IndexVO {
     List<TabArticle> articles;
     List<TabArticle> images;
+    List<TabTask> tasks;
 }
