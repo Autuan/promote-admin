@@ -128,7 +128,7 @@
             Base.Network.post({
                 url:ctx+'promote/group/custom/list',
                 successParse:function (data) {
-                    let str = '<option value="-1">---请选择小组---</option>';
+                    let str = '<option value="">---请选择小组---</option>';
                     for (let i=0;i<data.length;i++) {
                         str += `<option value="${data[i].id}">${data[i].name}</option>`
                     }

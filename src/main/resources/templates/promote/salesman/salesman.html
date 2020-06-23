@@ -142,16 +142,16 @@
 
                 {
                     field: 'brokerageBankNo',
-                    title: '佣金结算卡-银行卡号'
+                    title: '结算卡卡号'
                 },
                 {
                     field: 'brokerageBankName',
-                    title: '佣金结算卡-银行名称'
+                    title: '结算卡银行'
                 },
-                {
-                    field: 'brokerageBankAddress',
-                    title: '佣金结算卡-银行开户行地区'
-                },
+                // {
+                //     field: 'brokerageBankAddress',
+                //     title: '佣金结算卡-银行开户行地区'
+                // },
                 // {
                 //     field: 'password',
                 //     title: '密码'
@@ -163,11 +163,6 @@
                 {
                     field: 'applyTime',
                     title: '申请日期',
-                    formatter: function (value, row, index) {
-                        return value;
-                        // return Base.Table.formatterDate(value)
-                        // return $.format.date(new Date(), 'dd M yy')
-                    }
                 },
                 {
                     field: 'level',
@@ -175,7 +170,7 @@
                 },
                 {
                     field: 'groupId',
-                    title: '所属小组ID',
+                    title: '所属小组',
                     formatter: function (value, row, index) {
                         if (value !== '-1') {
                             console.info('formatter')
@@ -204,7 +199,7 @@
                                 return '男';
                                 break;
                             case 1 :
-                                return '男';
+                                return '女';
                                 break;
                             default:
                                 return '未设置';

@@ -6,7 +6,7 @@ import cn.hutool.core.util.IdUtil;
     import java.time.LocalDateTime;
             import com.autuan.common.utils.security.ShiroUtils;
             import com.autuan.common.utils.security.ShiroUtils;
-    import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.autuan.project.promote.param.mapper.ParamMapper;
 import com.autuan.project.promote.param.domain.Param;
@@ -17,7 +17,7 @@ import com.autuan.common.utils.text.Convert;
  * 任务链接参数Service业务层处理
  * 
  * @author autuan
- * @date 2020-06-22
+ * @date 2020-06-23
  */
 @Service
 public class ParamServiceImpl implements IParamService 
@@ -60,7 +60,7 @@ public class ParamServiceImpl implements IParamService
     {
                         param.setCreateTime(LocalDateTime.now());
                     param.setCreateBy(ShiroUtils.getLoginName());
-                param.setId(IdUtil.simpleUUID());
+                    param.setId(IdUtil.simpleUUID());
         return paramMapper.insertParam(param);
     }
 
@@ -75,7 +75,7 @@ public class ParamServiceImpl implements IParamService
     {
                         param.setUpdateTime(LocalDateTime.now());
                         param.setUpdateBy(ShiroUtils.getLoginName());
-            return paramMapper.updateParam(param);
+                return paramMapper.updateParam(param);
     }
 
     /**

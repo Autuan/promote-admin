@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改任务')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-task-edit" th:object="${task}">
+        <input id="taskId" th:field="*{id}" type="hidden">
+        <input id="prefix" th:field="*{prefix}" type="hidden">
+
+        <div id="paramDiv">
+            <div class="eachParam" th:if="${paramList.empty}">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">参数名：</label>
+                    <div class="col-sm-6">
+                        <input class="form-control keyInput" type="text">
+                    </div>
+                    <div class="col-sm-2">
+                        <a href="javascript:void(0);" class="btn btn-info copyBtn"><i class="fa fa-plus"></i></a>
+                        <a href="javascript:void(0);" class="btn btn-danger removeBtn"><i class="fa fa-remove"></i></a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">参数值：</label>
+                    <div class="col-sm-4 valType">
+                        <select class="form-control m-b valTypeSelect" name="articleId">
+                            <option value="0">自定义</option>
+                            <option value="1">业务员CODE</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 valInputDiv">
+                        <input name="priority" class="form-control valInput" type="text" placeholder="请输入自定义值">
+                    </div>
+                </div>
+            </div>
+
+            <div class="eachParam" th:each="item : ${paramList}">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">参数名：</label>
+                    <div class="col-sm-6">
+                        <input class="form-control keyInput" type="text" th:value="${item.paramKey}">
+                    </div>
+                    <div class="col-sm-2">
+                        <a href="javascript:void(0);" class="btn btn-info copyBtn"><i class="fa fa-plus"></i></a>
+                        <a href="javascript:void(0);" class="btn btn-danger removeBtn"><i class="fa fa-remove"></i></a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">参数值：</label>
+                    <div class="col-sm-4 valType" >
+                        <select class="form-control m-b valTypeSelect"  >
+                            <option value="0" th:selected="${item.type == 0}">自定义</option>
+                            <option value="1" th:selected="${item.type == 1}">业务员CODE</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 valInputDiv" th:style="${item.type == 1} ? 'visibility:hide' : 'visibility:hide'">
+                        <input name="priority" th:value="${item.value}" class="form-control valInput" type="text" placeholder="请输入自定义值">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="form-group">
+                <!--                <a class="btn btn-info col-sm-8">生成测试链接</a>-->
+                <label class="col-sm-3 control-label">生成测试链接：</label>
+                <div class="col-sm-8">
+                    <a class="btn btn-info" href="javascript:void(0);" id="testParamUrlBtn">点击生成</a>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <!--                <a class="btn btn-info col-sm-8">生成测试链接</a>-->
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-8">
+                                        <div id="testParamUrl"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+<script type="text/javascript">
+    var prefix = ctx + "promote/task";
+    $("#form-task-edit").validate({
+        focusCleanup: true
+    });
+    function getParamList() {
+        let list = [];
+        $('.eachParam').each((index, item) => {
+            let param = {};
+            let paramKey = $(item).find('.keyInput').val();
+            let type = $(item).find('.valTypeSelect').val();
+            let val = $(item).find('.valInput').val();
+            param.paramKey = paramKey
+            param.type = type
+            param.value = val
+            param.taskId = $('#taskId').val();
+            list.push(param)
+        })
+        return list;
+    }
+
+    function initStyle() {
+        $('.valTypeSelect').each((index,item) => {
+            let val = $(item).val();
+            let valType = $(item).parent('.valType')
+            let valInputDiv = valType.next('.valInputDiv');
+            if (val === '0') {
+                valType.removeClass('col-sm-8')
+                valType.addClass('col-sm-4')
+                valInputDiv.show();
+            }
+            if (val === '1') {
+                valType.removeClass('col-sm-4')
+                valType.addClass('col-sm-8')
+                valInputDiv.hide();
+            }
+        });
+    }
+    function submitHandler() {
+        let param = {
+            list :  getParamList(),
+        }
+        // console.info(param)
+        Base.Network.post({
+            url:ctx+'promote/task/custom/setTaskParam',
+            data:param,
+            contentType:'application/json',
+            successParse:function (data) {
+                // console.info(data)
+                $.modal.close();
+                parent.$.modal.msgSuccess('操作成功');
+                parent.$.table.refresh();
+                // let str = '<option value="">---请选择文章---</option>';
+                // for (let i=0;i<data.length;i++) {
+                //     str += `<option value="${data[i].id}">${data[i].title}</option>`
+                // }
+                // $('#articleSelect').empty();
+                // $('#articleSelect').append($(str));
+            }
+        })
+    }
+
+    $("input[name='rewardBeginTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    $("input[name='rewardStopTime']").datetimepicker({
+        format: "yyyy-mm-dd",
+        minView: "month",
+        autoclose: true
+    });
+
+    $(function () {
+        $(document).on('click', '.copyBtn', function () {
+            $(".eachParam").last().clone().appendTo("#paramDiv");
+        })
+        $(document).on('click', '.removeBtn', function () {
+            let len = $('.eachParam').length
+            if(len < 2) {
+                return;
+            }
+            $(this).parents('.eachParam').remove();
+        });
+        $(document).on('change', '.valTypeSelect', function () {
+            let val = $(this).val();
+            let valType = $(this).parent('.valType')
+            let valInputDiv = valType.next('.valInputDiv');
+            if (val === '0') {
+                valType.removeClass('col-sm-8')
+                valType.addClass('col-sm-4')
+                valInputDiv.show();
+            }
+            if (val === '1') {
+                valType.removeClass('col-sm-4')
+                valType.addClass('col-sm-8')
+                valInputDiv.hide();
+            }
+        });
+
+        $('#searchArticle').click(function () {
+            let param = {
+                'title': $('#articleTitleInput').val(),
+            }
+            Base.Network.post({
+                url: ctx + 'promote/article/custom/list',
+                data: param,
+                successParse: function (data) {
+                    console.info(data)
+                    // return;
+                    let str = '<option value="">---请选择文章---</option>';
+                    for (let i = 0; i < data.length; i++) {
+                        str += `<option value="${data[i].id}">${data[i].title}</option>`
+                    }
+                    $('#articleSelect').empty();
+                    $('#articleSelect').append($(str));
+                }
+            })
+        })
+
+        $('#testParamUrlBtn').click(function () {
+            let hrefPrefix = $('#prefix').val();
+            let list = getParamList();
+            let str = '';
+            for (const obj of list) {
+                if (obj.type === '0') {
+                    str += obj.paramKey + '=' + obj.value + '&'
+                }
+                if (obj.type === '1') {
+                    str += obj.paramKey + '=code&'
+                }
+            }
+            str = str.substring(0, str.length - 1);
+            if (Bee.StringUtils.contains(hrefPrefix, '?')) {
+                str = hrefPrefix + '&' + str;
+            } else {
+                str = hrefPrefix + '?' + str;
+            }
+            $('#testParamUrl').text(str);
+        });
+
+        initStyle();
+    })
+</script>
+</body>
+</html>

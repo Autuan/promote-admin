@@ -531,6 +531,7 @@
         URL_CONTENT_TYPE: 'application/x-www-form-urlencoded;charset=utf-8',
     };
     Base.Network = {
+
         post: function (opt) {
             let url = opt.url
             let successParse = opt.successParse || function () {
@@ -541,9 +542,14 @@
                 $.modal.msgError(data.msg)
             };
             let type = opt.type || 'post'
+            let contentType = opt.contentType || 'application/x-www-form-urlencoded'
+            if(opt.contentType === 'application/json') {
+                opt.data = JSON.stringify(opt.data);
+            }
             $.ajax({
                 url: opt.url,
                 data: opt.data,
+                contentType: contentType,
                 type: type,
                 async: false, //改为同步
                 success: function (httpResponse) {
@@ -558,6 +564,9 @@
                     console.log(data);
                 },
             });
+        },
+        postJSON:function(){
+
         },
     }
     window['Base'] = Base;

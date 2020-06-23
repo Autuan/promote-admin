@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
  * 任务对象 tab_task
  * 
  * @author autuan
- * @date 2020-06-22
+ * @date 2020-06-23
  */
 
 @Data
@@ -55,6 +55,12 @@ public class Task extends BaseEntity
     /** 优先级 */
     @Excel(name = "优先级")
     private Integer priority;
+    /** 文章标题 */
+    @Excel(name = "文章标题")
+    private String articleTitle;
+    /** 文章图片 */
+    @Excel(name = "文章图片")
+    private String image;
 
 
 }
