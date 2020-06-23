@@ -18,6 +18,8 @@
     <result column="priority" jdbcType="INTEGER" property="priority" />
     <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
     <result column="image" jdbcType="VARCHAR" property="image" />
+    <result column="bg_img" jdbcType="VARCHAR" property="bgImg" />
+    <result column="summary" jdbcType="VARCHAR" property="summary" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -79,7 +81,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, 
-    update_time, create_by, update_by, tags, article_id, priority, article_title, image
+    update_time, create_by, update_by, tags, article_id, priority, article_title, image, 
+    bg_img, summary
   </sql>
   <select id="selectByExample" parameterType="com.autuan.project.promote.task.domain.TabTaskExample" resultMap="BaseResultMap">
     select
@@ -125,13 +128,15 @@
       reward_stop_time, create_time, update_time, 
       create_by, update_by, tags, 
       article_id, priority, article_title, 
-      image)
+      image, bg_img, summary
+      )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{prefix,jdbcType=VARCHAR}, 
       #{paramId,jdbcType=VARCHAR}, #{reward,jdbcType=DECIMAL}, #{rewardBeginTime,jdbcType=TIMESTAMP}, 
       #{rewardStopTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, 
       #{articleId,jdbcType=VARCHAR}, #{priority,jdbcType=INTEGER}, #{articleTitle,jdbcType=VARCHAR}, 
-      #{image,jdbcType=VARCHAR})
+      #{image,jdbcType=VARCHAR}, #{bgImg,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="map">
     insert into tab_task
@@ -190,6 +195,12 @@
           </if>
           <if test="record.image != null">
             image,
+          </if>
+          <if test="record.bgImg != null">
+            bg_img,
+          </if>
+          <if test="record.summary != null">
+            summary,
           </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
@@ -251,6 +262,12 @@
           </if>
           <if test="record.image != null">
             #{record.image,jdbcType=VARCHAR},
+          </if>
+          <if test="record.bgImg != null">
+            #{record.bgImg,jdbcType=VARCHAR},
+          </if>
+          <if test="record.summary != null">
+            #{record.summary,jdbcType=VARCHAR},
           </if>
         </trim>
       </otherwise>
@@ -321,6 +338,12 @@
           <if test="record.image != null">
             image = #{record.image,jdbcType=VARCHAR},
           </if>
+          <if test="record.bgImg != null">
+            bg_img = #{record.bgImg,jdbcType=VARCHAR},
+          </if>
+          <if test="record.summary != null">
+            summary = #{record.summary,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -345,7 +368,9 @@
       article_id = #{record.articleId,jdbcType=VARCHAR},
       priority = #{record.priority,jdbcType=INTEGER},
       article_title = #{record.articleTitle,jdbcType=VARCHAR},
-      image = #{record.image,jdbcType=VARCHAR}
+      image = #{record.image,jdbcType=VARCHAR},
+      bg_img = #{record.bgImg,jdbcType=VARCHAR},
+      summary = #{record.summary,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -406,6 +431,12 @@
           <if test="record.image != null">
             image = #{record.image,jdbcType=VARCHAR},
           </if>
+          <if test="record.bgImg != null">
+            bg_img = #{record.bgImg,jdbcType=VARCHAR},
+          </if>
+          <if test="record.summary != null">
+            summary = #{record.summary,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -427,7 +458,9 @@
       article_id = #{articleId,jdbcType=VARCHAR},
       priority = #{priority,jdbcType=INTEGER},
       article_title = #{articleTitle,jdbcType=VARCHAR},
-      image = #{image,jdbcType=VARCHAR}
+      image = #{image,jdbcType=VARCHAR},
+      bg_img = #{bgImg,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.autuan.project.promote.task.domain.TabTaskExample" resultMap="BaseResultMap">
@@ -445,8 +478,8 @@
   <insert id="batchInsert" parameterType="map">
     insert into tab_task
     (id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, 
-      update_time, create_by, update_by, tags, article_id, priority, article_title, image
-      )
+      update_time, create_by, update_by, tags, article_id, priority, article_title, image, 
+      bg_img, summary)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.prefix,jdbcType=VARCHAR}, 
@@ -454,7 +487,8 @@
         #{item.rewardStopTime,jdbcType=TIMESTAMP}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR}, 
         #{item.tags,jdbcType=VARCHAR}, #{item.articleId,jdbcType=VARCHAR}, #{item.priority,jdbcType=INTEGER}, 
-        #{item.articleTitle,jdbcType=VARCHAR}, #{item.image,jdbcType=VARCHAR})
+        #{item.articleTitle,jdbcType=VARCHAR}, #{item.image,jdbcType=VARCHAR}, #{item.bgImg,jdbcType=VARCHAR}, 
+        #{item.summary,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -514,6 +548,12 @@
         </if>
         <if test="'image'.toString() == column.value">
           #{item.image,jdbcType=VARCHAR}
+        </if>
+        <if test="'bg_img'.toString() == column.value">
+          #{item.bgImg,jdbcType=VARCHAR}
+        </if>
+        <if test="'summary'.toString() == column.value">
+          #{item.summary,jdbcType=VARCHAR}
         </if>
       </foreach>
       )

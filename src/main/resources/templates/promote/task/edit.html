@@ -11,16 +11,29 @@
             <input name="id" th:field="*{id}" type="hidden">
             <input name="articleTitle" id="articleTitle" th:field="*{articleTitle}" class="form-control" type="hidden">
             <input name="image" id="image" th:field="*{image}" class="form-control" type="hidden">
-            <div class="form-group">    
+            <input name="bgImg" id="bgImg" th:field="*{bgImg}" class="form-control" type="hidden">
+            <div class="form-group">
                 <label class="col-sm-3 control-label">任务名称：</label>
                 <div class="col-sm-8">
                     <input name="name" th:field="*{name}" class="form-control" type="text" required>
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-3 control-label">简介：</label>
+                <div class="col-sm-8">
+                    <input name="summary" th:field="*{summary}" class="form-control" type="text" >
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="font-noraml">缩略图:</label>
                 <div class="file-loading">
                     <input id="fileinput-demo-1" type="file" name="file" multiple data-min-file-count="1">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="font-noraml">二维码背景图:</label>
+                <div class="file-loading">
+                    <input id="fileinput-qrcode" type="file" name="file" multiple data-min-file-count="1">
                 </div>
             </div>
             <div class="form-group">    
@@ -119,6 +132,18 @@
         });
 
         $(function () {
+            $("#fileinput-qrcode").fileinput({
+                'theme': 'explorer-fas',
+                'uploadUrl': ctx + 'common/upload',
+                overwriteInitial: false,
+                maxFileCount:1,
+                initialPreviewAsData: true,
+                initialPreview: [
+                    $('#bgImg').val()
+                ],
+            }).on("fileuploaded", function(event, data, previewId, index) {
+                $('#bgImg').val(data.response.url);
+            });
             $("#fileinput-demo-1").fileinput({
                 'theme': 'explorer-fas',
                 'uploadUrl': ctx + 'common/upload',

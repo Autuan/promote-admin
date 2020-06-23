@@ -58,9 +58,15 @@ public class Task extends BaseEntity
     /** 文章标题 */
     @Excel(name = "文章标题")
     private String articleTitle;
-    /** 文章图片 */
-    @Excel(name = "文章图片")
+    /** 图片 */
+    @Excel(name = "图片")
     private String image;
+    /** 背景图 */
+    @Excel(name = "背景图")
+    private String bgImg;
+    /** 简介 */
+    @Excel(name = "简介")
+    private String summary;
 
 
 }
