@@ -7,6 +7,9 @@ import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.project.front.entity.GeneratorQrCodeVO;
+import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
+import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskExample;
+import com.autuan.project.promote.link.linkSalesmanTask.mapper.TabSalesmanTaskMapper;
 import com.autuan.project.promote.link.linkSalesmanTask.service.ISalesmanTaskCustomService;
 import com.autuan.project.promote.param.domain.TabParam;
 import com.autuan.project.promote.param.domain.TabParamExample;
@@ -43,6 +46,8 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
     private TabParamMapper paramMapper;
     @Autowired
     private TabTaskMapper tabTaskMapper;
+    @Autowired
+    private TabSalesmanTaskMapper tabSalesmanTaskMapper;
 
     /**
      * 设置参数
@@ -114,28 +119,34 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
     @Override
     public void generatorQrcode(GeneratorQrCodeVO vo, ServletOutputStream outputStream) {
         try {
-        String taskId = vo.getTaskId();
-        TabTask task = tabTaskMapper.selectByPrimaryKey(taskId);
+            String taskId = vo.getTaskId();
+            String salesmanId = vo.getSalesmanId();
+            TabTask task = tabTaskMapper.selectByPrimaryKey(taskId);
             // 获取背景图片
-//            Image src =ImgUtil.read("E:/temp/1.jpg");
-            BufferedImage  src = ImgUtil.read(new URL(task.getBgImg()));
-//        task.getBgImg()
-
+            BufferedImage src = ImgUtil.read(new URL(task.getBgImg()));
             // 生成二维码
             //      获取内容
-//            String content = "Hello Autuan 2020";
             TabParamExample paramExample = new TabParamExample();
             paramExample.createCriteria()
                     .andTaskIdEqualTo(taskId);
             List<TabParam> paramList = paramMapper.selectByExample(paramExample);
+            TabSalesmanTaskExample tabSalesmanTaskExample = new TabSalesmanTaskExample();
+            tabSalesmanTaskExample.createCriteria()
+                    .andSalesmanIdEqualTo(salesmanId)
+                    .andTaskIdEqualTo(taskId);
+            TabSalesmanTask link = tabSalesmanTaskMapper.selectOneByExample(tabSalesmanTaskExample);
+
             StringBuilder content = new StringBuilder("");
             for (TabParam param : paramList) {
-//                content += param.getParamKey() + '=' + param.getValue() + '&';
-                content = content.append(param.getParamKey()).append("=").append(param.getValue()).append("&");
-                // todo type 为自定义时 content 值
+                if (param.getType().equals(0)) {
+                    content = content.append(param.getParamKey()).append("=").append(param.getValue()).append("&");
+                } else if (param.getType().equals(1)) {
+                    content = content.append(param.getParamKey()).append("=").append(link.getCode()).append("&");
+
+                }
             }
             StringBuilder prefix = new StringBuilder(task.getPrefix());
-            if(StrUtil.contains(prefix,"?")){
+            if (StrUtil.contains(prefix, "?")) {
                 content = prefix.append("&").append(content);
             } else {
                 content = prefix.append("?").append(content);
@@ -150,7 +161,6 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
             config.setBackColor(Color.WHITE);
             BufferedImage qrCodeImg = QrCodeUtil.generate(content.substring(0, content.length() - 1), config);
             // 合成图片
-//            Rectangle rectangle = new Rectangle();
             ImgUtil.pressImage(
                     // 背景图
                     src,
@@ -164,13 +174,6 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                     290,
                     1f
             );
-//            outputStream.
-//            byte result = outputStream.readByte();
-            // 返回
-//            return result;
-//            return test;
-//            return bytes;
-//        return new byte[0];
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

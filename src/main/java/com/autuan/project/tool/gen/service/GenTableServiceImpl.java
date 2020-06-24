@@ -83,7 +83,9 @@ public class GenTableServiceImpl implements IGenTableService
      */
     public List<GenTable> selectDbTableList(GenTable genTable)
     {
-        return genTableMapper.selectDbTableList(genTable);
+        List<GenTable> list = genTableMapper.selectDbTableList(genTable);
+        return list;
+//        return genTableMapper.selectDbTableList(genTable);
     }
 
     /**
