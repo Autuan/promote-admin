@@ -7,6 +7,7 @@ import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.project.front.entity.GeneratorQrCodeVO;
+import com.autuan.project.front.entity.ReceiveAO;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskExample;
 import com.autuan.project.promote.link.linkSalesmanTask.mapper.TabSalesmanTaskMapper;
@@ -193,5 +194,26 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
         TabTaskExample example = new TabTaskExample();
         example.limit(1000);
         return tabTaskMapper.selectByExample(example);
+    }
+
+    @Override
+    public void receive(ReceiveAO ao) {
+        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+        example.createCriteria()
+                .andTaskIdEqualTo(ao.getTaskId())
+                .andSalesmanIdEqualTo(ao.getSalesmanId());
+        TabSalesmanTask one = tabSalesmanTaskMapper.selectOneByExample(example);
+        if(one != null && StrUtil.isNotBlank(one.getId())) {
+            return;
+        }
+        TabSalesmanTask bind = TabSalesmanTask.builder()
+                .taskId(ao.getTaskId())
+                .salesmanId(ao.getSalesmanId())
+                .code(IdUtil.objectId())
+                .createTime(LocalDateTime.now())
+                .id(IdUtil.simpleUUID())
+                .build();
+        tabSalesmanTaskMapper.insertSelective(bind);
+
     }
 }

@@ -1,6 +1,7 @@
 package com.autuan.project.promote.task.service;
 
 import com.autuan.project.front.entity.GeneratorQrCodeVO;
+import com.autuan.project.front.entity.ReceiveAO;
 import com.autuan.project.promote.param.domain.TabParam;
 import com.autuan.project.promote.task.domain.SetTaskParamAO;
 import com.autuan.project.promote.task.domain.TabTask;
@@ -67,4 +68,15 @@ public interface ITaskCustomService {
      * @since: 20:28 2020/6/23
      */
     List<TabTask> listTaskThousand();
+
+    /***
+     * 领取任务
+     * @param ao 
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : void
+     * @since: 19:49 2020/6/28
+     */
+    void receive(ReceiveAO ao);
 }

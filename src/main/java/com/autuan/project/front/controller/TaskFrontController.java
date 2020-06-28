@@ -1,6 +1,7 @@
 package com.autuan.project.front.controller;
 
 import com.autuan.project.front.entity.GeneratorQrCodeVO;
+import com.autuan.project.front.entity.ReceiveAO;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.task.service.ITaskCustomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class TaskFrontController {
      * @since: 19:32 2020/6/23
      */
     @RequestMapping(value = "/qrcode/{taskId}/{salesmanId}",produces = MediaType.IMAGE_JPEG_VALUE)
-    @ResponseBody
+//    @ResponseBody
     public void qrcode(@PathVariable("taskId") String taskId,
                        @PathVariable("salesmanId") String salesmanId,
                        HttpServletResponse response) throws IOException {
@@ -49,5 +50,22 @@ public class TaskFrontController {
                 .taskId(taskId)
                 .build();
         taskCustomService.generatorQrcode(vo,outputStream);
+    }
+
+    /***
+     * 领取任务
+     * @param
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : com.autuan.project.front.entity.ReturnResult
+     * @since: 19:33 2020/6/28
+     */
+    @PostMapping("/receive")
+    @ResponseBody
+    public ReturnResult receive(@RequestBody ReceiveAO ao){
+        taskCustomService.receive(ao);
+        return ReturnResult.ok();
+
     }
 }
