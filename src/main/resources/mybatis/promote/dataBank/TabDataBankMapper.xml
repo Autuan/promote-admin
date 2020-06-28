@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.dataBank.mapper.TabDataBankMapper">
+  <resultMap id="BaseResultMap" type="com.autuan.project.promote.dataBank.domain.TabDataBank">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="apply_date" jdbcType="TIMESTAMP" property="applyDate" />
+    <result column="verify_date" jdbcType="TIMESTAMP" property="verifyDate" />
+    <result column="apply_id" jdbcType="VARCHAR" property="applyId" />
+    <result column="approve_status" jdbcType="INTEGER" property="approveStatus" />
+    <result column="bank_name" jdbcType="VARCHAR" property="bankName" />
+    <result column="c_mobile" jdbcType="VARCHAR" property="cMobile" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="channel_code" jdbcType="VARCHAR" property="channelCode" />
+    <result column="custom_flag" jdbcType="INTEGER" property="customFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, apply_date, verify_date, apply_id, approve_status, bank_name, c_mobile, c_name, 
+    channel_code, custom_flag, create_time, update_time, create_by, update_by
+  </sql>
+  <select id="selectByExample" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBankExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tab_data_bank
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="rows != null">
+      <if test="offset != null">
+        limit ${offset}, ${rows}
+      </if>
+      <if test="offset == null">
+        limit ${rows}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tab_data_bank
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tab_data_bank
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBankExample">
+    delete from tab_data_bank
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBank">
+    insert into tab_data_bank (id, apply_date, verify_date, 
+      apply_id, approve_status, bank_name, 
+      c_mobile, c_name, channel_code, 
+      custom_flag, create_time, update_time, 
+      create_by, update_by)
+    values (#{id,jdbcType=VARCHAR}, #{applyDate,jdbcType=TIMESTAMP}, #{verifyDate,jdbcType=TIMESTAMP}, 
+      #{applyId,jdbcType=VARCHAR}, #{approveStatus,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, 
+      #{cMobile,jdbcType=VARCHAR}, #{cName,jdbcType=VARCHAR}, #{channelCode,jdbcType=VARCHAR}, 
+      #{customFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="map">
+    insert into tab_data_bank
+    <choose>
+      <when test="selective != null and selective.length > 0">
+        <foreach close=")" collection="selective" item="column" open="(" separator=",">
+          ${column.escapedColumnName}
+        </foreach>
+      </when>
+      <otherwise>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="record.id != null">
+            id,
+          </if>
+          <if test="record.applyDate != null">
+            apply_date,
+          </if>
+          <if test="record.verifyDate != null">
+            verify_date,
+          </if>
+          <if test="record.applyId != null">
+            apply_id,
+          </if>
+          <if test="record.approveStatus != null">
+            approve_status,
+          </if>
+          <if test="record.bankName != null">
+            bank_name,
+          </if>
+          <if test="record.cMobile != null">
+            c_mobile,
+          </if>
+          <if test="record.cName != null">
+            c_name,
+          </if>
+          <if test="record.channelCode != null">
+            channel_code,
+          </if>
+          <if test="record.customFlag != null">
+            custom_flag,
+          </if>
+          <if test="record.createTime != null">
+            create_time,
+          </if>
+          <if test="record.updateTime != null">
+            update_time,
+          </if>
+          <if test="record.createBy != null">
+            create_by,
+          </if>
+          <if test="record.updateBy != null">
+            update_by,
+          </if>
+        </trim>
+        <trim prefix="(" suffix=")" suffixOverrides="," />
+      </otherwise>
+    </choose>
+    values
+    <choose>
+      <when test="selective != null and selective.length > 0">
+        <foreach close=")" collection="selective" item="column" open="(" separator=",">
+          #{record.${column.javaProperty},jdbcType=${column.jdbcType}}
+        </foreach>
+      </when>
+      <otherwise>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="record.id != null">
+            #{record.id,jdbcType=VARCHAR},
+          </if>
+          <if test="record.applyDate != null">
+            #{record.applyDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.verifyDate != null">
+            #{record.verifyDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.applyId != null">
+            #{record.applyId,jdbcType=VARCHAR},
+          </if>
+          <if test="record.approveStatus != null">
+            #{record.approveStatus,jdbcType=INTEGER},
+          </if>
+          <if test="record.bankName != null">
+            #{record.bankName,jdbcType=VARCHAR},
+          </if>
+          <if test="record.cMobile != null">
+            #{record.cMobile,jdbcType=VARCHAR},
+          </if>
+          <if test="record.cName != null">
+            #{record.cName,jdbcType=VARCHAR},
+          </if>
+          <if test="record.channelCode != null">
+            #{record.channelCode,jdbcType=VARCHAR},
+          </if>
+          <if test="record.customFlag != null">
+            #{record.customFlag,jdbcType=INTEGER},
+          </if>
+          <if test="record.createTime != null">
+            #{record.createTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.updateTime != null">
+            #{record.updateTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.createBy != null">
+            #{record.createBy,jdbcType=VARCHAR},
+          </if>
+          <if test="record.updateBy != null">
+            #{record.updateBy,jdbcType=VARCHAR},
+          </if>
+        </trim>
+      </otherwise>
+    </choose>
+  </insert>
+  <select id="countByExample" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBankExample" resultType="java.lang.Long">
+    select count(*) from tab_data_bank
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tab_data_bank
+    SET
+    <choose>
+      <when test="selective != null and selective.length > 0">
+        <foreach collection="selective" item="column" separator=",">
+          ${column.escapedColumnName} = #{record.${column.javaProperty},jdbcType=${column.jdbcType}}
+        </foreach>
+      </when>
+      <otherwise>
+        <trim suffixOverrides=",">
+          <if test="record.id != null">
+            id = #{record.id,jdbcType=VARCHAR},
+          </if>
+          <if test="record.applyDate != null">
+            apply_date = #{record.applyDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.verifyDate != null">
+            verify_date = #{record.verifyDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.applyId != null">
+            apply_id = #{record.applyId,jdbcType=VARCHAR},
+          </if>
+          <if test="record.approveStatus != null">
+            approve_status = #{record.approveStatus,jdbcType=INTEGER},
+          </if>
+          <if test="record.bankName != null">
+            bank_name = #{record.bankName,jdbcType=VARCHAR},
+          </if>
+          <if test="record.cMobile != null">
+            c_mobile = #{record.cMobile,jdbcType=VARCHAR},
+          </if>
+          <if test="record.cName != null">
+            c_name = #{record.cName,jdbcType=VARCHAR},
+          </if>
+          <if test="record.channelCode != null">
+            channel_code = #{record.channelCode,jdbcType=VARCHAR},
+          </if>
+          <if test="record.customFlag != null">
+            custom_flag = #{record.customFlag,jdbcType=INTEGER},
+          </if>
+          <if test="record.createTime != null">
+            create_time = #{record.createTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.updateTime != null">
+            update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.createBy != null">
+            create_by = #{record.createBy,jdbcType=VARCHAR},
+          </if>
+          <if test="record.updateBy != null">
+            update_by = #{record.updateBy,jdbcType=VARCHAR},
+          </if>
+        </trim>
+      </otherwise>
+    </choose>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tab_data_bank
+    set id = #{record.id,jdbcType=VARCHAR},
+      apply_date = #{record.applyDate,jdbcType=TIMESTAMP},
+      verify_date = #{record.verifyDate,jdbcType=TIMESTAMP},
+      apply_id = #{record.applyId,jdbcType=VARCHAR},
+      approve_status = #{record.approveStatus,jdbcType=INTEGER},
+      bank_name = #{record.bankName,jdbcType=VARCHAR},
+      c_mobile = #{record.cMobile,jdbcType=VARCHAR},
+      c_name = #{record.cName,jdbcType=VARCHAR},
+      channel_code = #{record.channelCode,jdbcType=VARCHAR},
+      custom_flag = #{record.customFlag,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      update_by = #{record.updateBy,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="map">
+    update tab_data_bank
+    SET
+    <choose>
+      <when test="selective != null and selective.length > 0">
+        <foreach collection="selective" item="column" separator=",">
+          ${column.escapedColumnName} = #{record.${column.javaProperty},jdbcType=${column.jdbcType}}
+        </foreach>
+      </when>
+      <otherwise>
+        <trim suffixOverrides=",">
+          <if test="record.applyDate != null">
+            apply_date = #{record.applyDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.verifyDate != null">
+            verify_date = #{record.verifyDate,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.applyId != null">
+            apply_id = #{record.applyId,jdbcType=VARCHAR},
+          </if>
+          <if test="record.approveStatus != null">
+            approve_status = #{record.approveStatus,jdbcType=INTEGER},
+          </if>
+          <if test="record.bankName != null">
+            bank_name = #{record.bankName,jdbcType=VARCHAR},
+          </if>
+          <if test="record.cMobile != null">
+            c_mobile = #{record.cMobile,jdbcType=VARCHAR},
+          </if>
+          <if test="record.cName != null">
+            c_name = #{record.cName,jdbcType=VARCHAR},
+          </if>
+          <if test="record.channelCode != null">
+            channel_code = #{record.channelCode,jdbcType=VARCHAR},
+          </if>
+          <if test="record.customFlag != null">
+            custom_flag = #{record.customFlag,jdbcType=INTEGER},
+          </if>
+          <if test="record.createTime != null">
+            create_time = #{record.createTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.updateTime != null">
+            update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.createBy != null">
+            create_by = #{record.createBy,jdbcType=VARCHAR},
+          </if>
+          <if test="record.updateBy != null">
+            update_by = #{record.updateBy,jdbcType=VARCHAR},
+          </if>
+        </trim>
+      </otherwise>
+    </choose>
+    where id = #{record.id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBank">
+    update tab_data_bank
+    set apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      verify_date = #{verifyDate,jdbcType=TIMESTAMP},
+      apply_id = #{applyId,jdbcType=VARCHAR},
+      approve_status = #{approveStatus,jdbcType=INTEGER},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      c_mobile = #{cMobile,jdbcType=VARCHAR},
+      c_name = #{cName,jdbcType=VARCHAR},
+      channel_code = #{channelCode,jdbcType=VARCHAR},
+      custom_flag = #{customFlag,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectOneByExample" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBankExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tab_data_bank
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 1
+  </select>
+  <insert id="batchInsert" parameterType="map">
+    insert into tab_data_bank
+    (id, apply_date, verify_date, apply_id, approve_status, bank_name, c_mobile, c_name, 
+      channel_code, custom_flag, create_time, update_time, create_by, update_by)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=VARCHAR}, #{item.applyDate,jdbcType=TIMESTAMP}, #{item.verifyDate,jdbcType=TIMESTAMP}, 
+        #{item.applyId,jdbcType=VARCHAR}, #{item.approveStatus,jdbcType=INTEGER}, #{item.bankName,jdbcType=VARCHAR}, 
+        #{item.cMobile,jdbcType=VARCHAR}, #{item.cName,jdbcType=VARCHAR}, #{item.channelCode,jdbcType=VARCHAR}, 
+        #{item.customFlag,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" parameterType="map">
+    insert into tab_data_bank (
+    <foreach collection="selective" item="column" separator=",">
+      ${column.escapedColumnName}
+    </foreach>
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      <foreach collection="selective" item="column" separator=",">
+        <if test="'id'.toString() == column.value">
+          #{item.id,jdbcType=VARCHAR}
+        </if>
+        <if test="'apply_date'.toString() == column.value">
+          #{item.applyDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'verify_date'.toString() == column.value">
+          #{item.verifyDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'apply_id'.toString() == column.value">
+          #{item.applyId,jdbcType=VARCHAR}
+        </if>
+        <if test="'approve_status'.toString() == column.value">
+          #{item.approveStatus,jdbcType=INTEGER}
+        </if>
+        <if test="'bank_name'.toString() == column.value">
+          #{item.bankName,jdbcType=VARCHAR}
+        </if>
+        <if test="'c_mobile'.toString() == column.value">
+          #{item.cMobile,jdbcType=VARCHAR}
+        </if>
+        <if test="'c_name'.toString() == column.value">
+          #{item.cName,jdbcType=VARCHAR}
+        </if>
+        <if test="'channel_code'.toString() == column.value">
+          #{item.channelCode,jdbcType=VARCHAR}
+        </if>
+        <if test="'custom_flag'.toString() == column.value">
+          #{item.customFlag,jdbcType=INTEGER}
+        </if>
+        <if test="'create_time'.toString() == column.value">
+          #{item.createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'update_time'.toString() == column.value">
+          #{item.updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'create_by'.toString() == column.value">
+          #{item.createBy,jdbcType=VARCHAR}
+        </if>
+        <if test="'update_by'.toString() == column.value">
+          #{item.updateBy,jdbcType=VARCHAR}
+        </if>
+      </foreach>
+      )
+    </foreach>
+  </insert>
+</mapper>

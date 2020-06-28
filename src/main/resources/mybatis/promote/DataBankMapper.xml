@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.dataBank.mapper.DataBankMapper">
+    
+    <resultMap type="DataBank" id="DataBankResult">
+        <result property="id"    column="id"    />
+        <result property="applyDate"    column="apply_date"    />
+        <result property="verifyDate"    column="verify_date"    />
+        <result property="applyId"    column="apply_id"    />
+        <result property="approveStatus"    column="approve_status"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="cMobile"    column="c_mobile"    />
+        <result property="cName"    column="c_name"    />
+        <result property="channelCode"    column="channel_code"    />
+        <result property="customFlag"    column="custom_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectDataBankVo">
+        select id, apply_date, verify_date, apply_id, approve_status, bank_name, c_mobile, c_name, channel_code, custom_flag, create_time, update_time, create_by, update_by from tab_data_bank
+    </sql>
+
+    <select id="selectDataBankList" parameterType="DataBank" resultMap="DataBankResult">
+        <include refid="selectDataBankVo"/>
+        <where>  
+            <if test="applyDate != null "> and apply_date = #{applyDate}</if>
+            <if test="verifyDate != null "> and verify_date = #{verifyDate}</if>
+            <if test="applyId != null  and applyId != ''"> and apply_id = #{applyId}</if>
+            <if test="approveStatus != null "> and approve_status = #{approveStatus}</if>
+            <if test="bankName != null  and bankName != ''"> and bank_name like concat('%', #{bankName}, '%')</if>
+            <if test="cMobile != null  and cMobile != ''"> and c_mobile = #{cMobile}</if>
+            <if test="cName != null  and cName != ''"> and c_name like concat('%', #{cName}, '%')</if>
+            <if test="channelCode != null  and channelCode != ''"> and channel_code = #{channelCode}</if>
+            <if test="customFlag != null "> and custom_flag = #{customFlag}</if>
+        </where>
+    </select>
+    
+    <select id="selectDataBankById" parameterType="String" resultMap="DataBankResult">
+        <include refid="selectDataBankVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDataBank" parameterType="DataBank">
+        insert into tab_data_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="applyDate != null ">apply_date,</if>
+            <if test="verifyDate != null ">verify_date,</if>
+            <if test="applyId != null  and applyId != ''">apply_id,</if>
+            <if test="approveStatus != null ">approve_status,</if>
+            <if test="bankName != null  and bankName != ''">bank_name,</if>
+            <if test="cMobile != null  and cMobile != ''">c_mobile,</if>
+            <if test="cName != null  and cName != ''">c_name,</if>
+            <if test="channelCode != null  and channelCode != ''">channel_code,</if>
+            <if test="customFlag != null ">custom_flag,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="applyDate != null ">#{applyDate},</if>
+            <if test="verifyDate != null ">#{verifyDate},</if>
+            <if test="applyId != null  and applyId != ''">#{applyId},</if>
+            <if test="approveStatus != null ">#{approveStatus},</if>
+            <if test="bankName != null  and bankName != ''">#{bankName},</if>
+            <if test="cMobile != null  and cMobile != ''">#{cMobile},</if>
+            <if test="cName != null  and cName != ''">#{cName},</if>
+            <if test="channelCode != null  and channelCode != ''">#{channelCode},</if>
+            <if test="customFlag != null ">#{customFlag},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDataBank" parameterType="DataBank">
+        update tab_data_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyDate != null ">apply_date = #{applyDate},</if>
+            <if test="verifyDate != null ">verify_date = #{verifyDate},</if>
+            <if test="applyId != null  and applyId != ''">apply_id = #{applyId},</if>
+            <if test="approveStatus != null ">approve_status = #{approveStatus},</if>
+            <if test="bankName != null  and bankName != ''">bank_name = #{bankName},</if>
+            <if test="cMobile != null  and cMobile != ''">c_mobile = #{cMobile},</if>
+            <if test="cName != null  and cName != ''">c_name = #{cName},</if>
+            <if test="channelCode != null  and channelCode != ''">channel_code = #{channelCode},</if>
+            <if test="customFlag != null ">custom_flag = #{customFlag},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDataBankById" parameterType="String">
+        delete from tab_data_bank where id = #{id}
+    </delete>
+
+    <delete id="deleteDataBankByIds" parameterType="String">
+        delete from tab_data_bank where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

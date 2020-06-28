@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.dataJd.mapper.DataJdMapper">
+    
+    <resultMap type="DataJd" id="DataJdResult">
+        <result property="id"    column="id"    />
+        <result property="recordTime"    column="record_time"    />
+        <result property="taskInnerId"    column="task_inner_id"    />
+        <result property="taskUrl"    column="task_url"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="orderName"    column="order_name"    />
+        <result property="channelFirst"    column="channel_first"    />
+        <result property="channelBelowSource"    column="channel_below_source"    />
+        <result property="checkStatus"    column="check_status"    />
+        <result property="checkReason"    column="check_reason"    />
+        <result property="joinJdPin"    column="join_jd_pin"    />
+        <result property="joinLink"    column="join_link"    />
+        <result property="joinTime"    column="join_time"    />
+        <result property="joinOrder"    column="join_order"    />
+        <result property="openJdCreditPin"    column="open_jd_credit_pin"    />
+        <result property="openJdCreditUrl"    column="open_jd_credit_url"    />
+        <result property="openJdCreditTime"    column="open_jd_credit_time"    />
+        <result property="openJdCreditType"    column="open_jd_credit_type"    />
+        <result property="jdCreditFirstOrderNo"    column="jd_credit_first_order_no"    />
+        <result property="jdCreditFirstOrderPin"    column="jd_credit_first_order_pin"    />
+        <result property="jdCreditFirstOrderTime"    column="jd_credit_first_order_time"    />
+        <result property="jdCreditFirstOrderUrl"    column="jd_credit_first_order_url"    />
+        <result property="bankAndOrderNo"    column="bank_and_order_no"    />
+        <result property="bankAndPin"    column="bank_and_pin"    />
+        <result property="bankAndIncomeMoney"    column="bank_and_income_money"    />
+        <result property="bankAndIncomeTime"    column="bank_and_income_time"    />
+        <result property="bankAndPromoteUrl"    column="bank_and_promote_url"    />
+        <result property="joinedFirstOrderWithJdCreditTimeDifference"    column="joined_first_order_with_jd_credit_time_difference"    />
+        <result property="joinedFirstOrderWithBankIncomeTimeDifference"    column="joined_first_order_with_bank_income_time_difference"    />
+        <result property="jdCreditOpenOneDay"    column="jd_credit_open_one_day"    />
+        <result property="newbiePackageOperTime"    column="newbie_package_oper_time"    />
+        <result property="newbiePackagePin"    column="newbie_package_pin"    />
+        <result property="newbiePackageUrlId"    column="newbie_package_url_id"    />
+        <result property="newbiePackageResult"    column="newbie_package_result"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="updateUser"    column="update_user"    />
+    </resultMap>
+
+    <sql id="selectDataJdVo">
+        select id, record_time, task_inner_id, task_url, order_no, order_name, channel_first, channel_below_source, check_status, check_reason, join_jd_pin, join_link, join_time, join_order, open_jd_credit_pin, open_jd_credit_url, open_jd_credit_time, open_jd_credit_type, jd_credit_first_order_no, jd_credit_first_order_pin, jd_credit_first_order_time, jd_credit_first_order_url, bank_and_order_no, bank_and_pin, bank_and_income_money, bank_and_income_time, bank_and_promote_url, joined_first_order_with_jd_credit_time_difference, joined_first_order_with_bank_income_time_difference, jd_credit_open_one_day, newbie_package_oper_time, newbie_package_pin, newbie_package_url_id, newbie_package_result, create_time, update_time, create_user, update_user from tab_data_jd
+    </sql>
+
+    <select id="selectDataJdList" parameterType="DataJd" resultMap="DataJdResult">
+        <include refid="selectDataJdVo"/>
+        <where>  
+            <if test="recordTime != null "> and record_time = #{recordTime}</if>
+            <if test="taskInnerId != null  and taskInnerId != ''"> and task_inner_id = #{taskInnerId}</if>
+            <if test="taskUrl != null  and taskUrl != ''"> and task_url = #{taskUrl}</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="orderName != null  and orderName != ''"> and order_name like concat('%', #{orderName}, '%')</if>
+            <if test="channelFirst != null  and channelFirst != ''"> and channel_first = #{channelFirst}</if>
+            <if test="channelBelowSource != null  and channelBelowSource != ''"> and channel_below_source = #{channelBelowSource}</if>
+            <if test="checkStatus != null "> and check_status = #{checkStatus}</if>
+            <if test="checkReason != null  and checkReason != ''"> and check_reason = #{checkReason}</if>
+            <if test="joinJdPin != null  and joinJdPin != ''"> and join_jd_pin = #{joinJdPin}</if>
+            <if test="joinLink != null  and joinLink != ''"> and join_link = #{joinLink}</if>
+            <if test="joinTime != null "> and join_time = #{joinTime}</if>
+            <if test="joinOrder != null  and joinOrder != ''"> and join_order = #{joinOrder}</if>
+            <if test="openJdCreditPin != null  and openJdCreditPin != ''"> and open_jd_credit_pin = #{openJdCreditPin}</if>
+            <if test="openJdCreditUrl != null  and openJdCreditUrl != ''"> and open_jd_credit_url = #{openJdCreditUrl}</if>
+            <if test="openJdCreditTime != null "> and open_jd_credit_time = #{openJdCreditTime}</if>
+            <if test="openJdCreditType != null "> and open_jd_credit_type = #{openJdCreditType}</if>
+            <if test="jdCreditFirstOrderNo != null  and jdCreditFirstOrderNo != ''"> and jd_credit_first_order_no = #{jdCreditFirstOrderNo}</if>
+            <if test="jdCreditFirstOrderPin != null  and jdCreditFirstOrderPin != ''"> and jd_credit_first_order_pin = #{jdCreditFirstOrderPin}</if>
+            <if test="jdCreditFirstOrderTime != null "> and jd_credit_first_order_time = #{jdCreditFirstOrderTime}</if>
+            <if test="jdCreditFirstOrderUrl != null  and jdCreditFirstOrderUrl != ''"> and jd_credit_first_order_url = #{jdCreditFirstOrderUrl}</if>
+            <if test="bankAndOrderNo != null  and bankAndOrderNo != ''"> and bank_and_order_no = #{bankAndOrderNo}</if>
+            <if test="bankAndPin != null  and bankAndPin != ''"> and bank_and_pin = #{bankAndPin}</if>
+            <if test="bankAndIncomeMoney != null  and bankAndIncomeMoney != ''"> and bank_and_income_money = #{bankAndIncomeMoney}</if>
+            <if test="bankAndIncomeTime != null "> and bank_and_income_time = #{bankAndIncomeTime}</if>
+            <if test="bankAndPromoteUrl != null  and bankAndPromoteUrl != ''"> and bank_and_promote_url = #{bankAndPromoteUrl}</if>
+            <if test="joinedFirstOrderWithJdCreditTimeDifference != null  and joinedFirstOrderWithJdCreditTimeDifference != ''"> and joined_first_order_with_jd_credit_time_difference = #{joinedFirstOrderWithJdCreditTimeDifference}</if>
+            <if test="joinedFirstOrderWithBankIncomeTimeDifference != null  and joinedFirstOrderWithBankIncomeTimeDifference != ''"> and joined_first_order_with_bank_income_time_difference = #{joinedFirstOrderWithBankIncomeTimeDifference}</if>
+            <if test="jdCreditOpenOneDay != null "> and jd_credit_open_one_day = #{jdCreditOpenOneDay}</if>
+            <if test="newbiePackageOperTime != null "> and newbie_package_oper_time = #{newbiePackageOperTime}</if>
+            <if test="newbiePackagePin != null  and newbiePackagePin != ''"> and newbie_package_pin = #{newbiePackagePin}</if>
+            <if test="newbiePackageUrlId != null  and newbiePackageUrlId != ''"> and newbie_package_url_id = #{newbiePackageUrlId}</if>
+            <if test="newbiePackageResult != null "> and newbie_package_result = #{newbiePackageResult}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+            <if test="updateUser != null  and updateUser != ''"> and update_user = #{updateUser}</if>
+        </where>
+    </select>
+    
+    <select id="selectDataJdById" parameterType="String" resultMap="DataJdResult">
+        <include refid="selectDataJdVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDataJd" parameterType="DataJd">
+        insert into tab_data_jd
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="recordTime != null ">record_time,</if>
+            <if test="taskInnerId != null  and taskInnerId != ''">task_inner_id,</if>
+            <if test="taskUrl != null  and taskUrl != ''">task_url,</if>
+            <if test="orderNo != null  and orderNo != ''">order_no,</if>
+            <if test="orderName != null  and orderName != ''">order_name,</if>
+            <if test="channelFirst != null  and channelFirst != ''">channel_first,</if>
+            <if test="channelBelowSource != null  and channelBelowSource != ''">channel_below_source,</if>
+            <if test="checkStatus != null ">check_status,</if>
+            <if test="checkReason != null  and checkReason != ''">check_reason,</if>
+            <if test="joinJdPin != null  and joinJdPin != ''">join_jd_pin,</if>
+            <if test="joinLink != null  and joinLink != ''">join_link,</if>
+            <if test="joinTime != null ">join_time,</if>
+            <if test="joinOrder != null  and joinOrder != ''">join_order,</if>
+            <if test="openJdCreditPin != null  and openJdCreditPin != ''">open_jd_credit_pin,</if>
+            <if test="openJdCreditUrl != null  and openJdCreditUrl != ''">open_jd_credit_url,</if>
+            <if test="openJdCreditTime != null ">open_jd_credit_time,</if>
+            <if test="openJdCreditType != null ">open_jd_credit_type,</if>
+            <if test="jdCreditFirstOrderNo != null  and jdCreditFirstOrderNo != ''">jd_credit_first_order_no,</if>
+            <if test="jdCreditFirstOrderPin != null  and jdCreditFirstOrderPin != ''">jd_credit_first_order_pin,</if>
+            <if test="jdCreditFirstOrderTime != null ">jd_credit_first_order_time,</if>
+            <if test="jdCreditFirstOrderUrl != null  and jdCreditFirstOrderUrl != ''">jd_credit_first_order_url,</if>
+            <if test="bankAndOrderNo != null  and bankAndOrderNo != ''">bank_and_order_no,</if>
+            <if test="bankAndPin != null  and bankAndPin != ''">bank_and_pin,</if>
+            <if test="bankAndIncomeMoney != null  and bankAndIncomeMoney != ''">bank_and_income_money,</if>
+            <if test="bankAndIncomeTime != null ">bank_and_income_time,</if>
+            <if test="bankAndPromoteUrl != null  and bankAndPromoteUrl != ''">bank_and_promote_url,</if>
+            <if test="joinedFirstOrderWithJdCreditTimeDifference != null  and joinedFirstOrderWithJdCreditTimeDifference != ''">joined_first_order_with_jd_credit_time_difference,</if>
+            <if test="joinedFirstOrderWithBankIncomeTimeDifference != null  and joinedFirstOrderWithBankIncomeTimeDifference != ''">joined_first_order_with_bank_income_time_difference,</if>
+            <if test="jdCreditOpenOneDay != null ">jd_credit_open_one_day,</if>
+            <if test="newbiePackageOperTime != null ">newbie_package_oper_time,</if>
+            <if test="newbiePackagePin != null  and newbiePackagePin != ''">newbie_package_pin,</if>
+            <if test="newbiePackageUrlId != null  and newbiePackageUrlId != ''">newbie_package_url_id,</if>
+            <if test="newbiePackageResult != null ">newbie_package_result,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createUser != null  and createUser != ''">create_user,</if>
+            <if test="updateUser != null  and updateUser != ''">update_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="recordTime != null ">#{recordTime},</if>
+            <if test="taskInnerId != null  and taskInnerId != ''">#{taskInnerId},</if>
+            <if test="taskUrl != null  and taskUrl != ''">#{taskUrl},</if>
+            <if test="orderNo != null  and orderNo != ''">#{orderNo},</if>
+            <if test="orderName != null  and orderName != ''">#{orderName},</if>
+            <if test="channelFirst != null  and channelFirst != ''">#{channelFirst},</if>
+            <if test="channelBelowSource != null  and channelBelowSource != ''">#{channelBelowSource},</if>
+            <if test="checkStatus != null ">#{checkStatus},</if>
+            <if test="checkReason != null  and checkReason != ''">#{checkReason},</if>
+            <if test="joinJdPin != null  and joinJdPin != ''">#{joinJdPin},</if>
+            <if test="joinLink != null  and joinLink != ''">#{joinLink},</if>
+            <if test="joinTime != null ">#{joinTime},</if>
+            <if test="joinOrder != null  and joinOrder != ''">#{joinOrder},</if>
+            <if test="openJdCreditPin != null  and openJdCreditPin != ''">#{openJdCreditPin},</if>
+            <if test="openJdCreditUrl != null  and openJdCreditUrl != ''">#{openJdCreditUrl},</if>
+            <if test="openJdCreditTime != null ">#{openJdCreditTime},</if>
+            <if test="openJdCreditType != null ">#{openJdCreditType},</if>
+            <if test="jdCreditFirstOrderNo != null  and jdCreditFirstOrderNo != ''">#{jdCreditFirstOrderNo},</if>
+            <if test="jdCreditFirstOrderPin != null  and jdCreditFirstOrderPin != ''">#{jdCreditFirstOrderPin},</if>
+            <if test="jdCreditFirstOrderTime != null ">#{jdCreditFirstOrderTime},</if>
+            <if test="jdCreditFirstOrderUrl != null  and jdCreditFirstOrderUrl != ''">#{jdCreditFirstOrderUrl},</if>
+            <if test="bankAndOrderNo != null  and bankAndOrderNo != ''">#{bankAndOrderNo},</if>
+            <if test="bankAndPin != null  and bankAndPin != ''">#{bankAndPin},</if>
+            <if test="bankAndIncomeMoney != null  and bankAndIncomeMoney != ''">#{bankAndIncomeMoney},</if>
+            <if test="bankAndIncomeTime != null ">#{bankAndIncomeTime},</if>
+            <if test="bankAndPromoteUrl != null  and bankAndPromoteUrl != ''">#{bankAndPromoteUrl},</if>
+            <if test="joinedFirstOrderWithJdCreditTimeDifference != null  and joinedFirstOrderWithJdCreditTimeDifference != ''">#{joinedFirstOrderWithJdCreditTimeDifference},</if>
+            <if test="joinedFirstOrderWithBankIncomeTimeDifference != null  and joinedFirstOrderWithBankIncomeTimeDifference != ''">#{joinedFirstOrderWithBankIncomeTimeDifference},</if>
+            <if test="jdCreditOpenOneDay != null ">#{jdCreditOpenOneDay},</if>
+            <if test="newbiePackageOperTime != null ">#{newbiePackageOperTime},</if>
+            <if test="newbiePackagePin != null  and newbiePackagePin != ''">#{newbiePackagePin},</if>
+            <if test="newbiePackageUrlId != null  and newbiePackageUrlId != ''">#{newbiePackageUrlId},</if>
+            <if test="newbiePackageResult != null ">#{newbiePackageResult},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createUser != null  and createUser != ''">#{createUser},</if>
+            <if test="updateUser != null  and updateUser != ''">#{updateUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDataJd" parameterType="DataJd">
+        update tab_data_jd
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordTime != null ">record_time = #{recordTime},</if>
+            <if test="taskInnerId != null  and taskInnerId != ''">task_inner_id = #{taskInnerId},</if>
+            <if test="taskUrl != null  and taskUrl != ''">task_url = #{taskUrl},</if>
+            <if test="orderNo != null  and orderNo != ''">order_no = #{orderNo},</if>
+            <if test="orderName != null  and orderName != ''">order_name = #{orderName},</if>
+            <if test="channelFirst != null  and channelFirst != ''">channel_first = #{channelFirst},</if>
+            <if test="channelBelowSource != null  and channelBelowSource != ''">channel_below_source = #{channelBelowSource},</if>
+            <if test="checkStatus != null ">check_status = #{checkStatus},</if>
+            <if test="checkReason != null  and checkReason != ''">check_reason = #{checkReason},</if>
+            <if test="joinJdPin != null  and joinJdPin != ''">join_jd_pin = #{joinJdPin},</if>
+            <if test="joinLink != null  and joinLink != ''">join_link = #{joinLink},</if>
+            <if test="joinTime != null ">join_time = #{joinTime},</if>
+            <if test="joinOrder != null  and joinOrder != ''">join_order = #{joinOrder},</if>
+            <if test="openJdCreditPin != null  and openJdCreditPin != ''">open_jd_credit_pin = #{openJdCreditPin},</if>
+            <if test="openJdCreditUrl != null  and openJdCreditUrl != ''">open_jd_credit_url = #{openJdCreditUrl},</if>
+            <if test="openJdCreditTime != null ">open_jd_credit_time = #{openJdCreditTime},</if>
+            <if test="openJdCreditType != null ">open_jd_credit_type = #{openJdCreditType},</if>
+            <if test="jdCreditFirstOrderNo != null  and jdCreditFirstOrderNo != ''">jd_credit_first_order_no = #{jdCreditFirstOrderNo},</if>
+            <if test="jdCreditFirstOrderPin != null  and jdCreditFirstOrderPin != ''">jd_credit_first_order_pin = #{jdCreditFirstOrderPin},</if>
+            <if test="jdCreditFirstOrderTime != null ">jd_credit_first_order_time = #{jdCreditFirstOrderTime},</if>
+            <if test="jdCreditFirstOrderUrl != null  and jdCreditFirstOrderUrl != ''">jd_credit_first_order_url = #{jdCreditFirstOrderUrl},</if>
+            <if test="bankAndOrderNo != null  and bankAndOrderNo != ''">bank_and_order_no = #{bankAndOrderNo},</if>
+            <if test="bankAndPin != null  and bankAndPin != ''">bank_and_pin = #{bankAndPin},</if>
+            <if test="bankAndIncomeMoney != null  and bankAndIncomeMoney != ''">bank_and_income_money = #{bankAndIncomeMoney},</if>
+            <if test="bankAndIncomeTime != null ">bank_and_income_time = #{bankAndIncomeTime},</if>
+            <if test="bankAndPromoteUrl != null  and bankAndPromoteUrl != ''">bank_and_promote_url = #{bankAndPromoteUrl},</if>
+            <if test="joinedFirstOrderWithJdCreditTimeDifference != null  and joinedFirstOrderWithJdCreditTimeDifference != ''">joined_first_order_with_jd_credit_time_difference = #{joinedFirstOrderWithJdCreditTimeDifference},</if>
+            <if test="joinedFirstOrderWithBankIncomeTimeDifference != null  and joinedFirstOrderWithBankIncomeTimeDifference != ''">joined_first_order_with_bank_income_time_difference = #{joinedFirstOrderWithBankIncomeTimeDifference},</if>
+            <if test="jdCreditOpenOneDay != null ">jd_credit_open_one_day = #{jdCreditOpenOneDay},</if>
+            <if test="newbiePackageOperTime != null ">newbie_package_oper_time = #{newbiePackageOperTime},</if>
+            <if test="newbiePackagePin != null  and newbiePackagePin != ''">newbie_package_pin = #{newbiePackagePin},</if>
+            <if test="newbiePackageUrlId != null  and newbiePackageUrlId != ''">newbie_package_url_id = #{newbiePackageUrlId},</if>
+            <if test="newbiePackageResult != null ">newbie_package_result = #{newbiePackageResult},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createUser != null  and createUser != ''">create_user = #{createUser},</if>
+            <if test="updateUser != null  and updateUser != ''">update_user = #{updateUser},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDataJdById" parameterType="String">
+        delete from tab_data_jd where id = #{id}
+    </delete>
+
+    <delete id="deleteDataJdByIds" parameterType="String">
+        delete from tab_data_jd where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
