@@ -1,6 +1,9 @@
 package com.autuan.project.promote.dataBank.controller;
 
 import java.util.List;
+
+import com.autuan.project.promote.dataBank.domain.DataBank;
+import com.autuan.project.promote.dataBank.service.IDataBankService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.autuan.framework.aspectj.lang.annotation.Log;
 import com.autuan.framework.aspectj.lang.enums.BusinessType;
-import com.autuan.project.promote.dataBank.domain.DataBank;
-import com.autuan.project.promote.dataBank.service.IDataBankService;
 import com.autuan.framework.web.controller.BaseController;
 import com.autuan.framework.web.domain.AjaxResult;
 import com.autuan.common.utils.poi.ExcelUtil;
@@ -23,7 +24,7 @@ import com.autuan.framework.web.page.TableDataInfo;
  * 数据导入-开卡订单Controller
  * 
  * @author autuan
- * @date 2020-06-25
+ * @date 2020-06-28
  */
 @Controller
 @RequestMapping("/promote/dataBank")
@@ -36,7 +37,7 @@ public class DataBankController extends BaseController
 
     @RequiresPermissions("promote:dataBank:view")
     @GetMapping()
-    public String dataBank()
+    public String bank()
     {
         return prefix + "/dataBank";
     }
@@ -64,7 +65,7 @@ public class DataBankController extends BaseController
     {
         List<DataBank> list = dataBankService.selectDataBankList(dataBank);
         ExcelUtil<DataBank> util = new ExcelUtil<DataBank>(DataBank.class);
-        return util.exportExcel(list, "dataBank");
+        return util.exportExcel(list, "bank");
     }
 
     /**

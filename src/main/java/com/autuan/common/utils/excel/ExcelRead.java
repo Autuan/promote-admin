@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ExcelRead {
@@ -20,7 +21,7 @@ public class ExcelRead {
     public ExcelRead() {
     }
 
-    public static List<String> exportListFromExcel(InputStream is, String extensionName, int sheetNum) throws IOException {
+    public static List<List<Object>> exportListFromExcel(InputStream is, String extensionName, int sheetNum) throws IOException {
         Workbook workbook = null;
         System.out.println("extensionName=========={}" + extensionName);
         if (extensionName.toLowerCase().equals("xls")) {
@@ -34,18 +35,20 @@ public class ExcelRead {
         return exportListFromExcel((Workbook)workbook, sheetNum);
     }
 
-    public static List<String> exportListFromExcel(File file, int sheetNum) throws IOException {
+    public static List<List<Object>> exportListFromExcel(File file, int sheetNum) throws IOException {
         return exportListFromExcel(new FileInputStream(file), FilenameUtils.getExtension(file.getName()), sheetNum);
     }
 
-    private static List<String> exportListFromExcel(Workbook workbook, int sheetNum) {
+    private static List<List<Object>> exportListFromExcel(Workbook workbook, int sheetNum) {
         Sheet sheet = workbook.getSheetAt(sheetNum);
         FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-        List<String> list = new ArrayList();
+        List<List<Object>> list = new ArrayList();
+//        List<String> list = new ArrayList();
         int minRowIx = sheet.getFirstRowNum();
         int maxRowIx = sheet.getLastRowNum();
 
         for(int rowIx = minRowIx; rowIx <= maxRowIx; ++rowIx) {
+            List<Object> rowList = new ArrayList<>();
             Row row = sheet.getRow(rowIx);
             StringBuilder sb = new StringBuilder();
             short minColIx = row.getFirstCellNum();
@@ -56,30 +59,38 @@ public class ExcelRead {
                 CellValue cellValue = evaluator.evaluate(cell);
                 if (cellValue != null) {
                     switch(cellValue.getCellType()) {
-                        case 0:
+                        case NUMERIC: {
                             if (DateUtil.isCellDateFormatted(cell)) {
-                                System.out.println("==>" + cell.getDateCellValue());
+                                rowList.add(cell.getLocalDateTimeCellValue());
                                 sb.append("|" + cell.getDateCellValue());
                             } else {
+                                rowList.add(cellValue.getNumberValue());
                                 sb.append("|" + (long)cellValue.getNumberValue());
                             }
                             break;
-                        case 1:
-                            sb.append("|" + cellValue.getStringValue());
-                        case 2:
-                        case 3:
-                        case 5:
-                        default:
-                            break;
-                        case 4:
+                        }
+                        case STRING: {
+                            rowList.add(cellValue.getStringValue());
+                            sb.append("|" + cellValue.getStringValue());break;
+                        }
+                        case BOOLEAN: {
+                            rowList.add(cellValue.getBooleanValue());
                             sb.append("|" + cellValue.getBooleanValue());
+                            break;
+                        }
+                        default: {
+
+                            break;
+                        }
                     }
                 }else{
+                    rowList.add(null);
                     sb.append("|");
                 }
             }
 
-            list.add(sb.toString());
+//            list.add(sb.toString());
+            list.add(rowList);
         }
 
         return list;

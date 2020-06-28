@@ -435,7 +435,7 @@
         formatterDate: function (value) {
             var arr = value;
             if (arr == null || arr == "") {
-                return "-";
+                return "";
             } else {
                 for (var i = 0; i < arr.length; i++) {
                     if (arr[i].length == 1) {

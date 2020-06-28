@@ -1,6 +1,7 @@
 package com.autuan.project.promote.dataBank.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.autuan.common.exception.BusinessException;
 import com.autuan.common.utils.security.ShiroUtils;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -32,8 +34,15 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
     private IDataBankService dataBankService;
     @Override
     public void importExcel(List<TabDataBank> list) {
+        LocalDateTime now = LocalDateTime.now();
+        String loginName = ShiroUtils.getLoginName();
+        // 添加信息
+        for(TabDataBank dataBank : list) {
+            dataBank.setCreateTime(now);
+            dataBank.setCreateBy(loginName);
+            dataBank.setId(IdUtil.simpleUUID());
+        }
         dataBankMapper.batchInsert(list);
-
     }
 
     @Override

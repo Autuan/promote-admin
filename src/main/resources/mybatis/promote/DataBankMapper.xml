@@ -19,10 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateBy"    column="update_by"    />
+        <result property="taskId"    column="task_id"    />
     </resultMap>
 
     <sql id="selectDataBankVo">
-        select id, apply_date, verify_date, apply_id, approve_status, bank_name, c_mobile, c_name, channel_code, custom_flag, create_time, update_time, create_by, update_by from tab_data_bank
+        select id, apply_date, verify_date, apply_id, approve_status, bank_name, c_mobile, c_name, channel_code, custom_flag, create_time, update_time, create_by, update_by, task_id from tab_data_bank
     </sql>
 
     <select id="selectDataBankList" parameterType="DataBank" resultMap="DataBankResult">
@@ -37,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cName != null  and cName != ''"> and c_name like concat('%', #{cName}, '%')</if>
             <if test="channelCode != null  and channelCode != ''"> and channel_code = #{channelCode}</if>
             <if test="customFlag != null "> and custom_flag = #{customFlag}</if>
+            <if test="taskId != null  and taskId != ''"> and task_id = #{taskId}</if>
         </where>
     </select>
     
@@ -62,6 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null ">update_time,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="taskId != null  and taskId != ''">task_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  and id != ''">#{id},</if>
@@ -78,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null ">#{updateTime},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
             <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="taskId != null  and taskId != ''">#{taskId},</if>
          </trim>
     </insert>
 
@@ -97,6 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="taskId != null  and taskId != ''">task_id = #{taskId},</if>
         </trim>
         where id = #{id}
     </update>

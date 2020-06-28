@@ -1,7 +1,9 @@
 package com.autuan.project.promote.dataBank.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import com.autuan.common.exception.custom.CustomRespondException;
+import com.autuan.common.utils.datetime.LocalDateTimeUtil;
 import com.autuan.common.utils.excel.ExcelRead;
 import com.autuan.common.utils.poi.ExcelUtil;
 import com.autuan.common.utils.security.ShiroUtils;
@@ -32,11 +34,13 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @className: DataBankCustomController
@@ -54,26 +58,25 @@ public class DataBankCustomController {
     @Autowired
     private IDataBankCustomService dataBankCustomService;
 
-//    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    //    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
 //    @RequiresPermissions("system:user:import")
     @PostMapping("/importData")
     @ResponseBody
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
-    {
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<DataBank> util = new ExcelUtil<DataBank>(DataBank.class);
         List<DataBank> list = util.importExcel(file.getInputStream());
         String message = dataBankCustomService.importData(list, updateSupport);
         return AjaxResult.success(message);
     }
 
-//    @RequiresPermissions("system:user:view")
+    //    @RequiresPermissions("system:user:view")
     @GetMapping("/importTemplate")
     @ResponseBody
-    public AjaxResult importTemplate()
-    {
+    public AjaxResult importTemplate() {
         ExcelUtil<DataBank> util = new ExcelUtil<DataBank>(DataBank.class);
         return util.importTemplateExcel("开卡数据");
     }
+
     /***
      * 导入excel
      * @param
@@ -85,9 +88,9 @@ public class DataBankCustomController {
      */
     @RequestMapping("/importExcel")
     @ResponseBody
-    public ReturnResult importExcel(HttpServletRequest request){
+    public AjaxResult importExcel(HttpServletRequest request) throws ParseException {
         //读取excel的结果
-        List<String> inputList = Lists.newArrayList();
+        List<List<Object>> inputList = Lists.newArrayList();
         try {
             if (ServletFileUpload.isMultipartContent(request)) {
                 ServletContext application = request.getSession().getServletContext();
@@ -114,68 +117,50 @@ public class DataBankCustomController {
                         fileTemp.delete();
                     }
                 } else {
-                    return ReturnResult.error( "请求出现错误，请稍后再试！");
+                    return AjaxResult.error("请求出现错误，请稍后再试！");
                 }
             } else {
-                return ReturnResult.error("请求出现错误，请稍后再试！");
+                return AjaxResult.error("请求出现错误，请稍后再试！");
             }
         } catch (IOException e) {
             log.error("从excel表格中批量导入品牌运营商异常===》{}", e);
-            return ReturnResult.error(e.getMessage());
+            return AjaxResult.error(e.getMessage());
         }
 
         //导入有误的条目
         List<String> errorList = Lists.newArrayList();
         //获取管理员id
-        String loginName = ShiroUtils.getLoginName();
         //对导入的集合进行处理,第一行为标题
-        if(!CollectionUtils.isEmpty(inputList)&&inputList.size()>1){
+        if (!CollectionUtils.isEmpty(inputList) && inputList.size() > 1) {
             List<TabDataBank> list = new ArrayList<>();
+            for (int i = 1; i < inputList.size(); i++) {
+                List<Object> objList = inputList.get(i);
+                if (CollectionUtil.isNotEmpty(objList)) {
+                    LocalDateTime applyDate = (LocalDateTime) objList.get(0);
+                    LocalDateTime verifyDate = (LocalDateTime) objList.get(1);
+                    String applyId = (String) objList.get(2);
+                    String approveStatusStr = (String) objList.get(3);
+                    String bankName = (String) objList.get(4);
+                    String cMobile = String.valueOf(objList.get(5));
+                    String cName = (String) objList.get(6);
+                    String channelCode = (String) objList.get(7);
+                    String customFlagStr = (String) objList.get(8);
 
-            for(int i=1;i<inputList.size();i++){
-                String model = inputList.get(i);
-                String[] info = model.split("\\|");
-                if(info.length > 0){
-                    String applyDateStr = info[1];
-//                    LocalDateTime test = new LocalDateTime(applyDateStr);
-//                    new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US).parse("Tue Jul 23 00:00:00 CST 2019");
-                    DateUtil.parse(applyDateStr)
-                    DateTimeFormatter df = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy");
-                    LocalDateTime applyDate =LocalDateTime.parse(applyDateStr,df);
-//                    String memberNo = info[1];
-//                    String memberName = info[2];
-//                    String memberMobile = info[3];
-//                    String initMoney = info[4];
-
-
-                    TabDataBank.builder()
+                    list.add(TabDataBank.builder()
                             .applyDate(applyDate)
-                            .build();
-//                    ImportCreditRoleAdminRequestModel requestModel = new ImportCreditRoleAdminRequestModel();
-//                    requestModel.setMemberNo(memberNo);
-//                    requestModel.setMemberName(memberName);
-//                    requestModel.setMemberMobile(memberMobile);
-//                    requestModel.setInitMoney(initMoney);
-//                    requestModel.setRowNum(i);
-//                    requestModel.setUserId(userId);
-
+                            .verifyDate(verifyDate)
+                            .applyId(applyId)
+                            .approveStatus(approveStatusStr.equals("通过") ? 1 : 0)
+                            .bankName(bankName)
+                            .cMobile(cMobile)
+                            .cName(cName)
+                            .channelCode(channelCode)
+                            .customFlag(customFlagStr.equals("是") ? 1 : 0)
+                            .build());
                 }
             }
-
-            try {
                 dataBankCustomService.importExcel(list);
-//                ResponseModel<BooleanResponseModel> responseModel = iMemberRoleAdminApi.importCreditInfoAdmin(requestModel);
-//
-//                if(!CommonConstant.OPERATE_SUC.equals(responseModel.getCode()) || !responseModel.getData().isValue()){
-//                    errorList.add(responseModel.getMsg());
-//                }
-            } catch (CustomRespondException e){
-                errorList.add(e.getMessage()+"，此条导入已忽略。");
-//                errorList.add("第"+(i+1)+"行："+memberNo+","+e.getMessage()+"，此条导入已忽略。");
-            }
         }
-        int size=inputList.size()-1;
-        errorList.add(0,"共 "+(size)+"条记录;成功 "+(size-errorList.size())+"条记录;失败 "+(errorList.size())+"条记录。");
-        return ReturnResult.ok(errorList);
+        return AjaxResult.success(errorList);
     }
 }

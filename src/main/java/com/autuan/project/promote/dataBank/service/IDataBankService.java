@@ -1,13 +1,14 @@
 package com.autuan.project.promote.dataBank.service;
 
 import com.autuan.project.promote.dataBank.domain.DataBank;
+
 import java.util.List;
 
 /**
  * 数据导入-开卡订单Service接口
  * 
  * @author autuan
- * @date 2020-06-25
+ * @date 2020-06-28
  */
 public interface IDataBankService 
 {
@@ -21,7 +22,7 @@ public interface IDataBankService
 
     /**
      * 查询数据导入-开卡订单列表
-     * 
+     *
      * @param dataBank 数据导入-开卡订单
      * @return 数据导入-开卡订单集合
      */

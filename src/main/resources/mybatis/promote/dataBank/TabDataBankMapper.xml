@@ -16,6 +16,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -77,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, apply_date, verify_date, apply_id, approve_status, bank_name, c_mobile, c_name, 
-    channel_code, custom_flag, create_time, update_time, create_by, update_by
+    channel_code, custom_flag, create_time, update_time, create_by, update_by, task_id
   </sql>
   <select id="selectByExample" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBankExample" resultMap="BaseResultMap">
     select
@@ -122,12 +123,14 @@
       apply_id, approve_status, bank_name, 
       c_mobile, c_name, channel_code, 
       custom_flag, create_time, update_time, 
-      create_by, update_by)
+      create_by, update_by, task_id
+      )
     values (#{id,jdbcType=VARCHAR}, #{applyDate,jdbcType=TIMESTAMP}, #{verifyDate,jdbcType=TIMESTAMP}, 
       #{applyId,jdbcType=VARCHAR}, #{approveStatus,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, 
       #{cMobile,jdbcType=VARCHAR}, #{cName,jdbcType=VARCHAR}, #{channelCode,jdbcType=VARCHAR}, 
       #{customFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR})
+      #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="map">
     insert into tab_data_bank
@@ -180,6 +183,9 @@
           </if>
           <if test="record.updateBy != null">
             update_by,
+          </if>
+          <if test="record.taskId != null">
+            task_id,
           </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
@@ -235,6 +241,9 @@
           </if>
           <if test="record.updateBy != null">
             #{record.updateBy,jdbcType=VARCHAR},
+          </if>
+          <if test="record.taskId != null">
+            #{record.taskId,jdbcType=VARCHAR},
           </if>
         </trim>
       </otherwise>
@@ -299,6 +308,9 @@
           <if test="record.updateBy != null">
             update_by = #{record.updateBy,jdbcType=VARCHAR},
           </if>
+          <if test="record.taskId != null">
+            task_id = #{record.taskId,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -321,7 +333,8 @@
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=VARCHAR},
-      update_by = #{record.updateBy,jdbcType=VARCHAR}
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      task_id = #{record.taskId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -376,6 +389,9 @@
           <if test="record.updateBy != null">
             update_by = #{record.updateBy,jdbcType=VARCHAR},
           </if>
+          <if test="record.taskId != null">
+            task_id = #{record.taskId,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -395,7 +411,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
-      update_by = #{updateBy,jdbcType=VARCHAR}
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      task_id = #{taskId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBankExample" resultMap="BaseResultMap">
@@ -413,14 +430,16 @@
   <insert id="batchInsert" parameterType="map">
     insert into tab_data_bank
     (id, apply_date, verify_date, apply_id, approve_status, bank_name, c_mobile, c_name, 
-      channel_code, custom_flag, create_time, update_time, create_by, update_by)
+      channel_code, custom_flag, create_time, update_time, create_by, update_by, task_id
+      )
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=VARCHAR}, #{item.applyDate,jdbcType=TIMESTAMP}, #{item.verifyDate,jdbcType=TIMESTAMP}, 
         #{item.applyId,jdbcType=VARCHAR}, #{item.approveStatus,jdbcType=INTEGER}, #{item.bankName,jdbcType=VARCHAR}, 
         #{item.cMobile,jdbcType=VARCHAR}, #{item.cName,jdbcType=VARCHAR}, #{item.channelCode,jdbcType=VARCHAR}, 
         #{item.customFlag,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
-        #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR})
+        #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -474,6 +493,9 @@
         </if>
         <if test="'update_by'.toString() == column.value">
           #{item.updateBy,jdbcType=VARCHAR}
+        </if>
+        <if test="'task_id'.toString() == column.value">
+          #{item.taskId,jdbcType=VARCHAR}
         </if>
       </foreach>
       )
