@@ -1,6 +1,7 @@
 package com.autuan.project.front.controller;
 
 import com.autuan.project.front.entity.ReturnResult;
+import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
@@ -31,9 +32,27 @@ public class SalesmanFrontController {
         return null==result?ReturnResult.error("账户或密码错误"): ReturnResult.ok(result);
     }
 
+    /**
+     * 修改密码
+     */
+    @RequestMapping("/updatePwd")
+    public Object updatePwd(@RequestBody TabSalesman salesman) {
+        salesmanCustomService.updatePwd(salesman);
+        return ReturnResult.ok();
+    }
+
     @RequestMapping("/register")
     public Object register(@RequestBody TabSalesman salesman) {
         boolean result = salesmanCustomService.register(salesman);
         return result? ReturnResult.ok(salesman) : ReturnResult.error("注册失败,请稍后重试!");
+    }
+
+    /**
+     * 修改密码
+     */
+    @RequestMapping("/calcuReward")
+    public ReturnResult calcuReward(@RequestBody String salesmanId) {
+        CalcuRewardRes res = salesmanCustomService.calcuReward(salesmanId);
+        return ReturnResult.ok(res);
     }
 }

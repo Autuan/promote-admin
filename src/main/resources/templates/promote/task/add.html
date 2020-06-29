@@ -121,6 +121,7 @@
                 overwriteInitial: false,
                 maxFileCount:1,
                 initialPreviewAsData: true,
+                dropZoneTitle:'拖拽文件到这里',
                 initialPreview: [],
             }).on("fileuploaded", function(event, data, previewId, index) {
                 $('#bgImg').val(data.response.url);
@@ -130,6 +131,7 @@
                 'uploadUrl': ctx + 'common/upload',
                 overwriteInitial: false,
                 maxFileCount:1,
+                dropZoneTitle:'拖拽文件到这里',
                 initialPreviewAsData: true,
                 initialPreview: [
                     // "/img/profile.jpg"
@@ -149,7 +151,7 @@
                     url:ctx+'promote/article/custom/list',
                     data:param,
                     successParse:function (data) {
-                        console.info(data)
+                        // console.info(data)
                         // return;
                         let str = '<option value="">---请选择文章---</option>';
                         for (let i=0;i<data.length;i++) {

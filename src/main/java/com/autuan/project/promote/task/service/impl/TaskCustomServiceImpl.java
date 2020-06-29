@@ -32,6 +32,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author : Autuan.Yu
@@ -136,7 +137,6 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                     .andSalesmanIdEqualTo(salesmanId)
                     .andTaskIdEqualTo(taskId);
             TabSalesmanTask link = tabSalesmanTaskMapper.selectOneByExample(tabSalesmanTaskExample);
-
             StringBuilder content = new StringBuilder("");
             for (TabParam param : paramList) {
                 if (param.getType().equals(0)) {

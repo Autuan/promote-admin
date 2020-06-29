@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * 数据导入-开卡订单对象 tab_data_bank
  * 
  * @author autuan
- * @date 2020-06-25
+ * @date 2020-06-29
  */
 
 @Data
@@ -27,7 +27,7 @@ public class DataBank extends BaseEntity
     /** id */
     private String id;
     /** 申请日期 */
-    @Excel(name = "申请日期",dateFormat="yyyy-MM-dd")
+    @Excel(name = "申请日期")
     private LocalDateTime applyDate;
     /** 审核日期 */
     @Excel(name = "审核日期")
@@ -51,9 +51,14 @@ public class DataBank extends BaseEntity
     @Excel(name = "渠道code")
     private String channelCode;
     /** custom_flag  0-否 1-是 */
-    @Excel(name = "custom_flag", combo="否,是")
+    @Excel(name = "custom_flag",combo="否,是")
     private Integer customFlag;
     /** 所属任务ID */
     @Excel(name = "所属任务ID")
     private String taskId;
+    /** 所属业务员 */
+    @Excel(name = "所属业务员")
+    private String salesmanId;
+
+
 }

@@ -19,6 +19,7 @@
     <result column="group_id" jdbcType="VARCHAR" property="groupId" />
     <result column="education" jdbcType="VARCHAR" property="education" />
     <result column="gender" jdbcType="INTEGER" property="gender" />
+    <result column="head_img" jdbcType="VARCHAR" property="headImg" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -81,7 +82,7 @@
   <sql id="Base_Column_List">
     id, brokerage_bank_no, brokerage_bank_name, brokerage_bank_address, name, mobile, 
     create_time, update_time, create_by, update_by, password, identify_number, apply_time, 
-    level, group_id, education, gender
+    level, group_id, education, gender, head_img
   </sql>
   <select id="selectByExample" parameterType="com.autuan.project.promote.salesman.domain.TabSalesmanExample" resultMap="BaseResultMap">
     select
@@ -127,13 +128,15 @@
       create_time, update_time, create_by, 
       update_by, password, identify_number, 
       apply_time, level, group_id, 
-      education, gender)
+      education, gender, head_img
+      )
     values (#{id,jdbcType=VARCHAR}, #{brokerageBankNo,jdbcType=VARCHAR}, #{brokerageBankName,jdbcType=VARCHAR}, 
       #{brokerageBankAddress,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{updateBy,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{identifyNumber,jdbcType=VARCHAR}, 
       #{applyTime,jdbcType=TIMESTAMP}, #{level,jdbcType=VARCHAR}, #{groupId,jdbcType=VARCHAR}, 
-      #{education,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER})
+      #{education,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{headImg,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="map">
     insert into tab_salesman
@@ -195,6 +198,9 @@
           </if>
           <if test="record.gender != null">
             gender,
+          </if>
+          <if test="record.headImg != null">
+            head_img,
           </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
@@ -259,6 +265,9 @@
           </if>
           <if test="record.gender != null">
             #{record.gender,jdbcType=INTEGER},
+          </if>
+          <if test="record.headImg != null">
+            #{record.headImg,jdbcType=VARCHAR},
           </if>
         </trim>
       </otherwise>
@@ -332,6 +341,9 @@
           <if test="record.gender != null">
             gender = #{record.gender,jdbcType=INTEGER},
           </if>
+          <if test="record.headImg != null">
+            head_img = #{record.headImg,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -357,7 +369,8 @@
       level = #{record.level,jdbcType=VARCHAR},
       group_id = #{record.groupId,jdbcType=VARCHAR},
       education = #{record.education,jdbcType=VARCHAR},
-      gender = #{record.gender,jdbcType=INTEGER}
+      gender = #{record.gender,jdbcType=INTEGER},
+      head_img = #{record.headImg,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -421,6 +434,9 @@
           <if test="record.gender != null">
             gender = #{record.gender,jdbcType=INTEGER},
           </if>
+          <if test="record.headImg != null">
+            head_img = #{record.headImg,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -443,7 +459,8 @@
       level = #{level,jdbcType=VARCHAR},
       group_id = #{groupId,jdbcType=VARCHAR},
       education = #{education,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=INTEGER}
+      gender = #{gender,jdbcType=INTEGER},
+      head_img = #{headImg,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.autuan.project.promote.salesman.domain.TabSalesmanExample" resultMap="BaseResultMap">
@@ -462,7 +479,7 @@
     insert into tab_salesman
     (id, brokerage_bank_no, brokerage_bank_name, brokerage_bank_address, name, mobile, 
       create_time, update_time, create_by, update_by, password, identify_number, apply_time, 
-      level, group_id, education, gender)
+      level, group_id, education, gender, head_img)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=VARCHAR}, #{item.brokerageBankNo,jdbcType=VARCHAR}, #{item.brokerageBankName,jdbcType=VARCHAR}, 
@@ -470,7 +487,8 @@
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR}, 
         #{item.updateBy,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, #{item.identifyNumber,jdbcType=VARCHAR}, 
         #{item.applyTime,jdbcType=TIMESTAMP}, #{item.level,jdbcType=VARCHAR}, #{item.groupId,jdbcType=VARCHAR}, 
-        #{item.education,jdbcType=VARCHAR}, #{item.gender,jdbcType=INTEGER})
+        #{item.education,jdbcType=VARCHAR}, #{item.gender,jdbcType=INTEGER}, #{item.headImg,jdbcType=VARCHAR}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -533,6 +551,9 @@
         </if>
         <if test="'gender'.toString() == column.value">
           #{item.gender,jdbcType=INTEGER}
+        </if>
+        <if test="'head_img'.toString() == column.value">
+          #{item.headImg,jdbcType=VARCHAR}
         </if>
       </foreach>
       )

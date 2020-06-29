@@ -1,5 +1,6 @@
 package com.autuan.project.promote.salesman.service;
 
+import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 
@@ -52,5 +53,34 @@ public interface ISalesmanCustomService {
      */
     void resetPwd(String ids);
 
+    /**
+     * 修改密码
+     * @param salesmanId
+ * @param pwd
+     * @throws
+     * @author : Autuan.Yu
+     * @return: void
+     * @since : 2020/6/29 11:15
+     */
+    void updatePwd(TabSalesman salesman);
+
+    /**
+     * 获取一千条业务员  
+     * @param  
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: java.util.List<com.autuan.project.promote.salesman.domain.TabSalesman>
+     * @since : 2020/6/29 14:03  
+     */
     List<TabSalesman> listSalesmanThousand();
+    
+    /**
+     * 计算收益  
+     * @param  
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: java.lang.Object
+     * @since : 2020/6/29 14:20
+     */
+    CalcuRewardRes calcuReward(String salesmanId);
 }

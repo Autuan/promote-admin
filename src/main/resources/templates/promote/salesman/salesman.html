@@ -69,9 +69,9 @@
                shiro:hasPermission="promote:salesman:remove">
                 <i class="fa fa-remove"></i> 删除
             </a>
-            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:salesman:export">
-                <i class="fa fa-download"></i> 导出
-            </a>
+<!--            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:salesman:export">-->
+<!--                <i class="fa fa-download"></i> 导出-->
+<!--            </a>-->
             <a class="btn btn-info" onclick="resetPwd()" shiro:hasPermission="promote:salesman:edit">
                 <i class="fa fa-download"></i> 重置登录密码
             </a>
@@ -129,7 +129,7 @@
                 {
                     field: 'id',
                     title: 'id',
-                    visible: false
+                    visible: true,
                 },
                 {
                     field: 'name',

@@ -3,8 +3,6 @@ package com.autuan.project.promote.salesman.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,7 +37,6 @@ public class TabSalesman {
 
     private String identifyNumber;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime applyTime;
 
     private String level;
@@ -49,6 +46,8 @@ public class TabSalesman {
     private String education;
 
     private Integer gender;
+
+    private String headImg;
 
     public enum Column {
         id("id", "id", "VARCHAR", false),
@@ -67,7 +66,8 @@ public class TabSalesman {
         level("level", "level", "VARCHAR", false),
         groupId("group_id", "groupId", "VARCHAR", false),
         education("education", "education", "VARCHAR", false),
-        gender("gender", "gender", "INTEGER", false);
+        gender("gender", "gender", "INTEGER", false),
+        headImg("head_img", "headImg", "VARCHAR", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

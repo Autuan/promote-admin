@@ -69,9 +69,9 @@
                 <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:task:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:task:export">
-                    <i class="fa fa-download"></i> 导出
-                 </a>
+<!--                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:task:export">-->
+<!--                    <i class="fa fa-download"></i> 导出-->
+<!--                 </a>-->
                 <a class="btn btn-warning" onclick="setParam()" shiro:hasPermission="promote:task:edit">
                     <i class="fa fa-download"></i> 配置参数
                 </a>
@@ -112,7 +112,7 @@
                 {
                     field : 'id', 
                     title : '优先级',
-                    visible: false
+                    visible: true,
                 },
                 {
                     field : 'name', 

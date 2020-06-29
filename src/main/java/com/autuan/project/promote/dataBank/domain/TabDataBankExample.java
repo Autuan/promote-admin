@@ -1133,6 +1133,76 @@ public class TabDataBankExample {
             addCriterion("task_id not between", value1, value2, "taskId");
             return (Criteria) this;
         }
+
+        public Criteria andSalesmanIdIsNull() {
+            addCriterion("salesman_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdIsNotNull() {
+            addCriterion("salesman_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdEqualTo(String value) {
+            addCriterion("salesman_id =", value, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdNotEqualTo(String value) {
+            addCriterion("salesman_id <>", value, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdGreaterThan(String value) {
+            addCriterion("salesman_id >", value, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdGreaterThanOrEqualTo(String value) {
+            addCriterion("salesman_id >=", value, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdLessThan(String value) {
+            addCriterion("salesman_id <", value, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdLessThanOrEqualTo(String value) {
+            addCriterion("salesman_id <=", value, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdLike(String value) {
+            addCriterion("salesman_id like", value, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdNotLike(String value) {
+            addCriterion("salesman_id not like", value, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdIn(List<String> values) {
+            addCriterion("salesman_id in", values, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdNotIn(List<String> values) {
+            addCriterion("salesman_id not in", values, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdBetween(String value1, String value2) {
+            addCriterion("salesman_id between", value1, value2, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSalesmanIdNotBetween(String value1, String value2) {
+            addCriterion("salesman_id not between", value1, value2, "salesmanId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

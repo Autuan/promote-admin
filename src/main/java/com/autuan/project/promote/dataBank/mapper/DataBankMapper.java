@@ -1,14 +1,13 @@
 package com.autuan.project.promote.dataBank.mapper;
 
 import com.autuan.project.promote.dataBank.domain.DataBank;
-
 import java.util.List;
 
 /**
  * 数据导入-开卡订单Mapper接口
  * 
  * @author autuan
- * @date 2020-06-28
+ * @date 2020-06-29
  */
 public interface DataBankMapper 
 {

@@ -43,6 +43,8 @@ public class TabDataBank {
 
     private String taskId;
 
+    private String salesmanId;
+
     public enum Column {
         id("id", "id", "VARCHAR", false),
         applyDate("apply_date", "applyDate", "TIMESTAMP", false),
@@ -58,7 +60,8 @@ public class TabDataBank {
         updateTime("update_time", "updateTime", "TIMESTAMP", false),
         createBy("create_by", "createBy", "VARCHAR", false),
         updateBy("update_by", "updateBy", "VARCHAR", false),
-        taskId("task_id", "taskId", "VARCHAR", false);
+        taskId("task_id", "taskId", "VARCHAR", false),
+        salesmanId("salesman_id", "salesmanId", "VARCHAR", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

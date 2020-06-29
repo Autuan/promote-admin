@@ -21,7 +21,7 @@ import com.autuan.common.utils.text.Convert;
  * 业务员Service业务层处理
  *
  * @author autuan
- * @date 2020-06-22
+ * @date 2020-06-29
  */
 @Service
 public class SalesmanServiceImpl implements ISalesmanService {
@@ -58,13 +58,12 @@ public class SalesmanServiceImpl implements ISalesmanService {
      */
     @Override
     public int insertSalesman(Salesman salesman) {
-        String pwd = Md5Utils.hash("123456");
-        salesman.setPassword(pwd);
-        salesman.setApplyTime(LocalDateTime.now());
-
         salesman.setCreateTime(LocalDateTime.now());
         salesman.setCreateBy(ShiroUtils.getLoginName());
         salesman.setId(IdUtil.simpleUUID());
+
+        salesman.setApplyTime(LocalDateTime.now());
+        salesman.setPassword(Md5Utils.hash("123456"));
         return salesmanMapper.insertSalesman(salesman);
     }
 
