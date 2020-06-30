@@ -8,6 +8,7 @@ import com.autuan.common.utils.Md5Utils;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.common.utils.text.Convert;
 import com.autuan.project.front.entity.HistoryRewardReq;
+import com.autuan.project.front.entity.HistoryRewardRes;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.dataBank.domain.TabDataBankExample;
 import com.autuan.project.promote.dataBank.mapper.TabDataBankMapper;
@@ -95,7 +96,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         example.createCriteria()
                 .andMobileEqualTo(salesman.getMobile());
         TabSalesman one = salesmanMapper.selectOneByExample(example);
-        if(null != one && StrUtil.isNotBlank(one.getId())) {
+        if (null != one && StrUtil.isNotBlank(one.getId())) {
             throw new CustomRespondException("此手机号已注册,请直接登录");
         }
         return salesmanMapper.insertSelective(salesman) == 1;
@@ -132,7 +133,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 TabSalesman.builder()
                         .password(Md5Utils.hash("123456"))
                         .build();
-        salesmanMapper.updateByExampleSelective(salesman,example);
+        salesmanMapper.updateByExampleSelective(salesman, example);
     }
 
     /**
@@ -170,7 +171,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         salesmanTaskExample.createCriteria()
                 .andSalesmanIdEqualTo(salesmanId);
         List<TabSalesmanTask> receiveList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
-        if(CollectionUtil.isEmpty(receiveList)) {
+        if (CollectionUtil.isEmpty(receiveList)) {
             return CalcuRewardRes.zero();
         }
         // 所有业务
@@ -195,7 +196,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         BigDecimal historyReward = BigDecimal.ZERO;
 
         LocalDateTime now = LocalDateTime.now();
-        for(TabTask task : allTasks) {
+        for (TabTask task : allTasks) {
             BigDecimal reward = task.getReward();
 
             long allBankCount = dataBanks.stream()
@@ -220,11 +221,11 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     }
 
     @Override
-    public Object historyReward(HistoryRewardReq req) {
+    public List<HistoryRewardRes> historyReward(HistoryRewardReq req) {
         String salesmanId = req.getSalesmanId();
         String[] dateStrArray = req.getQueryDateStr().split("-");
-        LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[1]),Integer.valueOf(dateStrArray[1]),0,0,0,0);
-        LocalDateTime endTime = LocalDateTime.of(startTime.getYear(),startTime.getMonthValue(),startTime.getMonth().maxLength(),23,59,59);
+        LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getMonth().maxLength(), 23, 59, 59);
         // 京东推广 todo
 
 
@@ -233,8 +234,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         salesmanTaskExample.createCriteria()
                 .andSalesmanIdEqualTo(salesmanId);
         List<TabSalesmanTask> receiveList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
-        if(CollectionUtil.isEmpty(receiveList)) {
-            return CalcuRewardRes.zero();
+        if (CollectionUtil.isEmpty(receiveList)) {
+            return null;
         }
         // 所有业务
         TabTaskExample taskExample = new TabTaskExample();
@@ -246,32 +247,138 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         dataBankExample.createCriteria()
                 .andTaskIdIn(allTasks.stream().map(TabTask::getId).collect(toList()))
                 .andSalesmanIdEqualTo(salesmanId)
-                // 1:通过
-//                .andApproveStatusEqualTo(1)
-                .andApplyDateBetween(startTime,endTime)
+                .andApplyDateBetween(startTime, endTime)
         ;
 
 
         List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
 
 
-        // 累计推广费
-        BigDecimal historyReward = BigDecimal.ZERO;
-
-        LocalDateTime now = LocalDateTime.now();
-        for(TabTask task : allTasks) {
-            BigDecimal reward = task.getReward();
-
-            long allBankCount = dataBanks.stream()
+        List<TabDataBank> taskList = new ArrayList<>();
+        for (TabTask task : allTasks) {
+            List<TabDataBank> dataBank = dataBanks.stream()
                     .filter(data -> task.getId().equals(data.getTaskId()))
-                    .count();
-            BigDecimal taskBankAllReward = reward.multiply(new BigDecimal(allBankCount));
-            historyReward = historyReward.add(taskBankAllReward);
-
+                    .collect(toList());
+            taskList.addAll(dataBank);
         }
-        CalcuRewardRes res = CalcuRewardRes.builder()
-                .historyReward(historyReward)
-                .build();
-        return res;
+        List<HistoryRewardRes> resList = new ArrayList<>();
+        for (TabDataBank data : taskList) {
+            resList.add(HistoryRewardRes.builder()
+                    .verifyDate(data.getVerifyDate())
+                    .name(data.getBankName())
+                    .approveStatus(data.getApproveStatus() == 1 ? "审核通过" : "审核拒绝")
+                    .build());
+        }
+        return resList;
+    }
+
+
+    @Override
+    public List<HistoryRewardRes> thisMoonReward(HistoryRewardReq req) {
+        String salesmanId = req.getSalesmanId();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getMonth().maxLength(), 23, 59, 59);
+        // 京东推广 todo
+
+        // 该业务员领取的所有任务
+        TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
+        salesmanTaskExample.createCriteria()
+                .andSalesmanIdEqualTo(salesmanId);
+        List<TabSalesmanTask> receiveList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
+        if (CollectionUtil.isEmpty(receiveList)) {
+            return null;
+        }
+        // 所有业务
+        TabTaskExample taskExample = new TabTaskExample();
+        taskExample.createCriteria()
+                .andIdIn(receiveList.stream().map(TabSalesmanTask::getTaskId).collect(toList()));
+        List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
+        // 所有通过的开卡订单
+        TabDataBankExample dataBankExample = new TabDataBankExample();
+        dataBankExample.createCriteria()
+                .andTaskIdIn(allTasks.stream().map(TabTask::getId).collect(toList()))
+                .andSalesmanIdEqualTo(salesmanId)
+                .andApplyDateBetween(startTime, endTime)
+        ;
+
+
+        List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
+
+
+        List<TabDataBank> taskList = new ArrayList<>();
+        for (TabTask task : allTasks) {
+            List<TabDataBank> dataBank = dataBanks.stream()
+                    .filter(data -> task.getId().equals(data.getTaskId()))
+                    .collect(toList());
+            taskList.addAll(dataBank);
+        }
+        List<HistoryRewardRes> resList = new ArrayList<>();
+        for (TabDataBank data : taskList) {
+            resList.add(HistoryRewardRes.builder()
+                    .verifyDate(data.getVerifyDate())
+                    .name(data.getBankName())
+                    .approveStatus(data.getApproveStatus() == 1 ? "审核通过" : "审核拒绝")
+                    .build());
+        }
+        return resList;
+    }
+
+    @Override
+    public List<HistoryRewardRes> bankList(HistoryRewardReq req) {
+        String salesmanId = req.getSalesmanId();
+        String[] dateStrArray = req.getQueryDateStr().split("-");
+        LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getMonth().maxLength(), 23, 59, 59);
+
+
+        // 该业务员领取的所有任务
+        TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
+        salesmanTaskExample.createCriteria()
+                .andSalesmanIdEqualTo(salesmanId);
+        List<TabSalesmanTask> receiveList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
+        if (CollectionUtil.isEmpty(receiveList)) {
+            return null;
+        }
+        // 所有业务
+        TabTaskExample taskExample = new TabTaskExample();
+        taskExample.createCriteria()
+                .andIdIn(receiveList.stream().map(TabSalesmanTask::getTaskId).collect(toList()));
+        List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
+        // 所有通过的开卡订单
+        TabDataBankExample dataBankExample = new TabDataBankExample();
+        dataBankExample.createCriteria()
+                .andTaskIdIn(allTasks.stream().map(TabTask::getId).collect(toList()))
+                .andSalesmanIdEqualTo(salesmanId)
+                .andApplyDateBetween(startTime, endTime)
+        ;
+
+
+        List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
+
+
+        List<TabDataBank> taskList = new ArrayList<>();
+        for (TabTask task : allTasks) {
+            List<TabDataBank> dataBank = dataBanks.stream()
+                    .filter(data -> task.getId().equals(data.getTaskId()))
+                    .collect(toList());
+            taskList.addAll(dataBank);
+        }
+        List<HistoryRewardRes> resList = new ArrayList<>();
+        for (TabDataBank data : taskList) {
+            resList.add(HistoryRewardRes.builder()
+                    .verifyDate(data.getVerifyDate())
+                    .name(data.getBankName())
+                    .orderNo(data.getApplyId())
+                    .approveStatus(data.getApproveStatus() == 1 ? "审核通过" : "审核拒绝")
+                    .build());
+        }
+        return resList;
+    }
+
+    @Override
+    public Object ranking() {
+        this.listSalesmanThousand();
+        return null;
     }
 }

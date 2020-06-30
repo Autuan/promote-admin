@@ -57,7 +57,7 @@ public class DataBank extends BaseEntity
     @Excel(name = "所属任务ID")
     private String taskId;
     /** 所属业务员 */
-    @Excel(name = "所属业务员")
+    @Excel(name = "所属业务员ID")
     private String salesmanId;
 
 
