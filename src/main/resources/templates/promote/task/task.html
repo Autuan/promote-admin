@@ -122,11 +122,12 @@
                         field : 'image',
                         title : '缩略图',
                         formatter: function(value, row, index) {
-                            if(value) {
-                                return `<img src="${value}" style="height: 100px;"></img>`;
-                            } else {
-                                return '未上传图片';
-                            }
+                            return $.table.imageView(value);
+                            // if(value) {
+                            //     return `<img src="${value}" style="height: 100px;"></img>`;
+                            // } else {
+                            //     return '未上传图片';
+                            // }
                         }
                     },
                     {
