@@ -10,12 +10,19 @@ import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.dataBank.mapper.TabDataBankMapper;
 import com.autuan.project.promote.dataBank.service.IDataBankCustomService;
 import com.autuan.project.promote.dataBank.service.IDataBankService;
+import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
+import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskExample;
+import com.autuan.project.promote.link.linkSalesmanTask.mapper.TabSalesmanTaskMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @className: DataBankServiceCustomImpl
@@ -32,17 +39,64 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
     private TabDataBankMapper dataBankMapper;
     @Autowired
     private IDataBankService dataBankService;
+    @Autowired
+    private TabSalesmanTaskMapper tabSalesmanTaskMapper;
+
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void importExcel(List<TabDataBank> list) {
         LocalDateTime now = LocalDateTime.now();
         String loginName = ShiroUtils.getLoginName();
+
+//        TabSalesmanTaskExample linkExample = new TabSalesmanTaskExample();
+//        linkExample.createCriteria()
+
         // 添加信息
-        for(TabDataBank dataBank : list) {
+//        Set<String> taskIdSet = new HashSet<>();
+//        Set<String> salesManIdSet = new HashSet<>();
+
+        Set<String> addition = new HashSet<>();
+
+        for (TabDataBank dataBank : list) {
+            String taskId = dataBank.getTaskId();
+            String salesmanId = dataBank.getSalesmanId();
+//            taskIdSet.add(taskId);
+//            salesManIdSet.add(salesmanId);
+
+            addition.add(taskId + "-" + salesmanId);
+
+
+//            TabSalesmanTaskExample linkExample = new TabSalesmanTaskExample();
+//            linkExample.createCriteria()
+//                    .andTaskIdEqualTo()
+//                    .andSalesmanIdEqualTo()
+
             dataBank.setCreateTime(now);
             dataBank.setCreateBy(loginName);
             dataBank.setId(IdUtil.simpleUUID());
         }
         dataBankMapper.batchInsert(list);
+        // 添加领取记录
+        TabSalesmanTaskExample linkExample = new TabSalesmanTaskExample();
+        List<TabSalesmanTask> linkDataList = new ArrayList<>(addition.size());
+        for (String str : addition) {
+            String[] split = str.split("-");
+            linkExample.or()
+                    .andSalesmanIdEqualTo(split[1])
+                    .andTaskIdEqualTo(split[0]);
+
+            linkDataList.add(TabSalesmanTask.builder()
+                    .id(IdUtil.simpleUUID())
+                    .code(IdUtil.simpleUUID())
+                    .salesmanId(split[1])
+                    .taskId(split[0])
+                    .createTime(now)
+                    .createBy(loginName)
+                    .build());
+        }
+        tabSalesmanTaskMapper.deleteByExample(linkExample);
+        tabSalesmanTaskMapper.batchInsert(linkDataList);
+
     }
 
     @Override

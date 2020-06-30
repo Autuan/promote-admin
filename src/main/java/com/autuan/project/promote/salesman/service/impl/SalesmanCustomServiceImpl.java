@@ -7,6 +7,7 @@ import com.autuan.common.exception.custom.CustomRespondException;
 import com.autuan.common.utils.Md5Utils;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.common.utils.text.Convert;
+import com.autuan.project.front.entity.HistoryRewardReq;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.dataBank.domain.TabDataBankExample;
 import com.autuan.project.promote.dataBank.mapper.TabDataBankMapper;
@@ -214,6 +215,62 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         CalcuRewardRes res = CalcuRewardRes.builder()
                 .historyReward(historyReward)
                 .thisMoonReward(thisMoonReward)
+                .build();
+        return res;
+    }
+
+    @Override
+    public Object historyReward(HistoryRewardReq req) {
+        String salesmanId = req.getSalesmanId();
+        String[] dateStrArray = req.getQueryDateStr().split("-");
+        LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[1]),Integer.valueOf(dateStrArray[1]),0,0,0,0);
+        LocalDateTime endTime = LocalDateTime.of(startTime.getYear(),startTime.getMonthValue(),startTime.getMonth().maxLength(),23,59,59);
+        // 京东推广 todo
+
+
+        // 该业务员领取的所有任务
+        TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
+        salesmanTaskExample.createCriteria()
+                .andSalesmanIdEqualTo(salesmanId);
+        List<TabSalesmanTask> receiveList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
+        if(CollectionUtil.isEmpty(receiveList)) {
+            return CalcuRewardRes.zero();
+        }
+        // 所有业务
+        TabTaskExample taskExample = new TabTaskExample();
+        taskExample.createCriteria()
+                .andIdIn(receiveList.stream().map(TabSalesmanTask::getTaskId).collect(toList()));
+        List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
+        // 所有通过的开卡订单
+        TabDataBankExample dataBankExample = new TabDataBankExample();
+        dataBankExample.createCriteria()
+                .andTaskIdIn(allTasks.stream().map(TabTask::getId).collect(toList()))
+                .andSalesmanIdEqualTo(salesmanId)
+                // 1:通过
+//                .andApproveStatusEqualTo(1)
+                .andApplyDateBetween(startTime,endTime)
+        ;
+
+
+        List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
+
+
+        // 累计推广费
+        BigDecimal historyReward = BigDecimal.ZERO;
+
+        LocalDateTime now = LocalDateTime.now();
+        for(TabTask task : allTasks) {
+            BigDecimal reward = task.getReward();
+
+            long allBankCount = dataBanks.stream()
+                    .filter(data -> task.getId().equals(data.getTaskId()))
+                    .count();
+            BigDecimal taskBankAllReward = reward.multiply(new BigDecimal(allBankCount));
+            historyReward = historyReward.add(taskBankAllReward);
+
+        }
+        CalcuRewardRes res = CalcuRewardRes.builder()
+                .historyReward(historyReward)
                 .build();
         return res;
     }

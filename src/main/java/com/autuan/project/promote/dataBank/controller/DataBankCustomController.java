@@ -145,6 +145,8 @@ public class DataBankCustomController {
                     String cName = (String) objList.get(6);
                     String channelCode = (String) objList.get(7);
                     String customFlagStr = (String) objList.get(8);
+                    String taskId = (String) objList.get(9);
+                    String salesmanId = (String) objList.get(10);
 
                     list.add(TabDataBank.builder()
                             .applyDate(applyDate)
@@ -156,6 +158,8 @@ public class DataBankCustomController {
                             .cName(cName)
                             .channelCode(channelCode)
                             .customFlag(customFlagStr.equals("是") ? 1 : 0)
+                            .taskId(taskId)
+                            .salesmanId(salesmanId)
                             .build());
                 }
             }

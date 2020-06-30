@@ -1,5 +1,7 @@
 package com.autuan.project.front.controller;
 
+import com.autuan.project.front.entity.CalcuRewardReq;
+import com.autuan.project.front.entity.HistoryRewardReq;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
 import com.autuan.project.promote.salesman.domain.Salesman;
@@ -48,11 +50,25 @@ public class SalesmanFrontController {
     }
 
     /**
-     * 修改密码
+     * 计算会员中心首页的收益
      */
     @RequestMapping("/calcuReward")
-    public ReturnResult calcuReward(@RequestBody String salesmanId) {
-        CalcuRewardRes res = salesmanCustomService.calcuReward(salesmanId);
+    public ReturnResult calcuReward(@RequestBody CalcuRewardReq req) {
+        CalcuRewardRes res = salesmanCustomService.calcuReward(req.getSalesmanId());
         return ReturnResult.ok(res);
+    }
+
+    /**
+     * 历史推广费用
+     * @param req
+     * @throws
+     * @author : Autuan.Yu
+     * @return: com.autuan.project.front.entity.ReturnResult
+     * @since : 2020/6/30 14:02
+     */
+    @RequestMapping("/historyReward")
+    public ReturnResult historyReward(@RequestBody HistoryRewardReq req) {
+        salesmanCustomService.historyReward(req);
+        return ReturnResult.ok();
     }
 }

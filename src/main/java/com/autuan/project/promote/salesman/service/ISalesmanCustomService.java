@@ -1,5 +1,6 @@
 package com.autuan.project.promote.salesman.service;
 
+import com.autuan.project.front.entity.HistoryRewardReq;
 import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
@@ -83,4 +84,6 @@ public interface ISalesmanCustomService {
      * @since : 2020/6/29 14:20
      */
     CalcuRewardRes calcuReward(String salesmanId);
+
+    Object historyReward(HistoryRewardReq req);
 }
