@@ -153,7 +153,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                 content = prefix.append("?").append(content);
             }
 
-            QrConfig config = new QrConfig(130, 130);
+            QrConfig config = new QrConfig(250, 250);
             // 设置边距，既二维码和背景之间的边距
             config.setMargin(1);
             // 设置前景色，既二维码颜色（青色）
@@ -172,7 +172,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                     //x坐标修正值。 默认在中间，偏移量相对于中间偏移
                     0,
                     //y坐标修正值。 默认在中间，偏移量相对于中间偏移
-                    290,
+                    700,
                     1f
             );
         } catch (MalformedURLException e) {

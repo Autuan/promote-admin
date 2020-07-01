@@ -1,6 +1,8 @@
 package com.autuan.project.promote.salesman.service;
 
 import com.autuan.project.front.entity.HistoryRewardReq;
+import com.autuan.project.front.entity.HistoryRewardRes;
+import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
@@ -56,8 +58,6 @@ public interface ISalesmanCustomService {
 
     /**
      * 修改密码
-     * @param salesmanId
- * @param pwd
      * @throws
      * @author : Autuan.Yu
      * @return: void
@@ -85,5 +85,38 @@ public interface ISalesmanCustomService {
      */
     CalcuRewardRes calcuReward(String salesmanId);
 
-    Object historyReward(HistoryRewardReq req);
+    /***
+     * 历史记录
+     * @param req 
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.util.List<com.autuan.project.front.entity.HistoryRewardRes>
+     * @since: 20:51 2020/6/30 
+     */
+    List<HistoryRewardRes> historyReward(HistoryRewardReq req);
+
+    /***
+     * 当月记录
+     * @param req
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.util.List<com.autuan.project.front.entity.HistoryRewardRes>
+     * @since: 20:56 2020/6/30
+     */
+    List<HistoryRewardRes> thisMoonReward(HistoryRewardReq req);
+
+    List<HistoryRewardRes> bankList(HistoryRewardReq req);
+    
+    /***
+     * 业绩排行榜
+     * @param  
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.lang.Object
+     * @since: 21:24 2020/6/30 
+     */
+    Object ranking();
 }

@@ -2,7 +2,9 @@ package com.autuan.project.front.controller;
 
 import com.autuan.project.front.entity.CalcuRewardReq;
 import com.autuan.project.front.entity.HistoryRewardReq;
+import com.autuan.project.front.entity.HistoryRewardRes;
 import com.autuan.project.front.entity.ReturnResult;
+import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
@@ -11,6 +13,8 @@ import com.autuan.project.promote.salesman.service.ISalesmanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author : Autuan.Yu
@@ -68,7 +72,29 @@ public class SalesmanFrontController {
      */
     @RequestMapping("/historyReward")
     public ReturnResult historyReward(@RequestBody HistoryRewardReq req) {
-        salesmanCustomService.historyReward(req);
-        return ReturnResult.ok();
+        List<HistoryRewardRes> res = salesmanCustomService.historyReward(req);
+        return ReturnResult.ok(res);
+    }
+
+
+    @RequestMapping("/thisMoonReward")
+    public ReturnResult thisMoonReward(@RequestBody HistoryRewardReq req) {
+        List<HistoryRewardRes> res = salesmanCustomService.thisMoonReward(req);
+        return ReturnResult.ok(res);
+    }
+
+    /***
+     * 排行榜
+     * @param req 
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : com.autuan.project.front.entity.ReturnResult
+     * @since: 21:30 2020/6/30
+     */
+    @RequestMapping("/ranking")
+    public ReturnResult ranking(@RequestBody HistoryRewardReq req) {
+        List<HistoryRewardRes> res = salesmanCustomService.thisMoonReward(req);
+        return ReturnResult.ok(res);
     }
 }

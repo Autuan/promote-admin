@@ -32,13 +32,12 @@
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">申请 状态 0-拒绝 1-通过：</label>
+                <label class="col-sm-3 control-label">申请状态：</label>
                 <div class="col-sm-8">
-                    <div class="radio-box">
-                        <input type="radio" name="approveStatus" value="">
-                        <label th:for="approveStatus" th:text="未知"></label>
-                    </div>
-                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                    <select name="approveStatus" class="form-control m-b">
+                        <option value="0">拒绝</option>
+                        <option value="1">通过</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">    
@@ -66,9 +65,24 @@
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">custom_flag  0-否 1-是：</label>
+                <label class="col-sm-3 control-label">custom_flag</label>
                 <div class="col-sm-8">
-                    <input name="customFlag" class="form-control" type="text">
+                    <select name="customFlag" class="form-control m-b">
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">任务ID：</label>
+                <div class="col-sm-8">
+                    <input name="taskId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">业务员ID：</label>
+                <div class="col-sm-8">
+                    <input name="salesmanId" class="form-control" type="text">
                 </div>
             </div>
         </form>
