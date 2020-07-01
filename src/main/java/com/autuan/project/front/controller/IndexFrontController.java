@@ -1,9 +1,11 @@
 package com.autuan.project.front.controller;
 
+import com.autuan.project.front.entity.CalcuRewardReq;
 import com.autuan.project.front.entity.IndexVO;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.article.domain.TabArticle;
 import com.autuan.project.promote.article.service.IArticleCustomService;
+import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.task.domain.TabTask;
 import com.autuan.project.promote.task.service.ITaskCustomService;
@@ -38,17 +40,20 @@ public class IndexFrontController {
      * @since: 19:29 2020/6/22
      */
     @RequestMapping("/info")
-    public ReturnResult info() {
+    public ReturnResult info(@RequestBody CalcuRewardReq req) {
         // 文章輪播
         List<TabArticle> articles = articleCustomService.getCarouselArticle();
         // 圖片輪播
         List<TabArticle> images = articleCustomService.getCarouselImg();
         // 任务
         List<TabTask> tasks = taskCustomService.getIndexTask();
+        // 已领取任务
+        List<TabSalesmanTask> receivedList = taskCustomService.receivedTask(req.getSalesmanId());
         IndexVO result = IndexVO.builder()
                 .articles(articles)
                 .images(images)
                 .tasks(tasks)
+                .receivedList(receivedList)
                 .build();
 
         return ReturnResult.ok(result);

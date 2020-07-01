@@ -64,7 +64,15 @@
 <!--                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:linkSalesmanTask:export">-->
 <!--                    <i class="fa fa-download"></i> 导出-->
 <!--                 </a>-->
+<!--                <div style="margin-left: 20px;"></div>-->
+                    <a class="btn btn-info multiple disabled" onclick="verifyPass()" shiro:hasPermission="promote:linkSalesmanTask:remove">
+                        <i class="fa "></i> 审核通过
+                    </a>
+                    <a class="btn btn-warning multiple disabled" onclick="verifyFail()" shiro:hasPermission="promote:linkSalesmanTask:remove">
+                        <i class="fa "></i> 审核拒绝
+                    </a>
             </div>
+
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
             </div>
@@ -76,8 +84,43 @@
         var removeFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:remove')}]];
         var prefix = ctx + "promote/linkSalesmanTask";
 
+        function verifyPass() {
+            var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+            $.modal.confirm("确认要审核通过" + rows.length + "条数据吗?", function () {
+                Base.Network.post({
+                    url: ctx + 'promote/linkSalesmanTask/custom/pass',
+                    data: {"ids": rows.join()},
+                    successParse: function (data) {
+                        // console.info(data)
+                        $.modal.msgSuccess("操作成功");
+                        $.table.refresh();
+                    }
+                })
+            });
+        };
 
-
+        function verifyFail() {
+            var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+            $.modal.confirm("确认要审核拒绝" + rows.length + "条数据吗?", function () {
+                Base.Network.post({
+                    url: ctx + 'promote/linkSalesmanTask/custom/fail',
+                    data: {"ids": rows.join()},
+                    successParse: function (data) {
+                        // console.info(data)
+                        $.modal.msgSuccess("操作成功");
+                        $.table.refresh();
+                    }
+                })
+            });
+        };
 
         $(function() {
         let taskList = [];
@@ -125,6 +168,18 @@
                     field : 'code', 
                     title : '业务员CODE'
                 },
+                    {
+                        field : 'status',
+                        title : '状态',
+                        formatter: function(value, row, index) {
+                            switch (value) {
+                                case 0:return'未申请';break;
+                                case 1:return '审核中';break;
+                                case 2:return '审核通过';break;
+                                case 3:return '审核拒绝';break;
+                            }
+                        }
+                    },
                 // {
                 //     field : 'link',
                 //     title : '专属链接'

@@ -17,10 +17,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateBy"    column="update_by"    />
+        <result property="status"    column="status"    />
     </resultMap>
 
     <sql id="selectSalesmanTaskVo">
-        select id, task_id, salesman_id, code, link, reward, reward_begin_time, reward_stop_time, create_time, update_time, create_by, update_by from tab_salesman_task
+        select id, task_id, salesman_id, code, link, reward, reward_begin_time, reward_stop_time, create_time, update_time, create_by, update_by, status from tab_salesman_task
     </sql>
 
     <select id="selectSalesmanTaskList" parameterType="SalesmanTask" resultMap="SalesmanTaskResult">
@@ -33,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="reward != null "> and reward = #{reward}</if>
             <if test="rewardBeginTime != null "> and reward_begin_time = #{rewardBeginTime}</if>
             <if test="rewardStopTime != null "> and reward_stop_time = #{rewardStopTime}</if>
+            <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
     
@@ -56,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null ">update_time,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="status != null ">status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  and id != ''">#{id},</if>
@@ -70,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null ">#{updateTime},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
             <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="status != null ">#{status},</if>
          </trim>
     </insert>
 
@@ -87,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null ">update_time = #{updateTime},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="status != null ">status = #{status},</if>
         </trim>
         where id = #{id}
     </update>

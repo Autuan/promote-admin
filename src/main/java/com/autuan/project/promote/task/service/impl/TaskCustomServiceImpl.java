@@ -196,6 +196,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
         return tabTaskMapper.selectByExample(example);
     }
 
+
     @Override
     public void receive(ReceiveAO ao) {
         TabSalesmanTaskExample example = new TabSalesmanTaskExample();
@@ -210,10 +211,27 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                 .taskId(ao.getTaskId())
                 .salesmanId(ao.getSalesmanId())
                 .code(IdUtil.objectId())
+                .status(1)
                 .createTime(LocalDateTime.now())
                 .id(IdUtil.simpleUUID())
                 .build();
         tabSalesmanTaskMapper.insertSelective(bind);
+    }
 
+    /**
+     * 已领取任务
+     *
+     * @param salesmanId
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.util.List<com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask>
+     * @since : 2020/7/1 16:16
+     */
+    @Override
+    public List<TabSalesmanTask> receivedTask(String salesmanId) {
+        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+        example.createCriteria()
+                .andSalesmanIdEqualTo(salesmanId);
+        return tabSalesmanTaskMapper.selectByExample(example);
     }
 }

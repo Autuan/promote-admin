@@ -2,9 +2,11 @@ package com.autuan.project.promote.dataJd.service.impl;
 
 import java.util.List;
 import cn.hutool.core.util.IdUtil;
-                                                                                                                                        import java.time.LocalDateTime;
+                                                                                                                                                        import java.time.LocalDateTime;
     import java.time.LocalDateTime;
-            import org.springframework.beans.factory.annotation.Autowired;
+            import com.autuan.common.utils.security.ShiroUtils;
+            import com.autuan.common.utils.security.ShiroUtils;
+    import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.autuan.project.promote.dataJd.mapper.DataJdMapper;
 import com.autuan.project.promote.dataJd.domain.DataJd;
@@ -15,7 +17,7 @@ import com.autuan.common.utils.text.Convert;
  * 京东联合拉新数据Service业务层处理
  * 
  * @author autuan
- * @date 2020-06-25
+ * @date 2020-07-01
  */
 @Service
 public class DataJdServiceImpl implements IDataJdService 
@@ -56,8 +58,9 @@ public class DataJdServiceImpl implements IDataJdService
     @Override
     public int insertDataJd(DataJd dataJd)
     {
-                                                                                                                                                dataJd.setCreateTime(LocalDateTime.now());
-                        dataJd.setId(IdUtil.simpleUUID());
+                                                                                                                                                                dataJd.setCreateTime(LocalDateTime.now());
+                    dataJd.setCreateBy(ShiroUtils.getLoginName());
+                dataJd.setId(IdUtil.simpleUUID());
         return dataJdMapper.insertDataJd(dataJd);
     }
 
@@ -70,8 +73,9 @@ public class DataJdServiceImpl implements IDataJdService
     @Override
     public int updateDataJd(DataJd dataJd)
     {
-                                                                                                                                                dataJd.setUpdateTime(LocalDateTime.now());
-                        return dataJdMapper.updateDataJd(dataJd);
+                                                                                                                                                                dataJd.setUpdateTime(LocalDateTime.now());
+                        dataJd.setUpdateBy(ShiroUtils.getLoginName());
+            return dataJdMapper.updateDataJd(dataJd);
     }
 
     /**

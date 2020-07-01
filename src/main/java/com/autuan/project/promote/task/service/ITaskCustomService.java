@@ -2,6 +2,7 @@ package com.autuan.project.promote.task.service;
 
 import com.autuan.project.front.entity.GeneratorQrCodeVO;
 import com.autuan.project.front.entity.ReceiveAO;
+import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.param.domain.TabParam;
 import com.autuan.project.promote.task.domain.SetTaskParamAO;
 import com.autuan.project.promote.task.domain.TabTask;
@@ -79,4 +80,14 @@ public interface ITaskCustomService {
      * @since: 19:49 2020/6/28
      */
     void receive(ReceiveAO ao);
+
+    /**
+     * 已领取任务
+     * @param salesmanId
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.util.List<com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask>
+     * @since : 2020/7/1 16:16
+     */
+    List<TabSalesmanTask> receivedTask(String salesmanId);
 }

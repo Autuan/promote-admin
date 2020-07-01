@@ -38,6 +38,8 @@ public class TabSalesmanTask {
 
     private String updateBy;
 
+    private Integer status;
+
     public enum Column {
         id("id", "id", "VARCHAR", false),
         taskId("task_id", "taskId", "VARCHAR", false),
@@ -50,7 +52,8 @@ public class TabSalesmanTask {
         createTime("create_time", "createTime", "TIMESTAMP", false),
         updateTime("update_time", "updateTime", "TIMESTAMP", false),
         createBy("create_by", "createBy", "VARCHAR", false),
-        updateBy("update_by", "updateBy", "VARCHAR", false);
+        updateBy("update_by", "updateBy", "VARCHAR", false),
+        status("status", "status", "INTEGER", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

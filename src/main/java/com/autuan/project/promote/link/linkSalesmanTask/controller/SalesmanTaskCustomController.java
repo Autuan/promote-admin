@@ -35,4 +35,22 @@ public class SalesmanTaskCustomController {
         SalesmanTaskListDTO dto = salesmanTaskCustomServicce.listSalesmanAndTask();
         return ReturnResult.ok(dto);
     }
+
+    @RequiresPermissions("promote:linkSalesmanTask:list")
+    @PostMapping("/pass")
+    @ResponseBody
+    public ReturnResult pass(String ids){
+        // 2-通过  3-拒绝
+        salesmanTaskCustomServicce.verify(ids, 2);
+        return ReturnResult.ok();
+    }
+
+    @RequiresPermissions("promote:linkSalesmanTask:list")
+    @PostMapping("/fail")
+    @ResponseBody
+    public ReturnResult fail(String ids){
+        // 2-通过  3-拒绝
+        salesmanTaskCustomServicce.verify(ids, 3);
+        return ReturnResult.ok();
+    }
 }

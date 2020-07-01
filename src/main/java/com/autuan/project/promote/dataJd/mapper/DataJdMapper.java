@@ -7,7 +7,7 @@ import java.util.List;
  * 京东联合拉新数据Mapper接口
  * 
  * @author autuan
- * @date 2020-06-25
+ * @date 2020-07-01
  */
 public interface DataJdMapper 
 {

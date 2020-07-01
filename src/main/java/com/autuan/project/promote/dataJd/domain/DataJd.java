@@ -7,11 +7,13 @@ import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * 京东联合拉新数据对象 tab_data_jd
  * 
  * @author autuan
- * @date 2020-06-25
+ * @date 2020-07-01
  */
 
 @Data
@@ -26,7 +28,7 @@ public class DataJd extends BaseEntity
     private String id;
     /** 记录时间 */
     @Excel(name = "记录时间")
-    private Long recordTime;
+    private LocalDateTime recordTime;
     /** 任务链接内部ID */
     @Excel(name = "任务链接内部ID")
     private String taskInnerId;
@@ -59,7 +61,7 @@ public class DataJd extends BaseEntity
     private String joinLink;
     /** 用户参与时间 */
     @Excel(name = "用户参与时间")
-    private Long joinTime;
+    private LocalDateTime joinTime;
     /** 用户参与订单号 */
     @Excel(name = "用户参与订单号")
     private String joinOrder;
@@ -71,10 +73,10 @@ public class DataJd extends BaseEntity
     private String openJdCreditUrl;
     /** 白条开通时间 */
     @Excel(name = "白条开通时间")
-    private Long openJdCreditTime;
+    private LocalDateTime openJdCreditTime;
     /** 白条开通方式 0-普通开白条 1-小金库白条 */
     @Excel(name = "白条开通方式 0-普通开白条 1-小金库白条")
-    private Long openJdCreditType;
+    private Integer openJdCreditType;
     /** 白条首单订单号 */
     @Excel(name = "白条首单订单号")
     private String jdCreditFirstOrderNo;
@@ -83,7 +85,7 @@ public class DataJd extends BaseEntity
     private String jdCreditFirstOrderPin;
     /** 白条首单交易时间 */
     @Excel(name = "白条首单交易时间")
-    private Long jdCreditFirstOrderTime;
+    private LocalDateTime jdCreditFirstOrderTime;
     /** 白条首单推广链接 */
     @Excel(name = "白条首单推广链接")
     private String jdCreditFirstOrderUrl;
@@ -98,7 +100,7 @@ public class DataJd extends BaseEntity
     private String bankAndIncomeMoney;
     /** 银行+入金时间 */
     @Excel(name = "银行+入金时间")
-    private Long bankAndIncomeTime;
+    private LocalDateTime bankAndIncomeTime;
     /** 银行+推广链接 */
     @Excel(name = "银行+推广链接")
     private String bankAndPromoteUrl;
@@ -110,10 +112,10 @@ public class DataJd extends BaseEntity
     private String joinedFirstOrderWithBankIncomeTimeDifference;
     /** 白条开通首单是否同日 0-否 1-是 */
     @Excel(name = "白条开通首单是否同日 0-否 1-是")
-    private Long jdCreditOpenOneDay;
+    private Integer jdCreditOpenOneDay;
     /** 新手礼包操作时间 */
     @Excel(name = "新手礼包操作时间")
-    private Long newbiePackageOperTime;
+    private LocalDateTime newbiePackageOperTime;
     /** 新手礼包pin（脱敏） */
     @Excel(name = "新手礼包pin", readConverterExp = "脱=敏")
     private String newbiePackagePin;
@@ -122,13 +124,19 @@ public class DataJd extends BaseEntity
     private String newbiePackageUrlId;
     /** 新手礼包操作结果 0-fail 1-success */
     @Excel(name = "新手礼包操作结果 0-fail 1-success")
-    private Long newbiePackageResult;
-    /** 创建者 */
-    @Excel(name = "创建者")
-    private String createUser;
-    /** 更新者 */
-    @Excel(name = "更新者")
-    private String updateUser;
+    private Integer newbiePackageResult;
+    /** 金条贷款订单号 */
+    @Excel(name = "金条贷款订单号")
+    private String jdGoldOrderNo;
+    /** 金条是否首次贷款 0:否 1:是 */
+    @Excel(name = "金条是否首次贷款 0:否 1:是")
+    private Integer jdGoldIsFirst;
+    /** 金条贷款完成时间 */
+    @Excel(name = "金条贷款完成时间")
+    private LocalDateTime jdGoldConfirmTime;
+    /** 新手礼包海帆奖励Id */
+    @Excel(name = "新手礼包海帆奖励Id")
+    private String jdNewHandRewardId;
 
 
 }

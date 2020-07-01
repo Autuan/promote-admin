@@ -81,13 +81,21 @@ public class TabDataJd {
 
     private Integer newbiePackageResult;
 
+    private String jdGoldOrderNo;
+
+    private Integer jdGoldIsFirst;
+
+    private LocalDateTime jdGoldConfirmTime;
+
+    private String jdNewHandRewardId;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
 
-    private String createUser;
+    private String createBy;
 
-    private String updateUser;
+    private String updateBy;
 
     public enum Column {
         id("id", "id", "VARCHAR", false),
@@ -124,10 +132,14 @@ public class TabDataJd {
         newbiePackagePin("newbie_package_pin", "newbiePackagePin", "VARCHAR", false),
         newbiePackageUrlId("newbie_package_url_id", "newbiePackageUrlId", "VARCHAR", false),
         newbiePackageResult("newbie_package_result", "newbiePackageResult", "INTEGER", false),
+        jdGoldOrderNo("jd_gold_order_no", "jdGoldOrderNo", "VARCHAR", false),
+        jdGoldIsFirst("jd_gold_is_first", "jdGoldIsFirst", "INTEGER", false),
+        jdGoldConfirmTime("jd_gold_confirm_time", "jdGoldConfirmTime", "TIMESTAMP", false),
+        jdNewHandRewardId("jd_new_hand_reward_id", "jdNewHandRewardId", "VARCHAR", false),
         createTime("create_time", "createTime", "TIMESTAMP", false),
         updateTime("update_time", "updateTime", "TIMESTAMP", false),
-        createUser("create_user", "createUser", "VARCHAR", false),
-        updateUser("update_user", "updateUser", "VARCHAR", false);
+        createBy("create_by", "createBy", "VARCHAR", false),
+        updateBy("update_by", "updateBy", "VARCHAR", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

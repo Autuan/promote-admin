@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,5 +95,30 @@ public class ExcelRead {
         }
 
         return list;
+    }
+
+    private static  List<Object> objList = null;
+    private static  int objListSize = 0;
+    public static void setObjList(List<Object> list){
+        objList = list;
+        objListSize = list.size();
+    }
+    public static String getStr(int i){
+        if(objListSize <= i){
+            return null;
+        }
+        return String.valueOf(objList.get(i));
+    }
+    public static String getStrDef(int i,String def){
+        if(objListSize <= i){
+            return def;
+        }
+        return String.valueOf(objList.get(i));
+    }
+    public static LocalDateTime getLocalDateTime(int i){
+        if(objListSize <= i){
+            return null;
+        }
+        return (LocalDateTime) objList.get(i);
     }
 }

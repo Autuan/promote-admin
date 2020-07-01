@@ -7,6 +7,7 @@ import com.autuan.common.utils.datetime.LocalDateTimeUtil;
 import com.autuan.common.utils.excel.ExcelRead;
 import com.autuan.common.utils.poi.ExcelUtil;
 import com.autuan.common.utils.security.ShiroUtils;
+import com.autuan.framework.config.RuoYiConfig;
 import com.autuan.framework.web.domain.AjaxResult;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.dataBank.domain.DataBank;
@@ -93,10 +94,7 @@ public class DataBankCustomController {
         List<List<Object>> inputList = Lists.newArrayList();
         try {
             if (ServletFileUpload.isMultipartContent(request)) {
-                ServletContext application = request.getSession().getServletContext();
-//                String excelTempPath = application.getRealPath("/");
-//                String excelTempPath = application.getRealPath("d:/tmp/");
-                String excelTempPath = "d:/tmp/";
+                String excelTempPath = RuoYiConfig.getProfile();
                 // 检查目录
                 File uploadDir = new File(excelTempPath);
                 if (!uploadDir.exists()) {

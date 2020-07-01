@@ -23,7 +23,7 @@ import com.autuan.framework.web.page.TableDataInfo;
  * 京东联合拉新数据Controller
  * 
  * @author autuan
- * @date 2020-06-25
+ * @date 2020-07-01
  */
 @Controller
 @RequestMapping("/promote/dataJd")

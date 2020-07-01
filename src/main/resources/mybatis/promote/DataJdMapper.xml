@@ -39,14 +39,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="newbiePackagePin"    column="newbie_package_pin"    />
         <result property="newbiePackageUrlId"    column="newbie_package_url_id"    />
         <result property="newbiePackageResult"    column="newbie_package_result"    />
+        <result property="jdGoldOrderNo"    column="jd_gold_order_no"    />
+        <result property="jdGoldIsFirst"    column="jd_gold_is_first"    />
+        <result property="jdGoldConfirmTime"    column="jd_gold_confirm_time"    />
+        <result property="jdNewHandRewardId"    column="jd_new_hand_reward_id"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
-        <result property="createUser"    column="create_user"    />
-        <result property="updateUser"    column="update_user"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
     </resultMap>
 
     <sql id="selectDataJdVo">
-        select id, record_time, task_inner_id, task_url, order_no, order_name, channel_first, channel_below_source, check_status, check_reason, join_jd_pin, join_link, join_time, join_order, open_jd_credit_pin, open_jd_credit_url, open_jd_credit_time, open_jd_credit_type, jd_credit_first_order_no, jd_credit_first_order_pin, jd_credit_first_order_time, jd_credit_first_order_url, bank_and_order_no, bank_and_pin, bank_and_income_money, bank_and_income_time, bank_and_promote_url, joined_first_order_with_jd_credit_time_difference, joined_first_order_with_bank_income_time_difference, jd_credit_open_one_day, newbie_package_oper_time, newbie_package_pin, newbie_package_url_id, newbie_package_result, create_time, update_time, create_user, update_user from tab_data_jd
+        select id, record_time, task_inner_id, task_url, order_no, order_name, channel_first, channel_below_source, check_status, check_reason, join_jd_pin, join_link, join_time, join_order, open_jd_credit_pin, open_jd_credit_url, open_jd_credit_time, open_jd_credit_type, jd_credit_first_order_no, jd_credit_first_order_pin, jd_credit_first_order_time, jd_credit_first_order_url, bank_and_order_no, bank_and_pin, bank_and_income_money, bank_and_income_time, bank_and_promote_url, joined_first_order_with_jd_credit_time_difference, joined_first_order_with_bank_income_time_difference, jd_credit_open_one_day, newbie_package_oper_time, newbie_package_pin, newbie_package_url_id, newbie_package_result, jd_gold_order_no, jd_gold_is_first, jd_gold_confirm_time, jd_new_hand_reward_id, create_time, update_time, create_by, update_by from tab_data_jd
     </sql>
 
     <select id="selectDataJdList" parameterType="DataJd" resultMap="DataJdResult">
@@ -85,8 +89,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="newbiePackagePin != null  and newbiePackagePin != ''"> and newbie_package_pin = #{newbiePackagePin}</if>
             <if test="newbiePackageUrlId != null  and newbiePackageUrlId != ''"> and newbie_package_url_id = #{newbiePackageUrlId}</if>
             <if test="newbiePackageResult != null "> and newbie_package_result = #{newbiePackageResult}</if>
-            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
-            <if test="updateUser != null  and updateUser != ''"> and update_user = #{updateUser}</if>
+            <if test="jdGoldOrderNo != null  and jdGoldOrderNo != ''"> and jd_gold_order_no = #{jdGoldOrderNo}</if>
+            <if test="jdGoldIsFirst != null "> and jd_gold_is_first = #{jdGoldIsFirst}</if>
+            <if test="jdGoldConfirmTime != null "> and jd_gold_confirm_time = #{jdGoldConfirmTime}</if>
+            <if test="jdNewHandRewardId != null  and jdNewHandRewardId != ''"> and jd_new_hand_reward_id = #{jdNewHandRewardId}</if>
         </where>
     </select>
     
@@ -132,10 +138,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="newbiePackagePin != null  and newbiePackagePin != ''">newbie_package_pin,</if>
             <if test="newbiePackageUrlId != null  and newbiePackageUrlId != ''">newbie_package_url_id,</if>
             <if test="newbiePackageResult != null ">newbie_package_result,</if>
+            <if test="jdGoldOrderNo != null  and jdGoldOrderNo != ''">jd_gold_order_no,</if>
+            <if test="jdGoldIsFirst != null ">jd_gold_is_first,</if>
+            <if test="jdGoldConfirmTime != null ">jd_gold_confirm_time,</if>
+            <if test="jdNewHandRewardId != null  and jdNewHandRewardId != ''">jd_new_hand_reward_id,</if>
             <if test="createTime != null ">create_time,</if>
             <if test="updateTime != null ">update_time,</if>
-            <if test="createUser != null  and createUser != ''">create_user,</if>
-            <if test="updateUser != null  and updateUser != ''">update_user,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  and id != ''">#{id},</if>
@@ -172,10 +182,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="newbiePackagePin != null  and newbiePackagePin != ''">#{newbiePackagePin},</if>
             <if test="newbiePackageUrlId != null  and newbiePackageUrlId != ''">#{newbiePackageUrlId},</if>
             <if test="newbiePackageResult != null ">#{newbiePackageResult},</if>
+            <if test="jdGoldOrderNo != null  and jdGoldOrderNo != ''">#{jdGoldOrderNo},</if>
+            <if test="jdGoldIsFirst != null ">#{jdGoldIsFirst},</if>
+            <if test="jdGoldConfirmTime != null ">#{jdGoldConfirmTime},</if>
+            <if test="jdNewHandRewardId != null  and jdNewHandRewardId != ''">#{jdNewHandRewardId},</if>
             <if test="createTime != null ">#{createTime},</if>
             <if test="updateTime != null ">#{updateTime},</if>
-            <if test="createUser != null  and createUser != ''">#{createUser},</if>
-            <if test="updateUser != null  and updateUser != ''">#{updateUser},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
          </trim>
     </insert>
 
@@ -215,10 +229,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="newbiePackagePin != null  and newbiePackagePin != ''">newbie_package_pin = #{newbiePackagePin},</if>
             <if test="newbiePackageUrlId != null  and newbiePackageUrlId != ''">newbie_package_url_id = #{newbiePackageUrlId},</if>
             <if test="newbiePackageResult != null ">newbie_package_result = #{newbiePackageResult},</if>
+            <if test="jdGoldOrderNo != null  and jdGoldOrderNo != ''">jd_gold_order_no = #{jdGoldOrderNo},</if>
+            <if test="jdGoldIsFirst != null ">jd_gold_is_first = #{jdGoldIsFirst},</if>
+            <if test="jdGoldConfirmTime != null ">jd_gold_confirm_time = #{jdGoldConfirmTime},</if>
+            <if test="jdNewHandRewardId != null  and jdNewHandRewardId != ''">jd_new_hand_reward_id = #{jdNewHandRewardId},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
-            <if test="createUser != null  and createUser != ''">create_user = #{createUser},</if>
-            <if test="updateUser != null  and updateUser != ''">update_user = #{updateUser},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
         </trim>
         where id = #{id}
     </update>

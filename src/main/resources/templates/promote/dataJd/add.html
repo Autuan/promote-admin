@@ -231,15 +231,30 @@
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">创建者：</label>
+                <label class="col-sm-3 control-label">金条贷款订单号：</label>
                 <div class="col-sm-8">
-                    <input name="createUser" class="form-control" type="text">
+                    <input name="jdGoldOrderNo" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">更新者：</label>
+                <label class="col-sm-3 control-label">金条是否首次贷款 0:否 1:是：</label>
                 <div class="col-sm-8">
-                    <input name="updateUser" class="form-control" type="text">
+                    <input name="jdGoldIsFirst" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">金条贷款完成时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        <input name="jdGoldConfirmTime" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">新手礼包海帆奖励Id：</label>
+                <div class="col-sm-8">
+                    <input name="jdNewHandRewardId" class="form-control" type="text">
                 </div>
             </div>
         </form>
@@ -289,6 +304,12 @@
         });
 
         $("input[name='newbiePackageOperTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='jdGoldConfirmTime']").datetimepicker({
             format: "yyyy-mm-dd",
             minView: "month",
             autoclose: true

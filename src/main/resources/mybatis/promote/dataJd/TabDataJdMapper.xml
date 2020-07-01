@@ -36,10 +36,14 @@
     <result column="newbie_package_pin" jdbcType="VARCHAR" property="newbiePackagePin" />
     <result column="newbie_package_url_id" jdbcType="VARCHAR" property="newbiePackageUrlId" />
     <result column="newbie_package_result" jdbcType="INTEGER" property="newbiePackageResult" />
+    <result column="jd_gold_order_no" jdbcType="VARCHAR" property="jdGoldOrderNo" />
+    <result column="jd_gold_is_first" jdbcType="INTEGER" property="jdGoldIsFirst" />
+    <result column="jd_gold_confirm_time" jdbcType="TIMESTAMP" property="jdGoldConfirmTime" />
+    <result column="jd_new_hand_reward_id" jdbcType="VARCHAR" property="jdNewHandRewardId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
-    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -107,7 +111,8 @@
     bank_and_order_no, bank_and_pin, bank_and_income_money, bank_and_income_time, bank_and_promote_url, 
     joined_first_order_with_jd_credit_time_difference, joined_first_order_with_bank_income_time_difference, 
     jd_credit_open_one_day, newbie_package_oper_time, newbie_package_pin, newbie_package_url_id, 
-    newbie_package_result, create_time, update_time, create_user, update_user
+    newbie_package_result, jd_gold_order_no, jd_gold_is_first, jd_gold_confirm_time, 
+    jd_new_hand_reward_id, create_time, update_time, create_by, update_by
   </sql>
   <select id="selectByExample" parameterType="com.autuan.project.promote.dataJd.domain.TabDataJdExample" resultMap="BaseResultMap">
     select
@@ -161,8 +166,9 @@
       joined_first_order_with_jd_credit_time_difference, joined_first_order_with_bank_income_time_difference, 
       jd_credit_open_one_day, newbie_package_oper_time, 
       newbie_package_pin, newbie_package_url_id, newbie_package_result, 
-      create_time, update_time, create_user, 
-      update_user)
+      jd_gold_order_no, jd_gold_is_first, jd_gold_confirm_time, 
+      jd_new_hand_reward_id, create_time, update_time, 
+      create_by, update_by)
     values (#{id,jdbcType=VARCHAR}, #{recordTime,jdbcType=TIMESTAMP}, #{taskInnerId,jdbcType=VARCHAR}, 
       #{taskUrl,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, 
       #{channelFirst,jdbcType=VARCHAR}, #{channelBelowSource,jdbcType=VARCHAR}, #{checkStatus,jdbcType=INTEGER}, 
@@ -176,8 +182,9 @@
       #{joinedFirstOrderWithJdCreditTimeDifference,jdbcType=VARCHAR}, #{joinedFirstOrderWithBankIncomeTimeDifference,jdbcType=VARCHAR}, 
       #{jdCreditOpenOneDay,jdbcType=INTEGER}, #{newbiePackageOperTime,jdbcType=TIMESTAMP}, 
       #{newbiePackagePin,jdbcType=VARCHAR}, #{newbiePackageUrlId,jdbcType=VARCHAR}, #{newbiePackageResult,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
-      #{updateUser,jdbcType=VARCHAR})
+      #{jdGoldOrderNo,jdbcType=VARCHAR}, #{jdGoldIsFirst,jdbcType=INTEGER}, #{jdGoldConfirmTime,jdbcType=TIMESTAMP}, 
+      #{jdNewHandRewardId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="map">
     insert into tab_data_jd
@@ -291,17 +298,29 @@
           <if test="record.newbiePackageResult != null">
             newbie_package_result,
           </if>
+          <if test="record.jdGoldOrderNo != null">
+            jd_gold_order_no,
+          </if>
+          <if test="record.jdGoldIsFirst != null">
+            jd_gold_is_first,
+          </if>
+          <if test="record.jdGoldConfirmTime != null">
+            jd_gold_confirm_time,
+          </if>
+          <if test="record.jdNewHandRewardId != null">
+            jd_new_hand_reward_id,
+          </if>
           <if test="record.createTime != null">
             create_time,
           </if>
           <if test="record.updateTime != null">
             update_time,
           </if>
-          <if test="record.createUser != null">
-            create_user,
+          <if test="record.createBy != null">
+            create_by,
           </if>
-          <if test="record.updateUser != null">
-            update_user,
+          <if test="record.updateBy != null">
+            update_by,
           </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
@@ -418,17 +437,29 @@
           <if test="record.newbiePackageResult != null">
             #{record.newbiePackageResult,jdbcType=INTEGER},
           </if>
+          <if test="record.jdGoldOrderNo != null">
+            #{record.jdGoldOrderNo,jdbcType=VARCHAR},
+          </if>
+          <if test="record.jdGoldIsFirst != null">
+            #{record.jdGoldIsFirst,jdbcType=INTEGER},
+          </if>
+          <if test="record.jdGoldConfirmTime != null">
+            #{record.jdGoldConfirmTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.jdNewHandRewardId != null">
+            #{record.jdNewHandRewardId,jdbcType=VARCHAR},
+          </if>
           <if test="record.createTime != null">
             #{record.createTime,jdbcType=TIMESTAMP},
           </if>
           <if test="record.updateTime != null">
             #{record.updateTime,jdbcType=TIMESTAMP},
           </if>
-          <if test="record.createUser != null">
-            #{record.createUser,jdbcType=VARCHAR},
+          <if test="record.createBy != null">
+            #{record.createBy,jdbcType=VARCHAR},
           </if>
-          <if test="record.updateUser != null">
-            #{record.updateUser,jdbcType=VARCHAR},
+          <if test="record.updateBy != null">
+            #{record.updateBy,jdbcType=VARCHAR},
           </if>
         </trim>
       </otherwise>
@@ -553,17 +584,29 @@
           <if test="record.newbiePackageResult != null">
             newbie_package_result = #{record.newbiePackageResult,jdbcType=INTEGER},
           </if>
+          <if test="record.jdGoldOrderNo != null">
+            jd_gold_order_no = #{record.jdGoldOrderNo,jdbcType=VARCHAR},
+          </if>
+          <if test="record.jdGoldIsFirst != null">
+            jd_gold_is_first = #{record.jdGoldIsFirst,jdbcType=INTEGER},
+          </if>
+          <if test="record.jdGoldConfirmTime != null">
+            jd_gold_confirm_time = #{record.jdGoldConfirmTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.jdNewHandRewardId != null">
+            jd_new_hand_reward_id = #{record.jdNewHandRewardId,jdbcType=VARCHAR},
+          </if>
           <if test="record.createTime != null">
             create_time = #{record.createTime,jdbcType=TIMESTAMP},
           </if>
           <if test="record.updateTime != null">
             update_time = #{record.updateTime,jdbcType=TIMESTAMP},
           </if>
-          <if test="record.createUser != null">
-            create_user = #{record.createUser,jdbcType=VARCHAR},
+          <if test="record.createBy != null">
+            create_by = #{record.createBy,jdbcType=VARCHAR},
           </if>
-          <if test="record.updateUser != null">
-            update_user = #{record.updateUser,jdbcType=VARCHAR},
+          <if test="record.updateBy != null">
+            update_by = #{record.updateBy,jdbcType=VARCHAR},
           </if>
         </trim>
       </otherwise>
@@ -608,10 +651,14 @@
       newbie_package_pin = #{record.newbiePackagePin,jdbcType=VARCHAR},
       newbie_package_url_id = #{record.newbiePackageUrlId,jdbcType=VARCHAR},
       newbie_package_result = #{record.newbiePackageResult,jdbcType=INTEGER},
+      jd_gold_order_no = #{record.jdGoldOrderNo,jdbcType=VARCHAR},
+      jd_gold_is_first = #{record.jdGoldIsFirst,jdbcType=INTEGER},
+      jd_gold_confirm_time = #{record.jdGoldConfirmTime,jdbcType=TIMESTAMP},
+      jd_new_hand_reward_id = #{record.jdNewHandRewardId,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_user = #{record.updateUser,jdbcType=VARCHAR}
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      update_by = #{record.updateBy,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -726,17 +773,29 @@
           <if test="record.newbiePackageResult != null">
             newbie_package_result = #{record.newbiePackageResult,jdbcType=INTEGER},
           </if>
+          <if test="record.jdGoldOrderNo != null">
+            jd_gold_order_no = #{record.jdGoldOrderNo,jdbcType=VARCHAR},
+          </if>
+          <if test="record.jdGoldIsFirst != null">
+            jd_gold_is_first = #{record.jdGoldIsFirst,jdbcType=INTEGER},
+          </if>
+          <if test="record.jdGoldConfirmTime != null">
+            jd_gold_confirm_time = #{record.jdGoldConfirmTime,jdbcType=TIMESTAMP},
+          </if>
+          <if test="record.jdNewHandRewardId != null">
+            jd_new_hand_reward_id = #{record.jdNewHandRewardId,jdbcType=VARCHAR},
+          </if>
           <if test="record.createTime != null">
             create_time = #{record.createTime,jdbcType=TIMESTAMP},
           </if>
           <if test="record.updateTime != null">
             update_time = #{record.updateTime,jdbcType=TIMESTAMP},
           </if>
-          <if test="record.createUser != null">
-            create_user = #{record.createUser,jdbcType=VARCHAR},
+          <if test="record.createBy != null">
+            create_by = #{record.createBy,jdbcType=VARCHAR},
           </if>
-          <if test="record.updateUser != null">
-            update_user = #{record.updateUser,jdbcType=VARCHAR},
+          <if test="record.updateBy != null">
+            update_by = #{record.updateBy,jdbcType=VARCHAR},
           </if>
         </trim>
       </otherwise>
@@ -778,10 +837,14 @@
       newbie_package_pin = #{newbiePackagePin,jdbcType=VARCHAR},
       newbie_package_url_id = #{newbiePackageUrlId,jdbcType=VARCHAR},
       newbie_package_result = #{newbiePackageResult,jdbcType=INTEGER},
+      jd_gold_order_no = #{jdGoldOrderNo,jdbcType=VARCHAR},
+      jd_gold_is_first = #{jdGoldIsFirst,jdbcType=INTEGER},
+      jd_gold_confirm_time = #{jdGoldConfirmTime,jdbcType=TIMESTAMP},
+      jd_new_hand_reward_id = #{jdNewHandRewardId,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_user = #{updateUser,jdbcType=VARCHAR}
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.autuan.project.promote.dataJd.domain.TabDataJdExample" resultMap="BaseResultMap">
@@ -805,7 +868,8 @@
       bank_and_order_no, bank_and_pin, bank_and_income_money, bank_and_income_time, bank_and_promote_url, 
       joined_first_order_with_jd_credit_time_difference, joined_first_order_with_bank_income_time_difference, 
       jd_credit_open_one_day, newbie_package_oper_time, newbie_package_pin, newbie_package_url_id, 
-      newbie_package_result, create_time, update_time, create_user, update_user)
+      newbie_package_result, jd_gold_order_no, jd_gold_is_first, jd_gold_confirm_time, 
+      jd_new_hand_reward_id, create_time, update_time, create_by, update_by)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=VARCHAR}, #{item.recordTime,jdbcType=TIMESTAMP}, #{item.taskInnerId,jdbcType=VARCHAR}, 
@@ -822,8 +886,10 @@
         #{item.joinedFirstOrderWithJdCreditTimeDifference,jdbcType=VARCHAR}, #{item.joinedFirstOrderWithBankIncomeTimeDifference,jdbcType=VARCHAR}, 
         #{item.jdCreditOpenOneDay,jdbcType=INTEGER}, #{item.newbiePackageOperTime,jdbcType=TIMESTAMP}, 
         #{item.newbiePackagePin,jdbcType=VARCHAR}, #{item.newbiePackageUrlId,jdbcType=VARCHAR}, 
-        #{item.newbiePackageResult,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=VARCHAR}, #{item.updateUser,jdbcType=VARCHAR}
+        #{item.newbiePackageResult,jdbcType=INTEGER}, #{item.jdGoldOrderNo,jdbcType=VARCHAR}, 
+        #{item.jdGoldIsFirst,jdbcType=INTEGER}, #{item.jdGoldConfirmTime,jdbcType=TIMESTAMP}, 
+        #{item.jdNewHandRewardId,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR}
         )
     </foreach>
   </insert>
@@ -939,17 +1005,29 @@
         <if test="'newbie_package_result'.toString() == column.value">
           #{item.newbiePackageResult,jdbcType=INTEGER}
         </if>
+        <if test="'jd_gold_order_no'.toString() == column.value">
+          #{item.jdGoldOrderNo,jdbcType=VARCHAR}
+        </if>
+        <if test="'jd_gold_is_first'.toString() == column.value">
+          #{item.jdGoldIsFirst,jdbcType=INTEGER}
+        </if>
+        <if test="'jd_gold_confirm_time'.toString() == column.value">
+          #{item.jdGoldConfirmTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'jd_new_hand_reward_id'.toString() == column.value">
+          #{item.jdNewHandRewardId,jdbcType=VARCHAR}
+        </if>
         <if test="'create_time'.toString() == column.value">
           #{item.createTime,jdbcType=TIMESTAMP}
         </if>
         <if test="'update_time'.toString() == column.value">
           #{item.updateTime,jdbcType=TIMESTAMP}
         </if>
-        <if test="'create_user'.toString() == column.value">
-          #{item.createUser,jdbcType=VARCHAR}
+        <if test="'create_by'.toString() == column.value">
+          #{item.createBy,jdbcType=VARCHAR}
         </if>
-        <if test="'update_user'.toString() == column.value">
-          #{item.updateUser,jdbcType=VARCHAR}
+        <if test="'update_by'.toString() == column.value">
+          #{item.updateBy,jdbcType=VARCHAR}
         </if>
       </foreach>
       )
