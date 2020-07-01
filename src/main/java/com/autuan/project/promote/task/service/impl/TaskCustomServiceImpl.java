@@ -205,7 +205,13 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                 .andSalesmanIdEqualTo(ao.getSalesmanId());
         TabSalesmanTask one = tabSalesmanTaskMapper.selectOneByExample(example);
         if(one != null && StrUtil.isNotBlank(one.getId())) {
-            return;
+            if(Integer.valueOf(0).equals(one.getStatus())) {
+                one.setStatus(1);
+                tabSalesmanTaskMapper.updateByPrimaryKey(one);
+                return;
+            } else {
+                return;
+            }
         }
         TabSalesmanTask bind = TabSalesmanTask.builder()
                 .taskId(ao.getTaskId())
