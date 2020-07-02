@@ -20,6 +20,8 @@
     <result column="image" jdbcType="VARCHAR" property="image" />
     <result column="bg_img" jdbcType="VARCHAR" property="bgImg" />
     <result column="summary" jdbcType="VARCHAR" property="summary" />
+    <result column="code_prefix" jdbcType="VARCHAR" property="codePrefix" />
+    <result column="code_prefix_digit" jdbcType="INTEGER" property="codePrefixDigit" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -82,7 +84,7 @@
   <sql id="Base_Column_List">
     id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, 
     update_time, create_by, update_by, tags, article_id, priority, article_title, image, 
-    bg_img, summary
+    bg_img, summary, code_prefix, code_prefix_digit
   </sql>
   <select id="selectByExample" parameterType="com.autuan.project.promote.task.domain.TabTaskExample" resultMap="BaseResultMap">
     select
@@ -128,15 +130,15 @@
       reward_stop_time, create_time, update_time, 
       create_by, update_by, tags, 
       article_id, priority, article_title, 
-      image, bg_img, summary
-      )
+      image, bg_img, summary, 
+      code_prefix, code_prefix_digit)
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{prefix,jdbcType=VARCHAR}, 
       #{paramId,jdbcType=VARCHAR}, #{reward,jdbcType=DECIMAL}, #{rewardBeginTime,jdbcType=TIMESTAMP}, 
       #{rewardStopTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, 
       #{articleId,jdbcType=VARCHAR}, #{priority,jdbcType=INTEGER}, #{articleTitle,jdbcType=VARCHAR}, 
-      #{image,jdbcType=VARCHAR}, #{bgImg,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}
-      )
+      #{image,jdbcType=VARCHAR}, #{bgImg,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
+      #{codePrefix,jdbcType=VARCHAR}, #{codePrefixDigit,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="map">
     insert into tab_task
@@ -201,6 +203,12 @@
           </if>
           <if test="record.summary != null">
             summary,
+          </if>
+          <if test="record.codePrefix != null">
+            code_prefix,
+          </if>
+          <if test="record.codePrefixDigit != null">
+            code_prefix_digit,
           </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
@@ -268,6 +276,12 @@
           </if>
           <if test="record.summary != null">
             #{record.summary,jdbcType=VARCHAR},
+          </if>
+          <if test="record.codePrefix != null">
+            #{record.codePrefix,jdbcType=VARCHAR},
+          </if>
+          <if test="record.codePrefixDigit != null">
+            #{record.codePrefixDigit,jdbcType=INTEGER},
           </if>
         </trim>
       </otherwise>
@@ -344,6 +358,12 @@
           <if test="record.summary != null">
             summary = #{record.summary,jdbcType=VARCHAR},
           </if>
+          <if test="record.codePrefix != null">
+            code_prefix = #{record.codePrefix,jdbcType=VARCHAR},
+          </if>
+          <if test="record.codePrefixDigit != null">
+            code_prefix_digit = #{record.codePrefixDigit,jdbcType=INTEGER},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -370,7 +390,9 @@
       article_title = #{record.articleTitle,jdbcType=VARCHAR},
       image = #{record.image,jdbcType=VARCHAR},
       bg_img = #{record.bgImg,jdbcType=VARCHAR},
-      summary = #{record.summary,jdbcType=VARCHAR}
+      summary = #{record.summary,jdbcType=VARCHAR},
+      code_prefix = #{record.codePrefix,jdbcType=VARCHAR},
+      code_prefix_digit = #{record.codePrefixDigit,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -437,6 +459,12 @@
           <if test="record.summary != null">
             summary = #{record.summary,jdbcType=VARCHAR},
           </if>
+          <if test="record.codePrefix != null">
+            code_prefix = #{record.codePrefix,jdbcType=VARCHAR},
+          </if>
+          <if test="record.codePrefixDigit != null">
+            code_prefix_digit = #{record.codePrefixDigit,jdbcType=INTEGER},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -460,7 +488,9 @@
       article_title = #{articleTitle,jdbcType=VARCHAR},
       image = #{image,jdbcType=VARCHAR},
       bg_img = #{bgImg,jdbcType=VARCHAR},
-      summary = #{summary,jdbcType=VARCHAR}
+      summary = #{summary,jdbcType=VARCHAR},
+      code_prefix = #{codePrefix,jdbcType=VARCHAR},
+      code_prefix_digit = #{codePrefixDigit,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.autuan.project.promote.task.domain.TabTaskExample" resultMap="BaseResultMap">
@@ -479,7 +509,7 @@
     insert into tab_task
     (id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, 
       update_time, create_by, update_by, tags, article_id, priority, article_title, image, 
-      bg_img, summary)
+      bg_img, summary, code_prefix, code_prefix_digit)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.prefix,jdbcType=VARCHAR}, 
@@ -488,7 +518,8 @@
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR}, 
         #{item.tags,jdbcType=VARCHAR}, #{item.articleId,jdbcType=VARCHAR}, #{item.priority,jdbcType=INTEGER}, 
         #{item.articleTitle,jdbcType=VARCHAR}, #{item.image,jdbcType=VARCHAR}, #{item.bgImg,jdbcType=VARCHAR}, 
-        #{item.summary,jdbcType=VARCHAR})
+        #{item.summary,jdbcType=VARCHAR}, #{item.codePrefix,jdbcType=VARCHAR}, #{item.codePrefixDigit,jdbcType=INTEGER}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -554,6 +585,12 @@
         </if>
         <if test="'summary'.toString() == column.value">
           #{item.summary,jdbcType=VARCHAR}
+        </if>
+        <if test="'code_prefix'.toString() == column.value">
+          #{item.codePrefix,jdbcType=VARCHAR}
+        </if>
+        <if test="'code_prefix_digit'.toString() == column.value">
+          #{item.codePrefixDigit,jdbcType=INTEGER}
         </if>
       </foreach>
       )

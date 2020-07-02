@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改任务')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-task-edit" >
+        <input id="taskId" th:value="${task.id}" type="hidden">
+        <input id="prefix" field="*{prefix}" type="hidden">
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">CODE前缀：</label>
+            <div class="col-sm-6">
+                <input class="form-control keyInput" id="codePrefix" type="text" disabled="true" th:value="${task.codePrefix}">
+            </div>
+            <label class="col-sm-2 control-label">位数：</label>
+            <div class="col-sm-2">
+                <input class="form-control keyInput" id="digit" type="text" disabled="true" th:value="${task.codePrefixDigit}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">总数：</label>
+            <div class="col-sm-3">
+                <input class="form-control keyInput" type="text" id="allNum" disabled="true" th:value="${allNum}">
+            </div>
+            <label class="col-sm-3 control-label">已使用：</label>
+            <div class="col-sm-3">
+                <input class="form-control keyInput" type="text" id="usedNum" disabled="true" th:value="${usedNum}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">未使用：</label>
+            <div class="col-sm-3">
+                <input class="form-control keyInput" type="text" disabled="true" th:value="${unusedNum}">
+            </div>
+            <label class="col-sm-3 control-label">已收回：</label>
+            <div class="col-sm-3">
+                <input class="form-control keyInput" type="text" disabled="true" th:value="${recoveryNum}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">生成：</label>
+            <div class="col-sm-3">
+                <input class="form-control keyInput" id="num" type="text" placeholder="输入生成数量">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">预览：</label>
+            <div class="col-sm-3">
+               <div id="preview">12345</div>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+<script type="text/javascript">
+    var prefix = ctx + "promote/task";
+    $("#form-task-edit").validate({
+        focusCleanup: true
+    });
+    function PrefixInteger(num, n) {
+        return (Array(n).join(0) + num).slice(-n);
+    }
+
+    function submitHandler() {
+        let param = {
+            digit : $('#digit').val(),
+            prefix : $('#codePrefix').val(),
+            taskId : $('#taskId').val(),
+            num : $('#num').val(),
+            allNum : $('#allNum').val(),
+        }
+        Base.Network.post({
+            url:ctx+'promote/task/custom/setCode',
+            data:param,
+            contentType:'application/json',
+            successParse:function (data) {
+                $.modal.close();
+                parent.$.modal.msgSuccess('操作成功');
+                parent.$.table.refresh();
+            }
+        })
+    }
+    $(function () {
+
+        let digit = $('#digit').val() * 1;
+        let suffix = PrefixInteger(1, digit);
+        let codePrefix = $('#codePrefix').val();
+        let preview = codePrefix + suffix;
+        $('#preview').html(preview);
+
+        // $('#testParamUrlBtn').click(function () {
+        //     let hrefPrefix = $('#prefix').val();
+        //     let list = getParamList();
+        //     let str = '';
+        //     for (const obj of list) {
+        //         if (obj.type === '0') {
+        //             str += obj.paramKey + '=' + obj.value + '&'
+        //         }
+        //         if (obj.type === '1') {
+        //             str += obj.paramKey + '=code&'
+        //         }
+        //     }
+        //     str = str.substring(0, str.length - 1);
+        //     if (Bee.StringUtils.contains(hrefPrefix, '?')) {
+        //         str = hrefPrefix + '&' + str;
+        //     } else {
+        //         str = hrefPrefix + '?' + str;
+        //     }
+        //     $('#testParamUrl').text(str);
+        // });
+
+        // initStyle();
+    })
+</script>
+</body>
+</html>

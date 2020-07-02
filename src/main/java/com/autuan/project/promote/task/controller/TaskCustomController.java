@@ -1,9 +1,12 @@
 package com.autuan.project.promote.task.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.autuan.framework.aspectj.lang.annotation.Log;
 import com.autuan.framework.aspectj.lang.enums.BusinessType;
 import com.autuan.project.front.entity.ReturnResult;
+import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.param.domain.TabParam;
+import com.autuan.project.promote.task.domain.SetCodeReq;
 import com.autuan.project.promote.task.domain.SetTaskParamAO;
 import com.autuan.project.promote.task.domain.Task;
 import com.autuan.project.promote.task.service.ITaskCustomService;
@@ -32,6 +35,7 @@ public class TaskCustomController {
     private ITaskService taskService;
     @Autowired
     private ITaskCustomService taskCustomService;
+
     /**
      * 设置param
      *
@@ -49,19 +53,42 @@ public class TaskCustomController {
         return prefix + "/param";
     }
 
+    @GetMapping("/code/{id}")
+    public String code(@PathVariable("id") String id, ModelMap mmap) {
+        Task task = taskService.selectTaskById(id);
+        List<TabSalesmanTask> list = taskCustomService.listForCode(id);
+        mmap.put("allNum", list.size());
+        long usedNum = list.stream().filter(item -> 1 == item.getStatus()).count();
+        long unusedNum = list.stream().filter(item -> 0 == item.getStatus()).count();
+        long recoveryNum = list.stream().filter(item -> 3 == item.getStatus()).count();
+        mmap.put("task", task);
+        mmap.put("usedNum", usedNum);
+        mmap.put("unusedNum", unusedNum);
+        mmap.put("recoveryNum", recoveryNum);
+        return prefix + "/code";
+    }
+
     @PostMapping("/setTaskParam")
     @ResponseBody
     @RequiresPermissions("promote:task:edit")
     @Log(title = "设置参数", businessType = BusinessType.INSERT)
-    public ReturnResult setTaskParam(@RequestBody SetTaskParamAO ao){
+    public ReturnResult setTaskParam(@RequestBody SetTaskParamAO ao) {
         taskCustomService.setTaskParam(ao);
+        return ReturnResult.ok();
+    }
+
+    @PostMapping("/setCode")
+    @ResponseBody
+    @RequiresPermissions("promote:task:edit")
+    @Log(title = "设置参数", businessType = BusinessType.INSERT)
+    public ReturnResult setCode(@RequestBody SetCodeReq req) {
+        taskCustomService.setCode(req);
         return ReturnResult.ok();
     }
 
     @RequestMapping("/get/{id}")
     @ResponseBody
-    public ReturnResult edit(@PathVariable("id") String id)
-    {
+    public ReturnResult edit(@PathVariable("id") String id) {
         Task task = taskService.selectTaskById(id);
         return ReturnResult.ok(task);
     }

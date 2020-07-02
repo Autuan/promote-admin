@@ -3,6 +3,7 @@ package com.autuan.project.promote.link.linkSalesmanTask.controller;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.SalesmanTask;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.SalesmanTaskListDTO;
+import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.link.linkSalesmanTask.service.ISalesmanTaskCustomService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * @className: SalesmanTaskCustomController
@@ -34,6 +37,14 @@ public class SalesmanTaskCustomController {
     public ReturnResult list(SalesmanTask salesmanTask) {
         SalesmanTaskListDTO dto = salesmanTaskCustomServicce.listSalesmanAndTask();
         return ReturnResult.ok(dto);
+    }
+
+    @RequiresPermissions("promote:linkSalesmanTask:list")
+    @PostMapping("/listByTaskId")
+    @ResponseBody
+    public ReturnResult listByTaskId(SalesmanTask salesmanTask) {
+        List<TabSalesmanTask> res = salesmanTaskCustomServicce.listByTaskId(salesmanTask);
+        return ReturnResult.ok(res);
     }
 
     @RequiresPermissions("promote:linkSalesmanTask:list")

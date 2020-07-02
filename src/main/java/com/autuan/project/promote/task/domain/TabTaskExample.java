@@ -1344,6 +1344,136 @@ public class TabTaskExample {
             addCriterion("summary not between", value1, value2, "summary");
             return (Criteria) this;
         }
+
+        public Criteria andCodePrefixIsNull() {
+            addCriterion("code_prefix is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixIsNotNull() {
+            addCriterion("code_prefix is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixEqualTo(String value) {
+            addCriterion("code_prefix =", value, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixNotEqualTo(String value) {
+            addCriterion("code_prefix <>", value, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixGreaterThan(String value) {
+            addCriterion("code_prefix >", value, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixGreaterThanOrEqualTo(String value) {
+            addCriterion("code_prefix >=", value, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixLessThan(String value) {
+            addCriterion("code_prefix <", value, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixLessThanOrEqualTo(String value) {
+            addCriterion("code_prefix <=", value, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixLike(String value) {
+            addCriterion("code_prefix like", value, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixNotLike(String value) {
+            addCriterion("code_prefix not like", value, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixIn(List<String> values) {
+            addCriterion("code_prefix in", values, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixNotIn(List<String> values) {
+            addCriterion("code_prefix not in", values, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixBetween(String value1, String value2) {
+            addCriterion("code_prefix between", value1, value2, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixNotBetween(String value1, String value2) {
+            addCriterion("code_prefix not between", value1, value2, "codePrefix");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitIsNull() {
+            addCriterion("code_prefix_digit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitIsNotNull() {
+            addCriterion("code_prefix_digit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitEqualTo(Integer value) {
+            addCriterion("code_prefix_digit =", value, "codePrefixDigit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitNotEqualTo(Integer value) {
+            addCriterion("code_prefix_digit <>", value, "codePrefixDigit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitGreaterThan(Integer value) {
+            addCriterion("code_prefix_digit >", value, "codePrefixDigit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitGreaterThanOrEqualTo(Integer value) {
+            addCriterion("code_prefix_digit >=", value, "codePrefixDigit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitLessThan(Integer value) {
+            addCriterion("code_prefix_digit <", value, "codePrefixDigit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitLessThanOrEqualTo(Integer value) {
+            addCriterion("code_prefix_digit <=", value, "codePrefixDigit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitIn(List<Integer> values) {
+            addCriterion("code_prefix_digit in", values, "codePrefixDigit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitNotIn(List<Integer> values) {
+            addCriterion("code_prefix_digit not in", values, "codePrefixDigit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitBetween(Integer value1, Integer value2) {
+            addCriterion("code_prefix_digit between", value1, value2, "codePrefixDigit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCodePrefixDigitNotBetween(Integer value1, Integer value2) {
+            addCriterion("code_prefix_digit not between", value1, value2, "codePrefixDigit");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

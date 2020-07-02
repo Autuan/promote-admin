@@ -6,7 +6,7 @@ import cn.hutool.core.util.IdUtil;
     import java.time.LocalDateTime;
             import com.autuan.common.utils.security.ShiroUtils;
             import com.autuan.common.utils.security.ShiroUtils;
-                                import org.springframework.beans.factory.annotation.Autowired;
+                                        import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.autuan.project.promote.task.mapper.TaskMapper;
 import com.autuan.project.promote.task.domain.Task;
@@ -17,7 +17,7 @@ import com.autuan.common.utils.text.Convert;
  * 任务Service业务层处理
  * 
  * @author autuan
- * @date 2020-06-23
+ * @date 2020-07-02
  */
 @Service
 public class TaskServiceImpl implements ITaskService 
@@ -60,7 +60,7 @@ public class TaskServiceImpl implements ITaskService
     {
                                     task.setCreateTime(LocalDateTime.now());
                     task.setCreateBy(ShiroUtils.getLoginName());
-                                            task.setId(IdUtil.simpleUUID());
+                                                    task.setId(IdUtil.simpleUUID());
         return taskMapper.insertTask(task);
     }
 
@@ -75,7 +75,7 @@ public class TaskServiceImpl implements ITaskService
     {
                                     task.setUpdateTime(LocalDateTime.now());
                         task.setUpdateBy(ShiroUtils.getLoginName());
-                                        return taskMapper.updateTask(task);
+                                                return taskMapper.updateTask(task);
     }
 
     /**

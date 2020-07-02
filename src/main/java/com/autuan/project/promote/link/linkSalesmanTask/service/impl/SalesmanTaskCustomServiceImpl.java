@@ -2,6 +2,7 @@ package com.autuan.project.promote.link.linkSalesmanTask.service.impl;
 
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.common.utils.text.Convert;
+import com.autuan.project.promote.link.linkSalesmanTask.domain.SalesmanTask;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.SalesmanTaskListDTO;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskExample;
@@ -11,6 +12,7 @@ import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
 import com.autuan.project.promote.task.domain.TabTask;
 import com.autuan.project.promote.task.service.ITaskCustomService;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,6 +71,17 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
                 .build();
         tabSalesmanTaskMapper.updateByExampleSelective(bean,example);
 
+    }
+
+    @Override
+    public List<TabSalesmanTask> listByTaskId(SalesmanTask salesmanTask) {
+        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+        List<Integer> inList = Lists.newArrayList(0, 3);
+        example.createCriteria()
+                .andTaskIdEqualTo(salesmanTask.getTaskId())
+                .andStatusEqualTo(0)
+                .andTypeIn(inList);
+        return tabSalesmanTaskMapper.selectByExample(example);
     }
 
 

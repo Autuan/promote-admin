@@ -4,6 +4,7 @@ import com.autuan.project.front.entity.GeneratorQrCodeVO;
 import com.autuan.project.front.entity.ReceiveAO;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.param.domain.TabParam;
+import com.autuan.project.promote.task.domain.SetCodeReq;
 import com.autuan.project.promote.task.domain.SetTaskParamAO;
 import com.autuan.project.promote.task.domain.TabTask;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,16 @@ public interface ITaskCustomService {
      */
     void setTaskParam(SetTaskParamAO ao);
 
+    /***
+     *
+     * @param taskId
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.lang.Object
+     * @since: 20:48 2020/7/2
+     */
+    List<TabSalesmanTask> listForCode(String taskId);
     /**
      * 获取设置的配置
      * @param
@@ -90,4 +101,6 @@ public interface ITaskCustomService {
      * @since : 2020/7/1 16:16
      */
     List<TabSalesmanTask> receivedTask(String salesmanId);
+
+    void setCode(SetCodeReq req);
 }

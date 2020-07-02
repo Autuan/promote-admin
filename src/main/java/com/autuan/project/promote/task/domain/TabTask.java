@@ -50,6 +50,10 @@ public class TabTask {
 
     private String summary;
 
+    private String codePrefix;
+
+    private Integer codePrefixDigit;
+
     public enum Column {
         id("id", "id", "VARCHAR", false),
         name("name", "name", "VARCHAR", false),
@@ -68,7 +72,9 @@ public class TabTask {
         articleTitle("article_title", "articleTitle", "VARCHAR", false),
         image("image", "image", "VARCHAR", false),
         bgImg("bg_img", "bgImg", "VARCHAR", false),
-        summary("summary", "summary", "VARCHAR", false);
+        summary("summary", "summary", "VARCHAR", false),
+        codePrefix("code_prefix", "codePrefix", "VARCHAR", false),
+        codePrefixDigit("code_prefix_digit", "codePrefixDigit", "INTEGER", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

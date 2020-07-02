@@ -1,10 +1,12 @@
 package com.autuan.project.promote.task.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
+import com.autuan.common.exception.custom.CustomRespondException;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.project.front.entity.GeneratorQrCodeVO;
 import com.autuan.project.front.entity.ReceiveAO;
@@ -15,6 +17,7 @@ import com.autuan.project.promote.link.linkSalesmanTask.service.ISalesmanTaskCus
 import com.autuan.project.promote.param.domain.TabParam;
 import com.autuan.project.promote.param.domain.TabParamExample;
 import com.autuan.project.promote.param.mapper.TabParamMapper;
+import com.autuan.project.promote.task.domain.SetCodeReq;
 import com.autuan.project.promote.task.domain.SetTaskParamAO;
 import com.autuan.project.promote.task.domain.TabTask;
 import com.autuan.project.promote.task.domain.TabTaskExample;
@@ -30,7 +33,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +81,14 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
             param.setId(IdUtil.simpleUUID());
         }
         paramMapper.batchInsert(list);
+    }
+
+    @Override
+    public List<TabSalesmanTask> listForCode(String taskId) {
+        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+        example.createCriteria()
+                .andTaskIdEqualTo(taskId);
+        return tabSalesmanTaskMapper.selectByExample(example);
     }
 
     /**
@@ -240,5 +253,43 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
         example.createCriteria()
                 .andSalesmanIdEqualTo(salesmanId);
         return tabSalesmanTaskMapper.selectByExample(example);
+    }
+
+    @Override
+    public void setCode(SetCodeReq req) {
+        String prefix = req.getPrefix();
+        String taskId = req.getTaskId();
+        LocalDateTime now = LocalDateTime.now();
+        String loginName = ShiroUtils.getLoginName();
+
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMinimumIntegerDigits(req.getDigit());
+
+        int thisMax = req.getNum() + req.getAllNum();
+        String limit = "";
+        for(int i=0;i<req.getDigit();i++) {
+            limit += "9";
+        }
+        if(Integer.valueOf(limit) < thisMax){
+            throw new CustomRespondException("生成数量超过最大位数限制");
+        }
+        List<TabSalesmanTask> list = new ArrayList<>(req.getNum());
+        for(int i=req.getAllNum();i<thisMax;i++) {
+        String code = prefix + df.format(i);
+            TabSalesmanTask bean = TabSalesmanTask.builder()
+                    .id(IdUtil.simpleUUID())
+                    .taskId(taskId)
+                    .code(code)
+                    .createTime(now)
+                    .createBy(loginName)
+                    .status(0)
+                    .type(0)
+                    .build();
+            list.add(bean);
+        }
+        list.size();
+        if(CollectionUtil.isNotEmpty(list)) {
+        tabSalesmanTaskMapper.batchInsert(list);
+        }
     }
 }
