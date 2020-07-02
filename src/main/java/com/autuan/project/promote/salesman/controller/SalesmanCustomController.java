@@ -29,9 +29,10 @@ import java.util.List;
 @RequestMapping("/promote/salesman/custom")
 public class SalesmanCustomController extends BaseController {
     private String prefix = "promote/salesman";
-
     @Autowired
-    private ISalesmanCustomService salesmanService;
+    private ISalesmanService salesmanService;
+    @Autowired
+    private ISalesmanCustomService salesmanCustomService;
 
     /**
      * 查询业务员
@@ -40,7 +41,7 @@ public class SalesmanCustomController extends BaseController {
     @PostMapping("/selectByMobile/{mobile}")
     @ResponseBody
     public ReturnResult selectByMobile(@PathVariable("mobile") String mobile) {
-        TabSalesman tabSalesman = salesmanService.selectByMobile(mobile);
+        TabSalesman tabSalesman = salesmanCustomService.selectByMobile(mobile);
         return ReturnResult.ok(tabSalesman);
     }
 
@@ -49,7 +50,14 @@ public class SalesmanCustomController extends BaseController {
     @Log(title = "业务员重置密码", businessType = BusinessType.UPDATE)
     @ResponseBody
     public ReturnResult resetPwd(String ids) {
-        salesmanService.resetPwd(ids);
+        salesmanCustomService.resetPwd(ids);
         return ReturnResult.ok();
+    }
+
+    @RequestMapping("/get/{id}")
+    @ResponseBody
+    public ReturnResult edit(@PathVariable("id") String id) {
+        Salesman salesman = salesmanService.selectSalesmanById(id);
+        return ReturnResult.ok(salesman);
     }
 }

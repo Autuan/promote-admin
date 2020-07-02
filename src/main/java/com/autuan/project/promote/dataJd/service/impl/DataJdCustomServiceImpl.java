@@ -87,11 +87,12 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
             if(StrUtil.isBlank(taskId) || StrUtil.isBlank(salesmanId)) {
                 continue;
             }
-//            data.setTaskId(taskId);
-//            data.setSalesmanId(salesmanId);
+            data.setTaskId(taskId);
+            data.setSalesmanId(salesmanId);
             data.setCreateTime(now);
             data.setCreateBy(loginName);
             data.setId(IdUtil.simpleUUID());
+            insertList.add(data);
         }
         if(CollectionUtil.isNotEmpty(insertList)) {
             dataJdMapper.batchInsert(insertList);

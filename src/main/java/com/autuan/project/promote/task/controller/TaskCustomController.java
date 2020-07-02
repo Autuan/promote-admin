@@ -57,4 +57,12 @@ public class TaskCustomController {
         taskCustomService.setTaskParam(ao);
         return ReturnResult.ok();
     }
+
+    @RequestMapping("/get/{id}")
+    @ResponseBody
+    public ReturnResult edit(@PathVariable("id") String id)
+    {
+        Task task = taskService.selectTaskById(id);
+        return ReturnResult.ok(task);
+    }
 }

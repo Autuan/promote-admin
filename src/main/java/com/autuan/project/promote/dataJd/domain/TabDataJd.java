@@ -97,6 +97,10 @@ public class TabDataJd {
 
     private String updateBy;
 
+    private String taskId;
+
+    private String salesmanId;
+
     public enum Column {
         id("id", "id", "VARCHAR", false),
         recordTime("record_time", "recordTime", "TIMESTAMP", false),
@@ -139,7 +143,9 @@ public class TabDataJd {
         createTime("create_time", "createTime", "TIMESTAMP", false),
         updateTime("update_time", "updateTime", "TIMESTAMP", false),
         createBy("create_by", "createBy", "VARCHAR", false),
-        updateBy("update_by", "updateBy", "VARCHAR", false);
+        updateBy("update_by", "updateBy", "VARCHAR", false),
+        taskId("task_id", "taskId", "VARCHAR", false),
+        salesmanId("salesman_id", "salesmanId", "VARCHAR", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

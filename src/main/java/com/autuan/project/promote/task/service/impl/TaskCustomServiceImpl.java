@@ -218,6 +218,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                 .salesmanId(ao.getSalesmanId())
                 .code(IdUtil.objectId())
                 .status(1)
+                .type(1)
                 .createTime(LocalDateTime.now())
                 .id(IdUtil.simpleUUID())
                 .build();

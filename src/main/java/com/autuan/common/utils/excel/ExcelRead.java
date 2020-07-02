@@ -9,7 +9,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -119,6 +121,15 @@ public class ExcelRead {
         if(objListSize <= i){
             return null;
         }
-        return (LocalDateTime) objList.get(i);
+        Object obj = objList.get(i);
+        if(obj instanceof LocalDateTime) {
+            return (LocalDateTime) obj;
+        }
+        if(obj instanceof String) {
+            String dateStr = (String) obj;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return LocalDateTime.parse(dateStr, formatter);
+        }
+        return null;
     }
 }
