@@ -134,30 +134,30 @@ public class DataBankCustomController {
             for (int i = 1; i < inputList.size(); i++) {
                 List<Object> objList = inputList.get(i);
                 if (CollectionUtil.isNotEmpty(objList)) {
-                    LocalDateTime applyDate = (LocalDateTime) objList.get(0);
-                    LocalDateTime verifyDate = (LocalDateTime) objList.get(1);
-                    String applyId = (String) objList.get(2);
-                    String approveStatusStr = (String) objList.get(3);
-                    String bankName = (String) objList.get(4);
-                    String cMobile = String.valueOf(objList.get(5));
-                    String cName = (String) objList.get(6);
-                    String channelCode = (String) objList.get(7);
-                    String customFlagStr = (String) objList.get(8);
-                    String taskId = (String) objList.get(9);
-                    String salesmanId = (String) objList.get(10);
+                    int j = 0;
+                    ExcelRead.setObjList(objList);
+                    LocalDateTime applyDate = ExcelRead.getLocalDateTime(j++);
+                    LocalDateTime verifyDate = ExcelRead.getLocalDateTime(j++);
+                    String applyId = ExcelRead.getStr(j++);
+                    String approveStatusStr = ExcelRead.getStr(j++);
+                    String bankName = ExcelRead.getStr(j++);
+                    String cMobile =ExcelRead.getStr(j++);
+                    String cName =ExcelRead.getStr(j++);
+                    String channelCode = ExcelRead.getStr(j++);
+                    String customFlagStr = ExcelRead.getStr(j++);
 
                     list.add(TabDataBank.builder()
                             .applyDate(applyDate)
                             .verifyDate(verifyDate)
                             .applyId(applyId)
-                            .approveStatus(approveStatusStr.equals("通过") ? 1 : 0)
+                            .approveStatus("通过".equals(approveStatusStr) ? 1 : 0)
                             .bankName(bankName)
                             .cMobile(cMobile)
                             .cName(cName)
                             .channelCode(channelCode)
-                            .customFlag(customFlagStr.equals("是") ? 1 : 0)
-                            .taskId(taskId)
-                            .salesmanId(salesmanId)
+                            .customFlag("是".equals(customFlagStr) ? 1 : 0)
+//                            .taskId(taskId)
+//                            .salesmanId(salesmanId)
                             .build());
                 }
             }

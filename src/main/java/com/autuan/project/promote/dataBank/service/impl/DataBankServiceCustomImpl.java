@@ -13,16 +13,18 @@ import com.autuan.project.promote.dataBank.service.IDataBankService;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskExample;
 import com.autuan.project.promote.link.linkSalesmanTask.mapper.TabSalesmanTaskMapper;
+import com.autuan.project.promote.salesman.domain.TabSalesmanExample;
+import com.autuan.project.promote.task.domain.TabTask;
+import com.autuan.project.promote.task.domain.TabTaskExample;
+import com.autuan.project.promote.task.mapper.TabTaskMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @className: DataBankServiceCustomImpl
@@ -41,61 +43,79 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
     private IDataBankService dataBankService;
     @Autowired
     private TabSalesmanTaskMapper tabSalesmanTaskMapper;
-
+    @Autowired
+    private TabTaskMapper tabTaskMapper;
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void importExcel(List<TabDataBank> list) {
         LocalDateTime now = LocalDateTime.now();
         String loginName = ShiroUtils.getLoginName();
 
-//        TabSalesmanTaskExample linkExample = new TabSalesmanTaskExample();
-//        linkExample.createCriteria()
-
-        // 添加信息
-//        Set<String> taskIdSet = new HashSet<>();
-//        Set<String> salesManIdSet = new HashSet<>();
-
-        Set<String> addition = new HashSet<>();
-
+        // 使用code 和 name 分别查出 taskId 和 salesmanId
+        // taskId
+        TabTaskExample tabTaskExample = new TabTaskExample();
         for (TabDataBank dataBank : list) {
-            String taskId = dataBank.getTaskId();
-            String salesmanId = dataBank.getSalesmanId();
-//            taskIdSet.add(taskId);
-//            salesManIdSet.add(salesmanId);
+            tabTaskExample.or()
+                    .andNameEqualTo(dataBank.getBankName());
+        }
+        List<TabTask> taskList = tabTaskMapper.selectByExample(tabTaskExample);
+        Map<String, String> taskMap = taskList.stream()
+                .collect(Collectors.toMap(TabTask::getName, TabTask::getId));
+        // salesmanId
+        TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
+        for (TabDataBank dataBank : list) {
+            String taskId = taskMap.get(dataBank.getBankName());
+            if(StrUtil.isNotBlank(taskId)) {
+            salesmanTaskExample.or()
+                    .andCodeEqualTo(dataBank.getChannelCode())
+                    .andTaskIdEqualTo(taskId);
+            }
+        }
+        List<TabSalesmanTask> tabSalesmanTaskList = new ArrayList<>();
+        if(CollectionUtil.isNotEmpty(salesmanTaskExample.getOredCriteria())) {
+            tabSalesmanTaskList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
+        }
+        Map<String, String> linkMap = tabSalesmanTaskList.stream()
+                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId));
 
-            addition.add(taskId + "-" + salesmanId);
-
-
-//            TabSalesmanTaskExample linkExample = new TabSalesmanTaskExample();
-//            linkExample.createCriteria()
-//                    .andTaskIdEqualTo()
-//                    .andSalesmanIdEqualTo()
-
+        // 插入
+        List<TabDataBank> insertList = new ArrayList<>();
+        for (TabDataBank dataBank : list) {
+            String taskId = taskMap.get(dataBank.getBankName());
+            String salesmanId = linkMap.get(dataBank.getChannelCode());
+            if(StrUtil.isBlank(taskId) || StrUtil.isBlank(salesmanId)) {
+                continue;
+            }
+            dataBank.setTaskId(taskId);
+            dataBank.setSalesmanId(salesmanId);
             dataBank.setCreateTime(now);
             dataBank.setCreateBy(loginName);
             dataBank.setId(IdUtil.simpleUUID());
+            insertList.add(dataBank);
         }
-        dataBankMapper.batchInsert(list);
+        if(CollectionUtil.isNotEmpty(insertList)) {
+            dataBankMapper.batchInsert(insertList);
+        }
         // 添加领取记录
-        TabSalesmanTaskExample linkExample = new TabSalesmanTaskExample();
-        List<TabSalesmanTask> linkDataList = new ArrayList<>(addition.size());
-        for (String str : addition) {
-            String[] split = str.split("-");
-            linkExample.or()
-                    .andSalesmanIdEqualTo(split[1])
-                    .andTaskIdEqualTo(split[0]);
-
-            linkDataList.add(TabSalesmanTask.builder()
-                    .id(IdUtil.simpleUUID())
-                    .code(IdUtil.simpleUUID())
-                    .salesmanId(split[1])
-                    .taskId(split[0])
-                    .createTime(now)
-                    .createBy(loginName)
-                    .build());
-        }
-        tabSalesmanTaskMapper.deleteByExample(linkExample);
-        tabSalesmanTaskMapper.batchInsert(linkDataList);
+//        TabSalesmanTaskExample linkExample = new TabSalesmanTaskExample();
+//        List<TabSalesmanTask> linkDataList = new ArrayList<>(addition.size());
+//        for (String str : addition) {
+//            String[] split = str.split("-");
+//            linkExample.or()
+//                    .andSalesmanIdEqualTo(split[1])
+//                    .andTaskIdEqualTo(split[0]);
+//
+//            linkDataList.add(TabSalesmanTask.builder()
+//                    .id(IdUtil.simpleUUID())
+//                    .code(IdUtil.simpleUUID())
+//                    .salesmanId(split[1])
+//                    .taskId(split[0])
+//                    .createTime(now)
+//                    .createBy(loginName)
+//                    .build());
+//        }
+//        tabSalesmanTaskMapper.deleteByExample(linkExample);
+//        tabSalesmanTaskMapper.batchInsert(linkDataList);
 
     }
 

@@ -54,10 +54,10 @@ public class DataBank extends BaseEntity
     @Excel(name = "custom_flag",combo="否,是")
     private Integer customFlag;
     /** 所属任务ID */
-    @Excel(name = "所属任务ID")
+//    @Excel(name = "所属任务ID")
     private String taskId;
     /** 所属业务员 */
-    @Excel(name = "所属业务员ID")
+//    @Excel(name = "所属业务员ID")
     private String salesmanId;
 
 
