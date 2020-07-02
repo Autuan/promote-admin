@@ -1,163 +1,167 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('业务员任务领取记录列表')" />
+    <th:block th:include="include :: header('业务员任务领取记录列表')"/>
 </head>
 <body class="gray-bg">
-     <div class="container-div">
-        <div class="row">
-            <div class="col-sm-12 search-collapse">
-                <form id="formId">
-                    <div class="select-list">
-                        <ul>
-                            <!--<li>-->
-                                <!--<p>任务id：</p>-->
-                                <!--<input type="text" name="taskId"/>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<p>业务员id：</p>-->
-                                <!--<input type="text" name="salesmanId"/>-->
-                            <!--</li>-->
-                            <li>
-                                <p>业务员CODE：</p>
-                                <input type="text" name="code"/>
-                            </li>
-                            <!--<li>-->
-                                <!--<p>专属链接：</p>-->
-                                <!--<input type="text" name="link"/>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<p>奖励额：</p>-->
-                                <!--<input type="text" name="reward"/>-->
-                            <!--</li>-->
-                            <!--<li class="select-time">-->
-                                <!--<p>奖励开始时间：</p>-->
-                                <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginRewardBeginTime]"/>-->
-                                <!--<span>-</span>-->
-                                <!--<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endRewardBeginTime]"/>-->
-                            <!--</li>-->
-                            <!--<li class="select-time">-->
-                                <!--<p>奖励结束时间：</p>-->
-                                <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginRewardStopTime]"/>-->
-                                <!--<span>-</span>-->
-                                <!--<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endRewardStopTime]"/>-->
-                            <!--</li>-->
-                            <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-                            </li>
-                        </ul>
-                    </div>
-                </form>
-            </div>
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <!--<li>-->
+                        <!--<p>任务id：</p>-->
+                        <!--<input type="text" name="taskId"/>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                        <!--<p>业务员id：</p>-->
+                        <!--<input type="text" name="salesmanId"/>-->
+                        <!--</li>-->
+                        <li>
+                            <p>业务员CODE：</p>
+                            <input type="text" name="code"/>
+                        </li>
+                        <!--<li>-->
+                        <!--<p>专属链接：</p>-->
+                        <!--<input type="text" name="link"/>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                        <!--<p>奖励额：</p>-->
+                        <!--<input type="text" name="reward"/>-->
+                        <!--</li>-->
+                        <!--<li class="select-time">-->
+                        <!--<p>奖励开始时间：</p>-->
+                        <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginRewardBeginTime]"/>-->
+                        <!--<span>-</span>-->
+                        <!--<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endRewardBeginTime]"/>-->
+                        <!--</li>-->
+                        <!--<li class="select-time">-->
+                        <!--<p>奖励结束时间：</p>-->
+                        <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginRewardStopTime]"/>-->
+                        <!--<span>-</span>-->
+                        <!--<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endRewardStopTime]"/>-->
+                        <!--</li>-->
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
 
-            <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="promote:linkSalesmanTask:add">
-                    <i class="fa fa-plus"></i> 添加
-                </a>
-                <!--<a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="promote:linkSalesmanTask:edit">-->
-                    <!--<i class="fa fa-edit"></i> 修改-->
-                <!--</a>-->
-                <!--<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:linkSalesmanTask:remove">-->
-                    <!--<i class="fa fa-remove"></i> 删除-->
-                <!--</a>-->
-<!--                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:linkSalesmanTask:export">-->
-<!--                    <i class="fa fa-download"></i> 导出-->
-<!--                 </a>-->
-<!--                <div style="margin-left: 20px;"></div>-->
-                    <a class="btn btn-info multiple disabled" onclick="verifyPass()" shiro:hasPermission="promote:linkSalesmanTask:remove">
-                        <i class="fa "></i> 审核通过
-                    </a>
-                    <a class="btn btn-warning multiple disabled" onclick="verifyFail()" shiro:hasPermission="promote:linkSalesmanTask:remove">
-                        <i class="fa "></i> 审核拒绝
-                    </a>
-            </div>
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="promote:linkSalesmanTask:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <!--<a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="promote:linkSalesmanTask:edit">-->
+            <!--<i class="fa fa-edit"></i> 修改-->
+            <!--</a>-->
+            <!--<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:linkSalesmanTask:remove">-->
+            <!--<i class="fa fa-remove"></i> 删除-->
+            <!--</a>-->
+            <!--                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:linkSalesmanTask:export">-->
+            <!--                    <i class="fa fa-download"></i> 导出-->
+            <!--                 </a>-->
+            <!--                <div style="margin-left: 20px;"></div>-->
+            <a class="btn btn-info multiple disabled" onclick="verifyPass()"
+               shiro:hasPermission="promote:linkSalesmanTask:remove">
+                <i class="fa "></i> 审核通过
+            </a>
+            <a class="btn btn-warning multiple disabled" onclick="verifyFail()"
+               shiro:hasPermission="promote:linkSalesmanTask:remove">
+                <i class="fa "></i> 审核拒绝
+            </a>
+        </div>
 
-            <div class="col-sm-12 select-table table-striped">
-                <table id="bootstrap-table"></table>
-            </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
         </div>
     </div>
-    <th:block th:include="include :: footer" />
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:remove')}]];
-        var prefix = ctx + "promote/linkSalesmanTask";
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:remove')}]];
+    var prefix = ctx + "promote/linkSalesmanTask";
 
-        function verifyPass() {
-            var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
-            if (rows.length == 0) {
-                $.modal.alertWarning("请至少选择一条记录");
-                return;
-            }
-            $.modal.confirm("确认要审核通过" + rows.length + "条数据吗?", function () {
-                Base.Network.post({
-                    url: ctx + 'promote/linkSalesmanTask/custom/pass',
-                    data: {"ids": rows.join()},
-                    successParse: function (data) {
-                        // console.info(data)
-                        $.modal.msgSuccess("操作成功");
-                        $.table.refresh();
-                    }
-                })
-            });
-        };
+    function verifyPass() {
+        var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+        if (rows.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
+        $.modal.confirm("确认要审核通过" + rows.length + "条数据吗?", function () {
+            Base.Network.post({
+                url: ctx + 'promote/linkSalesmanTask/custom/pass',
+                data: {"ids": rows.join()},
+                successParse: function (data) {
+                    // console.info(data)
+                    $.modal.msgSuccess("操作成功");
+                    $.table.refresh();
+                }
+            })
+        });
+    };
 
-        function verifyFail() {
-            var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
-            if (rows.length == 0) {
-                $.modal.alertWarning("请至少选择一条记录");
-                return;
-            }
-            $.modal.confirm("确认要审核拒绝" + rows.length + "条数据吗?", function () {
-                Base.Network.post({
-                    url: ctx + 'promote/linkSalesmanTask/custom/fail',
-                    data: {"ids": rows.join()},
-                    successParse: function (data) {
-                        // console.info(data)
-                        $.modal.msgSuccess("操作成功");
-                        $.table.refresh();
-                    }
-                })
-            });
-        };
+    function verifyFail() {
+        var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+        if (rows.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
+        $.modal.confirm("确认要审核拒绝" + rows.length + "条数据吗?", function () {
+            Base.Network.post({
+                url: ctx + 'promote/linkSalesmanTask/custom/fail',
+                data: {"ids": rows.join()},
+                successParse: function (data) {
+                    // console.info(data)
+                    $.modal.msgSuccess("操作成功");
+                    $.table.refresh();
+                }
+            })
+        });
+    };
 
-        $(function() {
+    $(function () {
         let taskList = [];
         let salesmanList = [];
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
-                exportUrl: prefix + "/export",
-                modalName: "业务员任务领取记录",
-                columns: [{
-                    checkbox: true
-                },
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "业务员任务领取记录",
+            columns: [{
+                checkbox: true
+            },
                 {
-                    field : 'id', 
-                    title : 'id',
+                    field: 'id',
+                    title: 'id',
                     visible: false
                 },
                 {
-                    field : 'taskId', 
-                    title : '任务',
-                    formatter: function(value, row, index) {
-                       let task =  taskList.filter(item=>item.id===value)[0]
-                        if(task) {
-                           return task.name;
+                    field: 'taskId',
+                    title: '任务',
+                    formatter: function (value, row, index) {
+                        let task = taskList.filter(item => item.id === value)[0]
+                        if (task) {
+                            return task.name;
                         } else {
-                           return value;
+                            return value;
                         }
                     }
                 },
                 {
-                    field : 'salesmanId', 
-                    title : '业务员',
-                    formatter: function(value, row, index) {
-                        let salesman =  salesmanList.filter(item=>item.id===value)[0]
-                        if(salesman) {
+                    field: 'salesmanId',
+                    title: '业务员',
+                    formatter: function (value, row, index) {
+                        let salesman = salesmanList.filter(item => item.id === value)[0]
+                        if (salesman) {
                             return salesman.name;
                         } else {
                             return value;
@@ -165,21 +169,49 @@
                     }
                 },
                 {
-                    field : 'code', 
-                    title : '业务员CODE'
+                    field: 'code',
+                    title: '业务员CODE'
                 },
-                    {
-                        field : 'status',
-                        title : '状态',
-                        formatter: function(value, row, index) {
-                            switch (value) {
-                                case 0:return'未申请';break;
-                                case 1:return '审核中';break;
-                                case 2:return '审核通过';break;
-                                case 3:return '审核拒绝';break;
-                            }
+                {
+                    field: 'status',
+                    title: '状态',
+                    formatter: function (value, row, index) {
+                        switch (value) {
+                            case 0:
+                                return '未申请';
+                                break;
+                            case 1:
+                                return '审核中';
+                                break;
+                            case 2:
+                                return '审核通过';
+                                break;
+                            case 3:
+                                return '审核拒绝';
+                                break;
                         }
-                    },
+                    }
+                },
+                {
+                    field: 'type',
+                    title: 'code状态',
+                    formatter: function (value, row, index) {
+                        switch (value) {
+                            case 0:
+                                return '未使用';
+                                break;
+                            case 1:
+                                return '正在使用';
+                                break;
+                            case 2:
+                                return '已停用';
+                                break;
+                            case 3:
+                                return '可以使用';
+                                break;
+                        }
+                    }
+                },
                 // {
                 //     field : 'link',
                 //     title : '专属链接'
@@ -206,19 +238,19 @@
                 //         return actions.join('');
                 //     }
                 // }
-                ]
-            };
+            ]
+        };
 
-            Base.Network.post({
-                url:ctx+'promote/linkSalesmanTask/custom/list',
-                // data:param,
-                successParse:function (data) {
-                    taskList = data.taskList;
-                    salesmanList = data.salesmanList;
-            $.table.init(options);
-                }
-            })
-        });
-    </script>
+        Base.Network.post({
+            url: ctx + 'promote/linkSalesmanTask/custom/list',
+            // data:param,
+            successParse: function (data) {
+                taskList = data.taskList;
+                salesmanList = data.salesmanList;
+                $.table.init(options);
+            }
+        })
+    });
+</script>
 </body>
 </html>

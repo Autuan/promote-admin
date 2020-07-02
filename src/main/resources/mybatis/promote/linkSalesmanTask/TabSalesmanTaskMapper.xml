@@ -15,6 +15,7 @@
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
     <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, task_id, salesman_id, code, link, reward, reward_begin_time, reward_stop_time, 
-    create_time, update_time, create_by, update_by, status
+    create_time, update_time, create_by, update_by, status, type
   </sql>
   <select id="selectByExample" parameterType="com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskExample" resultMap="BaseResultMap">
     select
@@ -121,12 +122,12 @@
       code, link, reward, 
       reward_begin_time, reward_stop_time, create_time, 
       update_time, create_by, update_by, 
-      status)
+      status, type)
     values (#{id,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{salesmanId,jdbcType=VARCHAR}, 
       #{code,jdbcType=VARCHAR}, #{link,jdbcType=VARCHAR}, #{reward,jdbcType=DECIMAL}, 
       #{rewardBeginTime,jdbcType=TIMESTAMP}, #{rewardStopTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER})
+      #{status,jdbcType=INTEGER}, #{type,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="map">
     insert into tab_salesman_task
@@ -176,6 +177,9 @@
           </if>
           <if test="record.status != null">
             status,
+          </if>
+          <if test="record.type != null">
+            type,
           </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
@@ -228,6 +232,9 @@
           </if>
           <if test="record.status != null">
             #{record.status,jdbcType=INTEGER},
+          </if>
+          <if test="record.type != null">
+            #{record.type,jdbcType=INTEGER},
           </if>
         </trim>
       </otherwise>
@@ -289,6 +296,9 @@
           <if test="record.status != null">
             status = #{record.status,jdbcType=INTEGER},
           </if>
+          <if test="record.type != null">
+            type = #{record.type,jdbcType=INTEGER},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -310,7 +320,8 @@
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=VARCHAR},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=INTEGER}
+      status = #{record.status,jdbcType=INTEGER},
+      type = #{record.type,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -362,6 +373,9 @@
           <if test="record.status != null">
             status = #{record.status,jdbcType=INTEGER},
           </if>
+          <if test="record.type != null">
+            type = #{record.type,jdbcType=INTEGER},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -380,7 +394,8 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_by = #{updateBy,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER}
+      status = #{status,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskExample" resultMap="BaseResultMap">
@@ -398,14 +413,15 @@
   <insert id="batchInsert" parameterType="map">
     insert into tab_salesman_task
     (id, task_id, salesman_id, code, link, reward, reward_begin_time, reward_stop_time, 
-      create_time, update_time, create_by, update_by, status)
+      create_time, update_time, create_by, update_by, status, type)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR}, #{item.salesmanId,jdbcType=VARCHAR}, 
         #{item.code,jdbcType=VARCHAR}, #{item.link,jdbcType=VARCHAR}, #{item.reward,jdbcType=DECIMAL}, 
         #{item.rewardBeginTime,jdbcType=TIMESTAMP}, #{item.rewardStopTime,jdbcType=TIMESTAMP}, 
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR}, 
-        #{item.updateBy,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER})
+        #{item.updateBy,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER}, #{item.type,jdbcType=INTEGER}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -456,6 +472,9 @@
         </if>
         <if test="'status'.toString() == column.value">
           #{item.status,jdbcType=INTEGER}
+        </if>
+        <if test="'type'.toString() == column.value">
+          #{item.type,jdbcType=INTEGER}
         </if>
       </foreach>
       )

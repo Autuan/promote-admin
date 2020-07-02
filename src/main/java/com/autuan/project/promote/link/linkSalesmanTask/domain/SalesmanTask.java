@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * 业务员-任务中间对象 tab_salesman_task
  * 
  * @author autuan
- * @date 2020-07-01
+ * @date 2020-07-02
  */
 
 @Data
@@ -48,6 +48,9 @@ public class SalesmanTask extends BaseEntity
     /** 0-未申请 1-申请中 2-申请通过 3-拒绝 */
     @Excel(name = "0-未申请 1-申请中 2-申请通过 3-拒绝")
     private Integer status;
+    /** 0-未使用 1-已使用 2-已停用 3-已回收(可以使用) */
+    @Excel(name = "0-未使用 1-已使用 2-已停用 3-已回收(可以使用)")
+    private Integer type;
 
 
 }
