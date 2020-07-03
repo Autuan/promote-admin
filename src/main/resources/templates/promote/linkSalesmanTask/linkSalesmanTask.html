@@ -10,10 +10,12 @@
             <form id="formId">
                 <div class="select-list">
                     <ul>
-                        <!--<li>-->
-                        <!--<p>任务id：</p>-->
-                        <!--<input type="text" name="taskId"/>-->
-                        <!--</li>-->
+                        <li>
+                        <p>任务：</p>
+                        <select id="taskSelect" name="taskId">
+                            <option value="">==请检索==</option>
+                        </select>
+                        </li>
                         <!--<li>-->
                         <!--<p>业务员id：</p>-->
                         <!--<input type="text" name="salesmanId"/>-->
@@ -57,7 +59,7 @@
             <!--<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="promote:linkSalesmanTask:add">-->
                 <!--<i class="fa fa-plus"></i> 添加-->
             <!--</a>-->
-            <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="promote:linkSalesmanTask:edit">
+            <a class="btn btn-primary single disabled" onclick="assignCode()" shiro:hasPermission="promote:linkSalesmanTask:edit">
             <i class="fa fa-edit"></i> 分配CODE
             </a>
             <!--<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:linkSalesmanTask:remove">-->
@@ -87,6 +89,20 @@
     var editFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:edit')}]];
     var removeFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:remove')}]];
     var prefix = ctx + "promote/linkSalesmanTask";
+
+    function assignCode() {
+        // var row = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+        var row = $.btTable.bootstrapTable('getSelections')[0];
+        // console.info(row)
+        if(Bee.StringUtils.isNotBlank(row.salesmanId)) {
+            $.modal.msgError("此CODE已分配");
+            return;
+        }
+        let url = $.table._option.updateUrl.replace("{id}", row.id);
+        console.info(url)
+        // return;;
+        $.modal.open("修改" + $.table._option.modalName,url);
+    };
 
     function verifyPass() {
         var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
@@ -248,6 +264,13 @@
                 taskList = data.taskList;
                 salesmanList = data.salesmanList;
                 $.table.init(options);
+
+                let str = '<option value="">---请选择任务---</option>';
+                for (let i = 0; i < taskList.length; i++) {
+                    str += `<option value="${taskList[i].id}">${taskList[i].name}</option>`
+                }
+                $('#taskSelect').empty();
+                $('#taskSelect').append($(str));
             }
         })
     });

@@ -23,6 +23,7 @@ import com.autuan.project.promote.task.domain.TabTask;
 import com.autuan.project.promote.task.domain.TabTaskExample;
 import com.autuan.project.promote.task.mapper.TabTaskMapper;
 import com.autuan.project.promote.task.service.ITaskCustomService;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -226,16 +227,21 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                 return;
             }
         }
-        TabSalesmanTask bind = TabSalesmanTask.builder()
-                .taskId(ao.getTaskId())
-                .salesmanId(ao.getSalesmanId())
-                .code(IdUtil.objectId())
-                .status(1)
-                .type(1)
-                .createTime(LocalDateTime.now())
-                .id(IdUtil.simpleUUID())
-                .build();
-        tabSalesmanTaskMapper.insertSelective(bind);
+        example.clear();
+        List<Integer> inList = Lists.newArrayList(0, 3);
+        example.createCriteria()
+                .andSalesmanIdIsNull()
+                .andTypeIn(inList)
+                .andTaskIdEqualTo(ao.getTaskId());
+        TabSalesmanTask bind = tabSalesmanTaskMapper.selectOneByExample(example);
+        if(null == bind || StrUtil.isBlank(bind.getId())) {
+            throw new CustomRespondException("CODE已用尽");
+        }
+        bind.setType(1);
+        bind.setStatus(1);
+        bind.setSalesmanId(ao.getSalesmanId());
+        bind.setUpdateTime(LocalDateTime.now());
+        tabSalesmanTaskMapper.updateByPrimaryKeySelective(bind);
     }
 
     /**
@@ -273,6 +279,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
         if(Integer.valueOf(limit) < thisMax){
             throw new CustomRespondException("生成数量超过最大位数限制");
         }
+
         List<TabSalesmanTask> list = new ArrayList<>(req.getNum());
         for(int i=req.getAllNum();i<thisMax;i++) {
         String code = prefix + df.format(i);

@@ -7,10 +7,10 @@
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-linkSalesmanTask-edit" th:object="${salesmanTask}">
-            <input name="id" th:field="*{id}" type="hidden">
-            <input name="type" value="1" type="hidden">
-            <input name="status" value="1" type="hidden">
-            <input name="taskId" th:field="*{taskId}" type="hidden">
+            <input name="id" id="id" th:field="*{id}" type="hidden">
+<!--            <input name="type" value="1" type="hidden">-->
+<!--            <input name="status" value="1" type="hidden">-->
+            <input name="taskId" id="taskId" th:field="*{taskId}" type="hidden">
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">任务：</label>
@@ -44,7 +44,7 @@
                 </div>
                 <a id="searchSalesman" class="btn btn-info col-sm-2" href="javascript:void(0);">检索</a>
                 <div class="col-sm-4">
-                    <select class="form-control m-b" id="salesmanSelect" name="salesmanId">
+                    <select class="form-control m-b" id="salesmanSelect" name="salesmanId" required>
                         <option value="">==请检索==</option>
                     </select>
                 </div>
@@ -94,7 +94,23 @@
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/edit", $('#form-linkSalesmanTask-edit').serialize());
+                // let param = $('#form-linkSalesmanTask-edit').serialize();
+                // console.info(param)
+                // return;
+                Base.Network.post({
+                    url:ctx+'promote/linkSalesmanTask/custom/assignCode',
+                    data:{
+                        id:$('#id').val(),
+                        taskId:$('#taskId').val(),
+                        salesmanId:$('#salesmanSelect').val(),
+                    },
+                    contentType:'application/json',
+                    successParse:function (data) {
+                        $.modal.close();
+                        parent.$.modal.msgSuccess('操作成功');
+                        parent.$.table.refresh();
+                    }
+                })
             }
         }
 
@@ -130,13 +146,6 @@
                 $('#salesmanSelect').append($(str));
             })
 
-            // Base.Network.post({
-            //     url: ctx + 'promote/salesman/custom/get/'+$('#salesmanId').val(),
-            //     successParse: function (data) {
-            //         console.info(data)
-            //         $('#salesmanIdShow').val(data.name)
-            //     }
-            // })
             Base.Network.post({
                 url: ctx + 'promote/task/custom/get/'+$('#taskId').val(),
                 successParse: function (data) {

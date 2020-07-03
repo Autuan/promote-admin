@@ -1,5 +1,7 @@
 package com.autuan.project.promote.link.linkSalesmanTask.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.autuan.common.exception.custom.CustomRespondException;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.common.utils.text.Convert;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.SalesmanTask;
@@ -82,6 +84,26 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
                 .andStatusEqualTo(0)
                 .andTypeIn(inList);
         return tabSalesmanTaskMapper.selectByExample(example);
+    }
+
+    @Override
+    public void assignCode(TabSalesmanTask req) {
+        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+        example.createCriteria()
+                .andTaskIdEqualTo(req.getTaskId())
+                .andSalesmanIdEqualTo(req.getSalesmanId());
+        TabSalesmanTask one = tabSalesmanTaskMapper.selectOneByExample(example);
+        if(null != one && StrUtil.isNotBlank(one.getId())) {
+            throw new CustomRespondException("业务员已有此任务");
+        }
+        TabSalesmanTask bean = tabSalesmanTaskMapper.selectByPrimaryKey(req.getId());
+        if(StrUtil.isNotBlank(bean.getSalesmanId())) {
+            throw new CustomRespondException("此CODE已被使用");
+        }
+        bean.setSalesmanId(req.getSalesmanId());
+        bean.setStatus(2);
+        bean.setType(1);
+        tabSalesmanTaskMapper.updateByPrimaryKeySelective(bean);
     }
 
 

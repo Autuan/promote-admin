@@ -21,4 +21,6 @@ public interface ISalesmanTaskCustomService {
     void verify(String ids, int i);
 
     List<TabSalesmanTask> listByTaskId(SalesmanTask salesmanTask);
+
+    void assignCode(TabSalesmanTask req);
 }

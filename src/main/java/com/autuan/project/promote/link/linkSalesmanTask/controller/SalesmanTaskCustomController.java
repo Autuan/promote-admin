@@ -1,5 +1,7 @@
 package com.autuan.project.promote.link.linkSalesmanTask.controller;
 
+import com.autuan.framework.aspectj.lang.annotation.Log;
+import com.autuan.framework.aspectj.lang.enums.BusinessType;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.SalesmanTask;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.SalesmanTaskListDTO;
@@ -9,6 +11,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -62,6 +65,15 @@ public class SalesmanTaskCustomController {
     public ReturnResult fail(String ids){
         // 2-通过  3-拒绝
         salesmanTaskCustomServicce.verify(ids, 3);
+        return ReturnResult.ok();
+    }
+
+    @PostMapping("/assignCode")
+    @ResponseBody
+    @RequiresPermissions("promote:task:edit")
+//    @Log(title = "设置参数", businessType = BusinessType.INSERT)
+    public ReturnResult assignCode(@RequestBody TabSalesmanTask req) {
+        salesmanTaskCustomServicce.assignCode(req);
         return ReturnResult.ok();
     }
 }
