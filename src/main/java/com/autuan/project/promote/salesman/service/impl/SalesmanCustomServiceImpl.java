@@ -7,6 +7,7 @@ import com.autuan.common.exception.custom.CustomRespondException;
 import com.autuan.common.utils.Md5Utils;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.common.utils.text.Convert;
+import com.autuan.project.front.entity.CalcuRewardReq;
 import com.autuan.project.front.entity.HistoryRewardReq;
 import com.autuan.project.front.entity.HistoryRewardRes;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
@@ -15,16 +16,15 @@ import com.autuan.project.promote.dataBank.mapper.TabDataBankMapper;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskExample;
 import com.autuan.project.promote.link.linkSalesmanTask.mapper.TabSalesmanTaskMapper;
-import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
-import com.autuan.project.promote.salesman.domain.Salesman;
-import com.autuan.project.promote.salesman.domain.TabSalesman;
-import com.autuan.project.promote.salesman.domain.TabSalesmanExample;
+import com.autuan.project.promote.salesman.domain.*;
 import com.autuan.project.promote.salesman.mapper.SalesmanMapper;
 import com.autuan.project.promote.salesman.mapper.TabSalesmanMapper;
 import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
 import com.autuan.project.promote.task.domain.TabTask;
 import com.autuan.project.promote.task.domain.TabTaskExample;
 import com.autuan.project.promote.task.mapper.TabTaskMapper;
+import com.autuan.project.system.dict.domain.DictData;
+import com.autuan.project.system.dict.service.IDictDataService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -56,6 +56,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     private TabTaskMapper taskMapper;
     @Autowired
     private TabDataBankMapper dataBankMapper;
+    @Autowired
+    private IDictDataService dictDataService;
 
     /**
      * 登录方法(返回用户信息)
@@ -89,9 +91,6 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
      */
     @Override
     public boolean register(TabSalesman salesman) {
-        salesman.setCreateTime(LocalDateTime.now());
-        salesman.setCreateBy("用户注册");
-        salesman.setId(IdUtil.simpleUUID());
         TabSalesmanExample example = new TabSalesmanExample();
         example.createCriteria()
                 .andMobileEqualTo(salesman.getMobile());
@@ -99,6 +98,10 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         if (null != one && StrUtil.isNotBlank(one.getId())) {
             throw new CustomRespondException("此手机号已注册,请直接登录");
         }
+        salesman.setCreateTime(LocalDateTime.now());
+        salesman.setCreateBy("用户注册");
+        salesman.setId(IdUtil.simpleUUID());
+        salesman.setLevel("普通用户");
         return salesmanMapper.insertSelective(salesman) == 1;
     }
 
@@ -165,7 +168,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
      * @since : 2020/6/29 14:04
      */
     @Override
-    public CalcuRewardRes calcuReward(String salesmanId) {
+    public CalcuRewardRes calcuReward(CalcuRewardReq req) {
+        String salesmanId = req.getSalesmanId();
         // 该业务员领取的所有任务
         TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
         salesmanTaskExample.createCriteria()
@@ -184,6 +188,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         dataBankExample.createCriteria()
                 .andTaskIdIn(allTasks.stream().map(TabTask::getId).collect(toList()))
                 .andSalesmanIdEqualTo(salesmanId)
+                // 1:是
+                .andCustomFlagEqualTo(1)
                 // 1:通过
                 .andApproveStatusEqualTo(1);
         List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
@@ -196,8 +202,10 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         BigDecimal historyReward = BigDecimal.ZERO;
 
         LocalDateTime now = LocalDateTime.now();
+        LocalDateTime queryMoon = req.getQueryMoon() == null ? now : req.getQueryMoon();
+
         for (TabTask task : allTasks) {
-            BigDecimal reward = task.getReward();
+            BigDecimal reward = null == task.getReward() ? BigDecimal.ZERO : task.getReward();
 
             long allBankCount = dataBanks.stream()
                     .filter(data -> task.getId().equals(data.getTaskId()))
@@ -207,8 +215,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 
             long thisMoonBankCount = dataBanks.stream()
                     .filter(data -> task.getId().equals(data.getTaskId()))
-                    .filter(data -> data.getVerifyDate().getYear() == now.getYear())
-                    .filter(data -> data.getVerifyDate().getMonthValue() == now.getMonthValue())
+                    .filter(data -> data.getVerifyDate().getYear() == queryMoon.getYear())
+                    .filter(data -> data.getVerifyDate().getMonthValue() == queryMoon.getMonthValue())
                     .count();
             BigDecimal taskBankThisMoonReward = reward.multiply(new BigDecimal(thisMoonBankCount));
             thisMoonReward = thisMoonReward.add(taskBankThisMoonReward);
@@ -247,7 +255,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         dataBankExample.createCriteria()
                 .andTaskIdIn(allTasks.stream().map(TabTask::getId).collect(toList()))
                 .andSalesmanIdEqualTo(salesmanId)
-                .andApplyDateBetween(startTime, endTime)
+                .andVerifyDateBetween(startTime, endTime)
         ;
 
 
@@ -294,12 +302,14 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         taskExample.createCriteria()
                 .andIdIn(receiveList.stream().map(TabSalesmanTask::getTaskId).collect(toList()));
         List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
+        Map<String, TabTask> taskMap = allTasks.stream()
+                .collect(Collectors.toMap(TabTask::getId, Function.identity()));
         // 所有通过的开卡订单
         TabDataBankExample dataBankExample = new TabDataBankExample();
         dataBankExample.createCriteria()
                 .andTaskIdIn(allTasks.stream().map(TabTask::getId).collect(toList()))
                 .andSalesmanIdEqualTo(salesmanId)
-                .andApplyDateBetween(startTime, endTime)
+                .andVerifyDateBetween(startTime, endTime)
         ;
 
 
@@ -315,9 +325,11 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         }
         List<HistoryRewardRes> resList = new ArrayList<>();
         for (TabDataBank data : taskList) {
+            TabTask task = taskMap.get(data.getTaskId());
             resList.add(HistoryRewardRes.builder()
                     .verifyDate(data.getVerifyDate())
                     .name(data.getBankName())
+                    .reward(task.getReward())
                     .approveStatus(data.getApproveStatus() == 1 ? "审核通过" : "审核拒绝")
                     .build());
         }
@@ -345,12 +357,14 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         taskExample.createCriteria()
                 .andIdIn(receiveList.stream().map(TabSalesmanTask::getTaskId).collect(toList()));
         List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
+        Map<String, TabTask> taskMap = allTasks.stream()
+                .collect(Collectors.toMap(TabTask::getId, Function.identity()));
         // 所有通过的开卡订单
         TabDataBankExample dataBankExample = new TabDataBankExample();
         dataBankExample.createCriteria()
                 .andTaskIdIn(allTasks.stream().map(TabTask::getId).collect(toList()))
                 .andSalesmanIdEqualTo(salesmanId)
-                .andApplyDateBetween(startTime, endTime)
+                .andVerifyDateBetween(startTime, endTime)
         ;
 
 
@@ -366,10 +380,13 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         }
         List<HistoryRewardRes> resList = new ArrayList<>();
         for (TabDataBank data : taskList) {
+            TabTask task = taskMap.get(data.getTaskId());
+            BigDecimal reward = task.getReward();
             resList.add(HistoryRewardRes.builder()
                     .verifyDate(data.getVerifyDate())
                     .name(data.getBankName())
                     .orderNo(data.getApplyId())
+                    .reward(reward)
                     .approveStatus(data.getApproveStatus() == 1 ? "审核通过" : "审核拒绝")
                     .build());
         }
@@ -377,8 +394,26 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     }
 
     @Override
-    public Object ranking() {
-        this.listSalesmanThousand();
-        return null;
+    public List<RankingRes> ranking() {
+        List<TabSalesman> salesmanList = this.listSalesmanThousand();
+        List<RankingRes> result = new ArrayList<>();
+        for(TabSalesman salesman : salesmanList) {
+            CalcuRewardReq rewardReq = CalcuRewardReq.builder()
+                    .salesmanId(salesman.getId())
+                    .build();
+            CalcuRewardRes calcuRewardRes = this.calcuReward(rewardReq);
+            BigDecimal thisMoonReward = calcuRewardRes.getThisMoonReward();
+            RankingRes resBean = RankingRes.builder()
+                    .name(salesman.getName())
+                    .headImg(salesman.getHeadImg())
+                    .amount(thisMoonReward)
+                    .build();
+            result.add(resBean);
+        }
+        List<RankingRes> res = result.stream()
+                .sorted(Comparator.comparing(RankingRes::getAmount).reversed())
+                .limit(10)
+                .collect(toList());
+        return res;
     }
 }

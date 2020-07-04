@@ -1,5 +1,6 @@
 package com.autuan.project.promote.dataBank.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +46,8 @@ public class TabDataBank {
 
     private String salesmanId;
 
+    private BigDecimal reward;
+
     public enum Column {
         id("id", "id", "VARCHAR", false),
         applyDate("apply_date", "applyDate", "TIMESTAMP", false),
@@ -61,7 +64,8 @@ public class TabDataBank {
         createBy("create_by", "createBy", "VARCHAR", false),
         updateBy("update_by", "updateBy", "VARCHAR", false),
         taskId("task_id", "taskId", "VARCHAR", false),
-        salesmanId("salesman_id", "salesmanId", "VARCHAR", false);
+        salesmanId("salesman_id", "salesmanId", "VARCHAR", false),
+        reward("reward", "reward", "DECIMAL", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

@@ -6,7 +6,7 @@ import cn.hutool.core.util.IdUtil;
     import java.time.LocalDateTime;
             import com.autuan.common.utils.security.ShiroUtils;
             import com.autuan.common.utils.security.ShiroUtils;
-            import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.autuan.project.promote.dataBank.mapper.DataBankMapper;
 import com.autuan.project.promote.dataBank.domain.DataBank;
@@ -17,7 +17,7 @@ import com.autuan.common.utils.text.Convert;
  * 数据导入-开卡订单Service业务层处理
  * 
  * @author autuan
- * @date 2020-06-29
+ * @date 2020-07-04
  */
 @Service
 public class DataBankServiceImpl implements IDataBankService 
@@ -60,7 +60,7 @@ public class DataBankServiceImpl implements IDataBankService
     {
                                                 dataBank.setCreateTime(LocalDateTime.now());
                     dataBank.setCreateBy(ShiroUtils.getLoginName());
-                        dataBank.setId(IdUtil.simpleUUID());
+                            dataBank.setId(IdUtil.simpleUUID());
         return dataBankMapper.insertDataBank(dataBank);
     }
 
@@ -75,7 +75,7 @@ public class DataBankServiceImpl implements IDataBankService
     {
                                                 dataBank.setUpdateTime(LocalDateTime.now());
                         dataBank.setUpdateBy(ShiroUtils.getLoginName());
-                    return dataBankMapper.updateDataBank(dataBank);
+                        return dataBankMapper.updateDataBank(dataBank);
     }
 
     /**

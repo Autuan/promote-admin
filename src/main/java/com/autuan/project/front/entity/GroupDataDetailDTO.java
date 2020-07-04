@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * @className: HistoryRewardRes
+ * @className: GroupDataDetailDTO
  * @author: sen.zhou
  * @description:
- * @date: 2020/6/30 19:58
+ * @date: 2020/7/4 11:49
  * @version: V2.0.0
  * @company:上海奥若拉信息科技集团有限公司
  **/
@@ -21,13 +21,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HistoryRewardRes {
-        @JsonFormat(pattern = "yyyy-MM-dd")
-//    @DateTimeFormat(pattern = "yyyy-MM")
-    private LocalDateTime verifyDate;
-    private String approveStatus;
-    private String name;
-    private String orderNo;
-    private BigDecimal reward;
+public class GroupDataDetailDTO {
 
+    private BigDecimal count;
+    @JsonFormat(pattern = "yyyy-MM")
+    private LocalDateTime date;
+    private String id;
 }

@@ -104,6 +104,9 @@
         };
 
         $(function() {
+            let taskList = [];
+            let salesmanList = [];
+
             var options = {
                 url: prefix + "/list",
                 createUrl: prefix + "/add",
@@ -115,12 +118,12 @@
                     checkbox: true
                 },
                 {
-                    field : 'id', 
+                    field : 'id',
                     title : 'id',
-                    visible: true,
+                    visible: false,
                 },
                 {
-                    field : 'name', 
+                    field : 'name',
                     title : '任务名称'
                 },
                     {
@@ -140,7 +143,7 @@
                         title : '标签 ',
                     },
                 {
-                    field : 'prefix', 
+                    field : 'prefix',
                     title : '任务链接前缀'
                 },
                 // {
@@ -148,7 +151,7 @@
                 //     title : '外键:参数表'
                 // },
                 {
-                    field : 'reward', 
+                    field : 'reward',
                     title : '奖励额'
                 },
                 // {
@@ -165,7 +168,7 @@
                     title : '推广攻略文章'
                 },
                 {
-                    field : 'priority', 
+                    field : 'priority',
                     title : '优先级'
                 },
                 {
@@ -180,7 +183,17 @@
                     }
                 }]
             };
-            $.table.init(options);
+
+            Base.Network.post({
+                url: ctx + 'promote/linkSalesmanTask/custom/list',
+                successParse: function (data) {
+                    taskList = data.taskList;
+                    salesmanList = data.salesmanList;
+                    $.table.init(options);
+                }
+            })
+
+
         });
     </script>
 </body>

@@ -1,13 +1,14 @@
 package com.autuan.project.promote.task.service;
 
 import com.autuan.project.promote.task.domain.Task;
+import com.autuan.project.promote.task.domain.TaskAddReq;
 import java.util.List;
 
 /**
  * 任务Service接口
  * 
  * @author autuan
- * @date 2020-07-02
+ * @date 2020-07-04
  */
 public interface ITaskService 
 {
@@ -58,4 +59,5 @@ public interface ITaskService
      * @return 结果
      */
     public int deleteTaskById(String id);
+
 }

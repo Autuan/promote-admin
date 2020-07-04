@@ -3,12 +3,12 @@ package com.autuan.project.promote.task.controller;
 import cn.hutool.core.collection.CollectionUtil;
 import com.autuan.framework.aspectj.lang.annotation.Log;
 import com.autuan.framework.aspectj.lang.enums.BusinessType;
+import com.autuan.framework.web.controller.BaseController;
+import com.autuan.framework.web.page.TableDataInfo;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.param.domain.TabParam;
-import com.autuan.project.promote.task.domain.SetCodeReq;
-import com.autuan.project.promote.task.domain.SetTaskParamAO;
-import com.autuan.project.promote.task.domain.Task;
+import com.autuan.project.promote.task.domain.*;
 import com.autuan.project.promote.task.service.ITaskCustomService;
 import com.autuan.project.promote.task.service.ITaskService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/promote/task/custom")
-public class TaskCustomController {
+public class TaskCustomController extends BaseController {
     private String prefix = "promote/task";
 
     @Autowired
@@ -58,9 +58,13 @@ public class TaskCustomController {
         Task task = taskService.selectTaskById(id);
         List<TabSalesmanTask> list = taskCustomService.listForCode(id);
         mmap.put("allNum", list.size());
-        long usedNum = list.stream().filter(item -> 1 == item.getStatus()).count();
-        long unusedNum = list.stream().filter(item -> 0 == item.getStatus()).count();
-        long recoveryNum = list.stream().filter(item -> 3 == item.getStatus()).count();
+        // todo del extra code
+        long usedNum = list.stream().filter(item -> TaskEnum.TYPE_USE.val().equals(item.getType())).count();
+        long unusedNum = list.stream().filter(item -> TaskEnum.TYPE_NOT_USE.val().equals(item.getType())).count();
+        long recoveryNum = list.stream().filter(item -> TaskEnum.TYPE_ABLE.val().equals(item.getType())).count();
+//        long recoveryNum = list.stream().filter(item -> 3 == item.getStatus()).count();
+//        long usedNum = list.stream().filter(item -> 2 == item.getStatus()).count();
+//        long unusedNum = list.stream().filter(item -> 0 == item.getStatus()).count();
         mmap.put("task", task);
         mmap.put("usedNum", usedNum);
         mmap.put("unusedNum", unusedNum);
@@ -88,8 +92,16 @@ public class TaskCustomController {
 
     @RequestMapping("/get/{id}")
     @ResponseBody
-    public ReturnResult edit(@PathVariable("id") String id) {
+    public ReturnResult get(@PathVariable("id") String id) {
         Task task = taskService.selectTaskById(id);
         return ReturnResult.ok(task);
     }
+
+    @RequestMapping("/add")
+    @ResponseBody
+    public ReturnResult add(@RequestBody TaskAddReq req) {
+        taskCustomService.add(req);
+        return ReturnResult.ok();
+    }
+
 }

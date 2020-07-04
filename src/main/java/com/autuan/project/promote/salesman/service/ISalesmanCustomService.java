@@ -1,9 +1,11 @@
 package com.autuan.project.promote.salesman.service;
 
+import com.autuan.project.front.entity.CalcuRewardReq;
 import com.autuan.project.front.entity.HistoryRewardReq;
 import com.autuan.project.front.entity.HistoryRewardRes;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
+import com.autuan.project.promote.salesman.domain.RankingRes;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 
@@ -83,7 +85,7 @@ public interface ISalesmanCustomService {
      * @return: java.lang.Object
      * @since : 2020/6/29 14:20
      */
-    CalcuRewardRes calcuReward(String salesmanId);
+    CalcuRewardRes calcuReward(CalcuRewardReq req);
 
     /***
      * 历史记录
@@ -118,5 +120,5 @@ public interface ISalesmanCustomService {
      * @return : java.lang.Object
      * @since: 21:24 2020/6/30 
      */
-    Object ranking();
+    List<RankingRes> ranking();
 }

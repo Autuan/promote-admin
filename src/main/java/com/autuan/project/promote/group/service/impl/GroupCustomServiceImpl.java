@@ -3,19 +3,23 @@ package com.autuan.project.promote.group.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.autuan.common.exception.custom.CustomRespondException;
 import com.autuan.common.utils.security.ShiroUtils;
+import com.autuan.project.front.entity.*;
 import com.autuan.project.promote.group.domain.TabGroup;
 import com.autuan.project.promote.group.domain.TabGroupExample;
 import com.autuan.project.promote.group.mapper.TabGroupMapper;
 import com.autuan.project.promote.group.service.IGroupCustomService;
+import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.salesman.domain.TabSalesmanExample;
 import com.autuan.project.promote.salesman.mapper.TabSalesmanMapper;
+import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +36,8 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
     private TabGroupMapper groupMapper;
     @Autowired
     private TabSalesmanMapper salesmanMapper;
+    @Autowired
+    private ISalesmanCustomService salesmanCustomService;
     /**
      * 查询是否已是组长
      *
@@ -144,5 +150,78 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
     @Override
     public List<TabGroup> list() {
         return groupMapper.selectByExample(null);
+    }
+
+    @Override
+    public List<GroupDataRes> groupData(GroupDataReq req) {
+        // 查出当前小组信息
+        TabGroupExample groupExample = new TabGroupExample();
+        groupExample.createCriteria()
+                .andIdEqualTo(req.getGroupId());
+        TabGroup group = groupMapper.selectOneByExample(groupExample);
+
+        // 查出当前小组所有成员
+        TabSalesmanExample salesmanExample = new TabSalesmanExample();
+        salesmanExample.createCriteria()
+                .andGroupIdEqualTo(req.getGroupId());
+        List<TabSalesman> salesmanList = salesmanMapper.selectByExample(salesmanExample);
+
+        // 查出每个成员业绩
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime createTime = group.getCreateTime();
+        List<LocalDateTime> queryDateList = new ArrayList<>();
+        int monthDiff = monthDiff(createTime, now);
+        for(int i=0;i<=monthDiff;i++) {
+            LocalDateTime queryDate = createTime.plusMonths(i);
+            queryDateList.add(queryDate);
+        }
+
+        List<GroupDataRes> resList = new ArrayList<>();
+        for(TabSalesman salesman : salesmanList) {
+            String salesmanId = salesman.getId();
+            List<GroupDataDetailDTO> detailList = new ArrayList<>();
+            for(LocalDateTime queryDate : queryDateList) {
+                CalcuRewardReq reqBean = CalcuRewardReq.builder()
+                        .queryMoon(queryDate)
+                        .salesmanId(salesmanId)
+                        .build();
+                CalcuRewardRes calcuRewardRes = salesmanCustomService.calcuReward(reqBean);
+                GroupDataDetailDTO dto = GroupDataDetailDTO.builder()
+.count(calcuRewardRes.getThisMoonReward())
+                        .date(queryDate)
+                        .id(queryDate.toString())
+                        .build();
+                detailList.add(dto);
+            }
+
+            GroupDataRes dataRes = GroupDataRes.builder()
+                    .salesmanId(salesmanId)
+                    .salesmanName(salesman.getName())
+                    .detail(detailList)
+                    .build();
+            resList.add(dataRes);
+        }
+        // 计算小组业绩 todo 前台计算
+
+        return resList;
+    }
+
+    /**
+     * 获取两个时间点的月份差
+     * @param dt1 第一个时间点
+     * @param dt2 第二个时间点
+     * @return int，即需求的月数差
+     */
+    private int monthDiff(LocalDateTime dt1,LocalDateTime dt2){
+        //获取第一个时间点的月份
+        int month1 = dt1.getMonthValue();
+        //获取第一个时间点的年份
+        int year1 = dt1.getYear();
+        //获取第一个时间点的月份
+        int month2 = dt2.getMonthValue();
+        //获取第一个时间点的年份
+        int year2 = dt2.getYear();
+        //返回两个时间点的月数差
+        return (year2 - year1) *12 + (month2 - month1);
     }
 }

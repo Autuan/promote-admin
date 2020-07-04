@@ -1,6 +1,7 @@
 package com.autuan.project.promote.task.controller;
 
 import java.util.List;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,13 @@ import com.autuan.framework.web.page.TableDataInfo;
 
 /**
  * 任务Controller
- * 
+ *
  * @author autuan
- * @date 2020-07-02
+ * @date 2020-07-04
  */
 @Controller
 @RequestMapping("/promote/task")
-public class TaskController extends BaseController
-{
+public class TaskController extends BaseController {
     private String prefix = "promote/task";
 
     @Autowired
@@ -36,8 +36,7 @@ public class TaskController extends BaseController
 
     @RequiresPermissions("promote:task:view")
     @GetMapping()
-    public String task()
-    {
+    public String task() {
         return prefix + "/task";
     }
 
@@ -47,8 +46,7 @@ public class TaskController extends BaseController
     @RequiresPermissions("promote:task:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(Task task)
-    {
+    public TableDataInfo list(Task task) {
         startPage();
         List<Task> list = taskService.selectTaskList(task);
         return getDataTable(list);
@@ -60,8 +58,7 @@ public class TaskController extends BaseController
     @RequiresPermissions("promote:task:export")
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(Task task)
-    {
+    public AjaxResult export(Task task) {
         List<Task> list = taskService.selectTaskList(task);
         ExcelUtil<Task> util = new ExcelUtil<Task>(Task.class);
         return util.exportExcel(list, "task");
@@ -71,8 +68,7 @@ public class TaskController extends BaseController
      * 新增任务
      */
     @GetMapping("/add")
-    public String add()
-    {
+    public String add() {
         return prefix + "/add";
     }
 
@@ -83,8 +79,7 @@ public class TaskController extends BaseController
     @Log(title = "任务", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(Task task)
-    {
+    public AjaxResult addSave(Task task) {
         return toAjax(taskService.insertTask(task));
     }
 
@@ -92,8 +87,7 @@ public class TaskController extends BaseController
      * 修改任务
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") String id, ModelMap mmap)
-    {
+    public String edit(@PathVariable("id") String id, ModelMap mmap) {
         Task task = taskService.selectTaskById(id);
         mmap.put("task", task);
         return prefix + "/edit";
@@ -106,8 +100,7 @@ public class TaskController extends BaseController
     @Log(title = "任务", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(Task task)
-    {
+    public AjaxResult editSave(Task task) {
         return toAjax(taskService.updateTask(task));
     }
 
@@ -116,10 +109,9 @@ public class TaskController extends BaseController
      */
     @RequiresPermissions("promote:task:remove")
     @Log(title = "任务", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) {
         return toAjax(taskService.deleteTaskByIds(ids));
     }
 }

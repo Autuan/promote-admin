@@ -1,5 +1,6 @@
 package com.autuan.project.promote.task.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.IdUtil;
@@ -10,6 +11,8 @@ import com.autuan.common.exception.custom.CustomRespondException;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.project.front.entity.GeneratorQrCodeVO;
 import com.autuan.project.front.entity.ReceiveAO;
+import com.autuan.project.promote.dataJd.domain.OptionJdRewardReq;
+import com.autuan.project.promote.dataJd.service.IDataJdCustomService;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskExample;
 import com.autuan.project.promote.link.linkSalesmanTask.mapper.TabSalesmanTaskMapper;
@@ -17,11 +20,9 @@ import com.autuan.project.promote.link.linkSalesmanTask.service.ISalesmanTaskCus
 import com.autuan.project.promote.param.domain.TabParam;
 import com.autuan.project.promote.param.domain.TabParamExample;
 import com.autuan.project.promote.param.mapper.TabParamMapper;
-import com.autuan.project.promote.task.domain.SetCodeReq;
-import com.autuan.project.promote.task.domain.SetTaskParamAO;
-import com.autuan.project.promote.task.domain.TabTask;
-import com.autuan.project.promote.task.domain.TabTaskExample;
+import com.autuan.project.promote.task.domain.*;
 import com.autuan.project.promote.task.mapper.TabTaskMapper;
+import com.autuan.project.promote.task.mapper.TaskMapper;
 import com.autuan.project.promote.task.service.ITaskCustomService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,8 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
     private TabTaskMapper tabTaskMapper;
     @Autowired
     private TabSalesmanTaskMapper tabSalesmanTaskMapper;
+    @Autowired
+    private IDataJdCustomService dataJdCustomService;
 
     /**
      * 设置参数
@@ -88,6 +91,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
     public List<TabSalesmanTask> listForCode(String taskId) {
         TabSalesmanTaskExample example = new TabSalesmanTaskExample();
         example.createCriteria()
+                .andCodeIsNotNull()
                 .andTaskIdEqualTo(taskId);
         return tabSalesmanTaskMapper.selectByExample(example);
     }
@@ -213,35 +217,48 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
 
     @Override
     public void receive(ReceiveAO ao) {
-        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
-        example.createCriteria()
-                .andTaskIdEqualTo(ao.getTaskId())
-                .andSalesmanIdEqualTo(ao.getSalesmanId());
-        TabSalesmanTask one = tabSalesmanTaskMapper.selectOneByExample(example);
-        if(one != null && StrUtil.isNotBlank(one.getId())) {
-            if(Integer.valueOf(0).equals(one.getStatus())) {
-                one.setStatus(1);
-                tabSalesmanTaskMapper.updateByPrimaryKey(one);
-                return;
-            } else {
-                return;
-            }
-        }
-        example.clear();
-        List<Integer> inList = Lists.newArrayList(0, 3);
-        example.createCriteria()
-                .andSalesmanIdIsNull()
-                .andTypeIn(inList)
-                .andTaskIdEqualTo(ao.getTaskId());
-        TabSalesmanTask bind = tabSalesmanTaskMapper.selectOneByExample(example);
-        if(null == bind || StrUtil.isBlank(bind.getId())) {
-            throw new CustomRespondException("CODE已用尽");
-        }
-        bind.setType(1);
-        bind.setStatus(1);
-        bind.setSalesmanId(ao.getSalesmanId());
-        bind.setUpdateTime(LocalDateTime.now());
-        tabSalesmanTaskMapper.updateByPrimaryKeySelective(bind);
+        // todo del extra code
+//        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+//        example.createCriteria()
+//                .andTaskIdEqualTo(ao.getTaskId())
+//                .andSalesmanIdEqualTo(ao.getSalesmanId());
+//        TabSalesmanTask one = tabSalesmanTaskMapper.selectOneByExample(example);
+//        if(one != null && StrUtil.isNotBlank(one.getId())) {
+//            if(Integer.valueOf(0).equals(one.getStatus())) {
+//                one.setStatus(1);
+//                tabSalesmanTaskMapper.updateByPrimaryKey(one);
+//                return;
+//            } else {
+//                return;
+//            }
+//        }
+//        example.clear();
+//        List<Integer> inList = Lists.newArrayList(0, 3);
+//        example.createCriteria()
+//                .andSalesmanIdIsNull()
+//                .andTypeIn(inList)
+//                .andTaskIdEqualTo(ao.getTaskId());
+//        TabSalesmanTask bind = tabSalesmanTaskMapper.selectOneByExample(example);
+//        if(null == bind || StrUtil.isBlank(bind.getId())) {
+//            throw new CustomRespondException("CODE已用尽");
+//        }
+//        bind.setType(1);
+//        bind.setStatus(1);
+//        bind.setSalesmanId(ao.getSalesmanId());
+//        bind.setUpdateTime(LocalDateTime.now());
+//        tabSalesmanTaskMapper.updateByPrimaryKeySelective(bind);
+
+        TabSalesmanTask bean = TabSalesmanTask.builder()
+                .id(IdUtil.simpleUUID())
+                .taskId(ao.getTaskId())
+                .salesmanId(ao.getSalesmanId())
+                // todo magic code
+                .status(1)
+                .type(0)
+
+                .build();
+
+        tabSalesmanTaskMapper.insertSelective(bean);
     }
 
     /**
@@ -289,6 +306,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                     .code(code)
                     .createTime(now)
                     .createBy(loginName)
+                    // todo magic code
                     .status(0)
                     .type(0)
                     .build();
@@ -299,4 +317,27 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
         tabSalesmanTaskMapper.batchInsert(list);
         }
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void add(TaskAddReq req) {
+        TabTask addBean = TabTask.builder().build();
+        BeanUtil.copyProperties(req, addBean);
+
+        String taskId =  IdUtil.simpleUUID();
+        addBean.setCreateTime(LocalDateTime.now());
+        addBean.setCreateBy(ShiroUtils.getLoginName());
+        addBean.setId(taskId);
+
+        tabTaskMapper.insertSelective(addBean);
+
+        OptionJdRewardReq optReq = OptionJdRewardReq.builder()
+                .taskId(taskId)
+                .rewardCommon(req.getRewardCommon())
+                .rewardGold(req.getRewardGold())
+                .rewardNewbie(req.getRewardNewbie())
+                .build();
+        dataJdCustomService.optionJdReward(optReq);
+    }
+
 }

@@ -18,6 +18,7 @@
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
     <result column="task_id" jdbcType="VARCHAR" property="taskId" />
     <result column="salesman_id" jdbcType="VARCHAR" property="salesmanId" />
+    <result column="reward" jdbcType="DECIMAL" property="reward" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,7 +81,7 @@
   <sql id="Base_Column_List">
     id, apply_date, verify_date, apply_id, approve_status, bank_name, c_mobile, c_name, 
     channel_code, custom_flag, create_time, update_time, create_by, update_by, task_id, 
-    salesman_id
+    salesman_id, reward
   </sql>
   <select id="selectByExample" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBankExample" resultMap="BaseResultMap">
     select
@@ -126,13 +127,13 @@
       c_mobile, c_name, channel_code, 
       custom_flag, create_time, update_time, 
       create_by, update_by, task_id, 
-      salesman_id)
+      salesman_id, reward)
     values (#{id,jdbcType=VARCHAR}, #{applyDate,jdbcType=TIMESTAMP}, #{verifyDate,jdbcType=TIMESTAMP}, 
       #{applyId,jdbcType=VARCHAR}, #{approveStatus,jdbcType=INTEGER}, #{bankName,jdbcType=VARCHAR}, 
       #{cMobile,jdbcType=VARCHAR}, #{cName,jdbcType=VARCHAR}, #{channelCode,jdbcType=VARCHAR}, 
       #{customFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
-      #{salesmanId,jdbcType=VARCHAR})
+      #{salesmanId,jdbcType=VARCHAR}, #{reward,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="map">
     insert into tab_data_bank
@@ -191,6 +192,9 @@
           </if>
           <if test="record.salesmanId != null">
             salesman_id,
+          </if>
+          <if test="record.reward != null">
+            reward,
           </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
@@ -252,6 +256,9 @@
           </if>
           <if test="record.salesmanId != null">
             #{record.salesmanId,jdbcType=VARCHAR},
+          </if>
+          <if test="record.reward != null">
+            #{record.reward,jdbcType=DECIMAL},
           </if>
         </trim>
       </otherwise>
@@ -322,6 +329,9 @@
           <if test="record.salesmanId != null">
             salesman_id = #{record.salesmanId,jdbcType=VARCHAR},
           </if>
+          <if test="record.reward != null">
+            reward = #{record.reward,jdbcType=DECIMAL},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -346,7 +356,8 @@
       create_by = #{record.createBy,jdbcType=VARCHAR},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
       task_id = #{record.taskId,jdbcType=VARCHAR},
-      salesman_id = #{record.salesmanId,jdbcType=VARCHAR}
+      salesman_id = #{record.salesmanId,jdbcType=VARCHAR},
+      reward = #{record.reward,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -407,6 +418,9 @@
           <if test="record.salesmanId != null">
             salesman_id = #{record.salesmanId,jdbcType=VARCHAR},
           </if>
+          <if test="record.reward != null">
+            reward = #{record.reward,jdbcType=DECIMAL},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -428,7 +442,8 @@
       create_by = #{createBy,jdbcType=VARCHAR},
       update_by = #{updateBy,jdbcType=VARCHAR},
       task_id = #{taskId,jdbcType=VARCHAR},
-      salesman_id = #{salesmanId,jdbcType=VARCHAR}
+      salesman_id = #{salesmanId,jdbcType=VARCHAR},
+      reward = #{reward,jdbcType=DECIMAL}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.autuan.project.promote.dataBank.domain.TabDataBankExample" resultMap="BaseResultMap">
@@ -447,7 +462,7 @@
     insert into tab_data_bank
     (id, apply_date, verify_date, apply_id, approve_status, bank_name, c_mobile, c_name, 
       channel_code, custom_flag, create_time, update_time, create_by, update_by, task_id, 
-      salesman_id)
+      salesman_id, reward)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=VARCHAR}, #{item.applyDate,jdbcType=TIMESTAMP}, #{item.verifyDate,jdbcType=TIMESTAMP}, 
@@ -455,7 +470,7 @@
         #{item.cMobile,jdbcType=VARCHAR}, #{item.cName,jdbcType=VARCHAR}, #{item.channelCode,jdbcType=VARCHAR}, 
         #{item.customFlag,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
         #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR}, 
-        #{item.salesmanId,jdbcType=VARCHAR})
+        #{item.salesmanId,jdbcType=VARCHAR}, #{item.reward,jdbcType=DECIMAL})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -515,6 +530,9 @@
         </if>
         <if test="'salesman_id'.toString() == column.value">
           #{item.salesmanId,jdbcType=VARCHAR}
+        </if>
+        <if test="'reward'.toString() == column.value">
+          #{item.reward,jdbcType=DECIMAL}
         </if>
       </foreach>
       )

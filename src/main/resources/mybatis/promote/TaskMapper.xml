@@ -25,10 +25,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="summary"    column="summary"    />
         <result property="codePrefix"    column="code_prefix"    />
         <result property="codePrefixDigit"    column="code_prefix_digit"    />
+        <result property="assignType"    column="assign_type"    />
+        <result property="indexName"    column="index_name"    />
     </resultMap>
 
     <sql id="selectTaskVo">
-        select id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, update_time, create_by, update_by, tags, article_id, priority, article_title, image, bg_img, summary, code_prefix, code_prefix_digit from tab_task
+        select id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, update_time, create_by, update_by, tags, article_id, priority, article_title, image, bg_img, summary, code_prefix, code_prefix_digit, assign_type, index_name from tab_task
     </sql>
 
     <select id="selectTaskList" parameterType="Task" resultMap="TaskResult">
@@ -49,6 +51,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="summary != null  and summary != ''"> and summary = #{summary}</if>
             <if test="codePrefix != null  and codePrefix != ''"> and code_prefix = #{codePrefix}</if>
             <if test="codePrefixDigit != null "> and code_prefix_digit = #{codePrefixDigit}</if>
+            <if test="assignType != null "> and assign_type = #{assignType}</if>
+            <if test="indexName != null  and indexName != ''"> and index_name like concat('%', #{indexName}, '%')</if>
         </where>
     </select>
     
@@ -80,6 +84,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="summary != null  and summary != ''">summary,</if>
             <if test="codePrefix != null  and codePrefix != ''">code_prefix,</if>
             <if test="codePrefixDigit != null ">code_prefix_digit,</if>
+            <if test="assignType != null ">assign_type,</if>
+            <if test="indexName != null  and indexName != ''">index_name,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null  and id != ''">#{id},</if>
@@ -102,6 +108,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="summary != null  and summary != ''">#{summary},</if>
             <if test="codePrefix != null  and codePrefix != ''">#{codePrefix},</if>
             <if test="codePrefixDigit != null ">#{codePrefixDigit},</if>
+            <if test="assignType != null ">#{assignType},</if>
+            <if test="indexName != null  and indexName != ''">#{indexName},</if>
          </trim>
     </insert>
 
@@ -127,6 +135,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="summary != null  and summary != ''">summary = #{summary},</if>
             <if test="codePrefix != null  and codePrefix != ''">code_prefix = #{codePrefix},</if>
             <if test="codePrefixDigit != null ">code_prefix_digit = #{codePrefixDigit},</if>
+            <if test="assignType != null ">assign_type = #{assignType},</if>
+            <if test="indexName != null  and indexName != ''">index_name = #{indexName},</if>
         </trim>
         where id = #{id}
     </update>

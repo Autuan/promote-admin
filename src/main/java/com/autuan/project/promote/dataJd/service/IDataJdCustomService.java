@@ -1,5 +1,6 @@
 package com.autuan.project.promote.dataJd.service;
 
+import com.autuan.project.promote.dataJd.domain.OptionJdRewardReq;
 import com.autuan.project.promote.dataJd.domain.TabDataJd;
 
 import java.util.List;
@@ -21,4 +22,15 @@ public interface IDataJdCustomService {
      * @since : 2020/7/1 11:13
      */
     void importExcel(List<TabDataJd> list);
+
+    /***
+     * 配置京东任务奖励
+     * @param req
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : void
+     * @since: 17:30 2020/7/4
+     */
+    void optionJdReward(OptionJdRewardReq req);
 }

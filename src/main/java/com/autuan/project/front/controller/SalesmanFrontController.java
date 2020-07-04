@@ -6,6 +6,7 @@ import com.autuan.project.front.entity.HistoryRewardRes;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
+import com.autuan.project.promote.salesman.domain.RankingRes;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
@@ -58,7 +59,7 @@ public class SalesmanFrontController {
      */
     @RequestMapping("/calcuReward")
     public ReturnResult calcuReward(@RequestBody CalcuRewardReq req) {
-        CalcuRewardRes res = salesmanCustomService.calcuReward(req.getSalesmanId());
+        CalcuRewardRes res = salesmanCustomService.calcuReward(req);
         return ReturnResult.ok(res);
     }
 
@@ -94,7 +95,7 @@ public class SalesmanFrontController {
      */
     @RequestMapping("/ranking")
     public ReturnResult ranking(@RequestBody HistoryRewardReq req) {
-        List<HistoryRewardRes> res = salesmanCustomService.thisMoonReward(req);
+        List<RankingRes> res = salesmanCustomService.ranking();
         return ReturnResult.ok(res);
     }
 }

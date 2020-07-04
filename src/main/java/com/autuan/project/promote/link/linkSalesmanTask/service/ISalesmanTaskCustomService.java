@@ -23,4 +23,15 @@ public interface ISalesmanTaskCustomService {
     List<TabSalesmanTask> listByTaskId(SalesmanTask salesmanTask);
 
     void assignCode(TabSalesmanTask req);
+
+    /***
+     * 列表查询
+     * @param salesmanTask 
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.util.List<com.autuan.project.promote.link.linkSalesmanTask.domain.SalesmanTask>
+     * @since: 19:59 2020/7/4 
+     */
+    List<TabSalesmanTask> selectSalesmanTaskList(SalesmanTask salesmanTask);
 }

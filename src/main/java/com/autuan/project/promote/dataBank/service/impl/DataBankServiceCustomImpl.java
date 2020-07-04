@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -56,16 +57,17 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
         TabTaskExample tabTaskExample = new TabTaskExample();
         for (TabDataBank dataBank : list) {
             tabTaskExample.or()
-                    .andNameEqualTo(dataBank.getBankName());
+                    .andIndexNameEqualTo(dataBank.getBankName());
         }
         List<TabTask> taskList = tabTaskMapper.selectByExample(tabTaskExample);
-        Map<String, String> taskMap = taskList.stream()
-                .collect(Collectors.toMap(TabTask::getName, TabTask::getId));
+        Map<String, TabTask> taskMap = taskList.stream()
+                .collect(Collectors.toMap(TabTask::getName, Function.identity()));
         // salesmanId
         TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
         for (TabDataBank dataBank : list) {
-            String taskId = taskMap.get(dataBank.getBankName());
-            if(StrUtil.isNotBlank(taskId)) {
+            TabTask task = taskMap.get(dataBank.getBankName());
+            if(null != task) {
+                String taskId = task.getId();
             salesmanTaskExample.or()
                     .andCodeEqualTo(dataBank.getChannelCode())
                     .andTaskIdEqualTo(taskId);
@@ -81,16 +83,18 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
         // 插入
         List<TabDataBank> insertList = new ArrayList<>();
         for (TabDataBank dataBank : list) {
-            String taskId = taskMap.get(dataBank.getBankName());
+            TabTask task = taskMap.get(dataBank.getBankName());
             String salesmanId = linkMap.get(dataBank.getChannelCode());
-            if(StrUtil.isBlank(taskId) || StrUtil.isBlank(salesmanId)) {
+            if(null == task || StrUtil.isBlank(salesmanId)) {
                 continue;
             }
+            String taskId = task.getId();
             dataBank.setTaskId(taskId);
             dataBank.setSalesmanId(salesmanId);
             dataBank.setCreateTime(now);
             dataBank.setCreateBy(loginName);
             dataBank.setId(IdUtil.simpleUUID());
+            dataBank.setReward(task.getReward());
             insertList.add(dataBank);
         }
         if(CollectionUtil.isNotEmpty(insertList)) {

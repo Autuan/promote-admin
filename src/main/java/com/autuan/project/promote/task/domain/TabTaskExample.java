@@ -1474,6 +1474,136 @@ public class TabTaskExample {
             addCriterion("code_prefix_digit not between", value1, value2, "codePrefixDigit");
             return (Criteria) this;
         }
+
+        public Criteria andAssignTypeIsNull() {
+            addCriterion("assign_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeIsNotNull() {
+            addCriterion("assign_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeEqualTo(Integer value) {
+            addCriterion("assign_type =", value, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeNotEqualTo(Integer value) {
+            addCriterion("assign_type <>", value, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeGreaterThan(Integer value) {
+            addCriterion("assign_type >", value, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("assign_type >=", value, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeLessThan(Integer value) {
+            addCriterion("assign_type <", value, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("assign_type <=", value, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeIn(List<Integer> values) {
+            addCriterion("assign_type in", values, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeNotIn(List<Integer> values) {
+            addCriterion("assign_type not in", values, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeBetween(Integer value1, Integer value2) {
+            addCriterion("assign_type between", value1, value2, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("assign_type not between", value1, value2, "assignType");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameIsNull() {
+            addCriterion("index_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameIsNotNull() {
+            addCriterion("index_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameEqualTo(String value) {
+            addCriterion("index_name =", value, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameNotEqualTo(String value) {
+            addCriterion("index_name <>", value, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameGreaterThan(String value) {
+            addCriterion("index_name >", value, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameGreaterThanOrEqualTo(String value) {
+            addCriterion("index_name >=", value, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameLessThan(String value) {
+            addCriterion("index_name <", value, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameLessThanOrEqualTo(String value) {
+            addCriterion("index_name <=", value, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameLike(String value) {
+            addCriterion("index_name like", value, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameNotLike(String value) {
+            addCriterion("index_name not like", value, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameIn(List<String> values) {
+            addCriterion("index_name in", values, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameNotIn(List<String> values) {
+            addCriterion("index_name not in", values, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameBetween(String value1, String value2) {
+            addCriterion("index_name between", value1, value2, "indexName");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndexNameNotBetween(String value1, String value2) {
+            addCriterion("index_name not between", value1, value2, "indexName");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -217,6 +217,18 @@
     }
     // 表单工具
     Base.Form = {
+        serializeObject:function (formId) {
+            let o ={};
+            $.each($('#'+formId).serializeArray(),function(index){
+                if(o[this['name']]){
+                    o[this['name']] = o[this['name']] +","+this['value'];
+                }else{
+                    o[this['name']] = this['value'];
+                }
+            });
+            return o;
+
+        },
         clearData: function (obj, infoDlg) {
             obj.infoDlg = {}
         },

@@ -202,7 +202,7 @@
             <!--                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:dataJd:export">-->
             <!--                    <i class="fa fa-download"></i> 导出-->
             <!--                 </a>-->
-            <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:user:import">
+            <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="promote:dataJd:edit">
                 <i class="fa fa-upload"></i> 导入
             </a>
         </div>
@@ -307,14 +307,14 @@
                     title: '白条开通方式',
                     formatter: function (value, row, index) {
                         switch (value) {
+                            // case 0:
+                            // case '0':return '-';break;
                             case 0:
-                            case '0':return '-';break;
+                            case '0':return '普通开白条';break;
                             case 1:
-                            case '1':return '普通开白条';break;
+                            case '1':return '小金库白条';break;
                             case 2:
-                            case '2':return '小金库白条';break;
-                            case 3:
-                            case '3':return '新手礼包';break;
+                            case '2':return '新手礼包';break;
                         }
                     }
                 },

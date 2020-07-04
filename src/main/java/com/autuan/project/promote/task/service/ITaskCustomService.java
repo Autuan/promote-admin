@@ -4,9 +4,7 @@ import com.autuan.project.front.entity.GeneratorQrCodeVO;
 import com.autuan.project.front.entity.ReceiveAO;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.param.domain.TabParam;
-import com.autuan.project.promote.task.domain.SetCodeReq;
-import com.autuan.project.promote.task.domain.SetTaskParamAO;
-import com.autuan.project.promote.task.domain.TabTask;
+import com.autuan.project.promote.task.domain.*;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.ServletOutputStream;
@@ -103,4 +101,16 @@ public interface ITaskCustomService {
     List<TabSalesmanTask> receivedTask(String salesmanId);
 
     void setCode(SetCodeReq req);
+
+    /***
+     * 添加
+     * @param req 
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : void
+     * @since: 19:49 2020/7/4
+     */
+    void add(TaskAddReq req);
+
 }

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改业务员-任务中间')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-linkSalesmanTask-edit" th:object="${salesmanTask}">
+            <input name="id" id="id" th:field="*{id}" type="hidden">
+<!--            <input name="type" value="1" type="hidden">-->
+<!--            <input name="status" value="1" type="hidden">-->
+            <input name="taskId" id="taskId" th:field="*{taskId}" type="hidden">
+            <input name="salesmanId" id="salesmanId" th:field="*{salesmanId}" type="hidden">
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">任务：</label>
+                <div class="col-sm-8">
+                    <input  id="taskIdShow"  class="form-control" type="text" required disabled="true">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">任务：</label>
+                <div class="col-sm-8">
+                    <input  id="salesmanIdShow"  class="form-control" type="text" required disabled="true">
+                </div>
+            </div>
+
+            <!--<div class="form-group">-->
+                <!--<label class="col-sm-3 control-label">检索任务：</label>-->
+                <!--<div class="col-sm-2">-->
+                    <!--<input id="taskNameInput" class="form-control" type="text" placeholder="任务名称">-->
+                <!--</div>-->
+                <!--<a id="searchTask" class="btn btn-info col-sm-2" href="javascript:void(0);">检索</a>-->
+                <!--<div class="col-sm-4">-->
+                    <!--<select class="form-control m-b" id="taskSelect" name="taskId">-->
+                        <!--<option value="">==请检索==</option>-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">code：</label>
+                <div class="col-sm-8">
+                    <select class="form-control m-b" id="codeSelect" name="code" required>
+                        <option value="">==请选择CODE==</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">专属链接：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <input name="link" th:field="*{link}" class="form-control" type="text">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">奖励额：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <input name="reward" th:field="*{reward}" class="form-control" type="text">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">奖励开始时间：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <div class="input-group date">-->
+<!--                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>-->
+<!--                        <input name="rewardBeginTime" th:value="${#dates.format(salesmanTask.rewardBeginTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group">    -->
+<!--                <label class="col-sm-3 control-label">奖励结束时间：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <div class="input-group date">-->
+<!--                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>-->
+<!--                        <input name="rewardStopTime" th:value="${#dates.format(salesmanTask.rewardStopTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "promote/linkSalesmanTask";
+        $("#form-linkSalesmanTask-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                // let param = $('#form-linkSalesmanTask-edit').serialize();
+                // console.info(param)
+                // return;
+                Base.Network.post({
+                    url:ctx+'promote/linkSalesmanTask/custom/assignCode',
+                    data:{
+                        id:$('#id').val(),
+                        taskId:$('#taskId').val(),
+                        salesmanId:$('#salesmanId').val(),
+                        code:$('#codeSelect').val(),
+                    },
+                    contentType:'application/json',
+                    successParse:function (data) {
+                        $.modal.close();
+                        parent.$.modal.msgSuccess('操作成功');
+                        parent.$.table.refresh();
+                    }
+                })
+            }
+        }
+
+        $("input[name='rewardBeginTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $("input[name='rewardStopTime']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+
+        $(function () {
+            let taskList = [];
+            let salesmanList = [];
+
+            $('#searchSalesman').click(function () {
+                let list = salesmanList;
+                let name = $('#salesanNameInput').val()
+                if (Bee.StringUtils.isNotBlank(name)) {
+                    list = list.filter(item => {
+                        return Bee.StringUtils.contains(item.name, name)
+                    })
+                }
+                let str = '<option value="">---请选择业务员---</option>';
+                for (let i = 0; i < list.length; i++) {
+                    str += `<option value="${list[i].id}">${list[i].name}</option>`
+                }
+                $('#salesmanSelect').empty();
+                $('#salesmanSelect').append($(str));
+            })
+
+            Base.Network.post({
+                url: ctx + 'promote/task/custom/get/'+$('#taskId').val(),
+                successParse: function (data) {
+                    // console.info(data)
+                    $('#taskIdShow').val(data.name)
+                }
+            })
+            Base.Network.post({
+                url: ctx + 'promote/salesman/custom/get/'+$('#salesmanId').val(),
+                successParse: function (data) {
+                    // console.info(data)
+                    $('#salesmanIdShow').val(data.name)
+                }
+            })
+
+            // Base.Network.post({
+            //     url: ctx + 'promote/linkSalesmanTask/custom/list',
+            //     successParse: function (data) {
+            //         taskList = data.taskList;
+            //         salesmanList = data.salesmanList;
+            //     }
+            // })
+
+            Base.Network.post({
+                url: ctx + 'promote/linkSalesmanTask/custom/listByTaskId',
+                data: {
+                    taskId: $('#taskId').val()
+                },
+                successParse: function (data) {
+                    let list = data;
+                    let str = '<option value="">---请选择CODE---</option>';
+                    for (let i = 0; i < list.length; i++) {
+                        str += `<option value="${list[i].code}">${list[i].code}</option>`
+                    }
+                    $('#codeSelect').empty();
+                    $('#codeSelect').append($(str));
+                }
+            })
+        })
+    </script>
+</body>
+</html>

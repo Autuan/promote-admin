@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -81,29 +82,73 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
         List<Integer> inList = Lists.newArrayList(0, 3);
         example.createCriteria()
                 .andTaskIdEqualTo(salesmanTask.getTaskId())
+                // todo magic code
                 .andStatusEqualTo(0)
                 .andTypeIn(inList);
         return tabSalesmanTaskMapper.selectByExample(example);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void assignCode(TabSalesmanTask req) {
+        // todo comment
+        // todo del extra code
         TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+        List<Integer> inList = Lists.newArrayList(0, 3);
         example.createCriteria()
+                .andCodeIsNotNull()
+                .andTypeIn(inList)
                 .andTaskIdEqualTo(req.getTaskId())
                 .andSalesmanIdEqualTo(req.getSalesmanId());
+
         TabSalesmanTask one = tabSalesmanTaskMapper.selectOneByExample(example);
         if(null != one && StrUtil.isNotBlank(one.getId())) {
             throw new CustomRespondException("业务员已有此任务");
         }
-        TabSalesmanTask bean = tabSalesmanTaskMapper.selectByPrimaryKey(req.getId());
-        if(StrUtil.isNotBlank(bean.getSalesmanId())) {
-            throw new CustomRespondException("此CODE已被使用");
-        }
+
+//        TabSalesmanTask bean = tabSalesmanTaskMapper.selectByPrimaryKey(req.getId());
+
+        example.clear();
+        example.createCriteria()
+                .andTaskIdEqualTo(req.getTaskId())
+                .andCodeEqualTo(req.getCode());
+        TabSalesmanTask bean = tabSalesmanTaskMapper.selectOneByExample(example);
+//        if(StrUtil.isNotBlank(bean.getSalesmanId())) {
+//            throw new CustomRespondException("此CODE已被使用");
+//        }
         bean.setSalesmanId(req.getSalesmanId());
+        // todo magic num
         bean.setStatus(2);
         bean.setType(1);
+        bean.setUpdateBy(ShiroUtils.getLoginName());
+        bean.setUpdateTime(LocalDateTime.now());
         tabSalesmanTaskMapper.updateByPrimaryKeySelective(bean);
+        // 删除用来展示的空CODE列表
+        example.clear();
+        example.createCriteria()
+                .andTaskIdEqualTo(req.getTaskId())
+                .andSalesmanIdEqualTo(req.getSalesmanId())
+                .andCodeIsNull();
+        tabSalesmanTaskMapper.deleteByExample(example);
+    }
+
+    @Override
+    public List<TabSalesmanTask> selectSalesmanTaskList(SalesmanTask salesmanTask) {
+        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+        TabSalesmanTaskExample.Criteria criteria = example.createCriteria();
+        criteria.andSalesmanIdIsNotNull();
+        if(StrUtil.isNotBlank(salesmanTask.getTaskId())) {
+            criteria.andTaskIdEqualTo(salesmanTask.getTaskId());
+        }
+        if(StrUtil.isNotBlank(salesmanTask.getCode())) {
+            criteria.andCodeLike("%"+salesmanTask.getCode()+"%");
+        }
+        if(StrUtil.isNotBlank(salesmanTask.getSalesmanId())) {
+            criteria.andSalesmanIdEqualTo(salesmanTask.getSalesmanId());
+        }
+
+        List<TabSalesmanTask> tabSalesmanTasks = tabSalesmanTaskMapper.selectByExample(example);
+        return tabSalesmanTasks;
     }
 
 

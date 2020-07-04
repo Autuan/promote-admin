@@ -5,7 +5,9 @@ import com.autuan.common.utils.excel.ExcelRead;
 import com.autuan.common.utils.poi.ExcelUtil;
 import com.autuan.framework.config.RuoYiConfig;
 import com.autuan.framework.web.domain.AjaxResult;
+import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.dataJd.domain.DataJd;
+import com.autuan.project.promote.dataJd.domain.OptionJdRewardReq;
 import com.autuan.project.promote.dataJd.domain.TabDataJd;
 import com.autuan.project.promote.dataJd.service.IDataJdCustomService;
 import com.google.common.collect.Lists;
@@ -113,9 +115,9 @@ public class DataJdCustomController {
                     String openJdCreditTypeStr = ExcelRead.getStrDef(j++,"");
                     Integer openJdCreditType = 0;
                     switch (openJdCreditTypeStr) {
-                        case "普通开白条" : openJdCreditType=1;break;
-                        case "小金库白条" : openJdCreditType=2;break;
-                        case "新手礼包" : openJdCreditType=3;break;
+                        case "普通开白条" : openJdCreditType=0;break;
+                        case "小金库白条" : openJdCreditType=1;break;
+                        case "新手礼包" : openJdCreditType=2;break;
                         default:break;
                     }
                     String jdCreditFirstOrderNo = ExcelRead.getStr(j++);
@@ -193,5 +195,12 @@ public class DataJdCustomController {
     public AjaxResult importTemplate() {
         ExcelUtil<DataJd> util = new ExcelUtil<DataJd>(DataJd.class);
         return util.importTemplateExcel("京东联合拉新");
+    }
+
+    @RequestMapping("/optionJdReward")
+    @ResponseBody
+    public ReturnResult optionJdReward(OptionJdRewardReq req) {
+        dataJdCustomService.optionJdReward(req);
+        return null;
     }
 }

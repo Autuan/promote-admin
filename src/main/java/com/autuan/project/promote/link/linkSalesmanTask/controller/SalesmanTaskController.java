@@ -1,6 +1,7 @@
 package com.autuan.project.promote.link.linkSalesmanTask.controller;
 
 import java.util.List;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,13 @@ import com.autuan.framework.web.page.TableDataInfo;
 
 /**
  * 业务员-任务中间Controller
- * 
+ *
  * @author autuan
  * @date 2020-07-02
  */
 @Controller
 @RequestMapping("/promote/linkSalesmanTask")
-public class SalesmanTaskController extends BaseController
-{
+public class SalesmanTaskController extends BaseController {
     private String prefix = "promote/linkSalesmanTask";
 
     @Autowired
@@ -36,8 +36,7 @@ public class SalesmanTaskController extends BaseController
 
     @RequiresPermissions("promote:linkSalesmanTask:view")
     @GetMapping()
-    public String linkSalesmanTask()
-    {
+    public String linkSalesmanTask() {
         return prefix + "/linkSalesmanTask";
     }
 
@@ -47,8 +46,7 @@ public class SalesmanTaskController extends BaseController
     @RequiresPermissions("promote:linkSalesmanTask:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(SalesmanTask salesmanTask)
-    {
+    public TableDataInfo list(SalesmanTask salesmanTask) {
         startPage();
         List<SalesmanTask> list = salesmanTaskService.selectSalesmanTaskList(salesmanTask);
         return getDataTable(list);
@@ -60,8 +58,7 @@ public class SalesmanTaskController extends BaseController
     @RequiresPermissions("promote:linkSalesmanTask:export")
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(SalesmanTask salesmanTask)
-    {
+    public AjaxResult export(SalesmanTask salesmanTask) {
         List<SalesmanTask> list = salesmanTaskService.selectSalesmanTaskList(salesmanTask);
         ExcelUtil<SalesmanTask> util = new ExcelUtil<SalesmanTask>(SalesmanTask.class);
         return util.exportExcel(list, "linkSalesmanTask");
@@ -71,8 +68,7 @@ public class SalesmanTaskController extends BaseController
      * 新增业务员-任务中间
      */
     @GetMapping("/add")
-    public String add()
-    {
+    public String add() {
         return prefix + "/add";
     }
 
@@ -83,8 +79,7 @@ public class SalesmanTaskController extends BaseController
     @Log(title = "业务员-任务中间", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(SalesmanTask salesmanTask)
-    {
+    public AjaxResult addSave(SalesmanTask salesmanTask) {
         return toAjax(salesmanTaskService.insertSalesmanTask(salesmanTask));
     }
 
@@ -92,8 +87,7 @@ public class SalesmanTaskController extends BaseController
      * 修改业务员-任务中间
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") String id, ModelMap mmap)
-    {
+    public String edit(@PathVariable("id") String id, ModelMap mmap) {
         SalesmanTask salesmanTask = salesmanTaskService.selectSalesmanTaskById(id);
         mmap.put("salesmanTask", salesmanTask);
         return prefix + "/edit";
@@ -106,8 +100,7 @@ public class SalesmanTaskController extends BaseController
     @Log(title = "业务员-任务中间", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(SalesmanTask salesmanTask)
-    {
+    public AjaxResult editSave(SalesmanTask salesmanTask) {
         return toAjax(salesmanTaskService.updateSalesmanTask(salesmanTask));
     }
 
@@ -116,10 +109,9 @@ public class SalesmanTaskController extends BaseController
      */
     @RequiresPermissions("promote:linkSalesmanTask:remove")
     @Log(title = "业务员-任务中间", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) {
         return toAjax(salesmanTaskService.deleteSalesmanTaskByIds(ids));
     }
 }

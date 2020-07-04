@@ -56,7 +56,7 @@ public class SalesmanCustomController extends BaseController {
 
     @RequestMapping("/get/{id}")
     @ResponseBody
-    public ReturnResult edit(@PathVariable("id") String id) {
+    public ReturnResult get(@PathVariable("id") String id) {
         Salesman salesman = salesmanService.selectSalesmanById(id);
         return ReturnResult.ok(salesman);
     }

@@ -1,5 +1,8 @@
 package com.autuan.project.promote.group.service;
 
+import com.autuan.project.front.entity.GroupDataReq;
+import com.autuan.project.front.entity.GroupDataRes;
+import com.autuan.project.front.entity.HistoryRewardRes;
 import com.autuan.project.promote.group.domain.TabGroup;
 
 import java.util.List;
@@ -60,4 +63,15 @@ public interface IGroupCustomService {
      * @since : 2020/6/22 16:28
      */
     List<TabGroup> list();
+
+    /***
+     * 小组数据统计
+     * @param req 
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.util.List<com.autuan.project.front.entity.HistoryRewardRes>
+     * @since: 12:07 2020/7/4
+     */
+    List<GroupDataRes> groupData(GroupDataReq req);
 }

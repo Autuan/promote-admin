@@ -1,5 +1,6 @@
 package com.autuan.project.promote.dataJd.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,6 +102,8 @@ public class TabDataJd {
 
     private String salesmanId;
 
+    private BigDecimal reward;
+
     public enum Column {
         id("id", "id", "VARCHAR", false),
         recordTime("record_time", "recordTime", "TIMESTAMP", false),
@@ -145,7 +148,8 @@ public class TabDataJd {
         createBy("create_by", "createBy", "VARCHAR", false),
         updateBy("update_by", "updateBy", "VARCHAR", false),
         taskId("task_id", "taskId", "VARCHAR", false),
-        salesmanId("salesman_id", "salesmanId", "VARCHAR", false);
+        salesmanId("salesman_id", "salesmanId", "VARCHAR", false),
+        reward("reward", "reward", "DECIMAL", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

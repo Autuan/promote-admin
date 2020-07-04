@@ -11,6 +11,36 @@
                 <div class="select-list">
                     <ul>
                         <li>
+                            <p>业务员：</p>
+                            <!--<div class="col-sm-4">-->
+                            <!--<div class="input-group">-->
+                            <!--<input name="salesmanId2" class="form-control" type="hidden" id="salesmanId">-->
+
+                            <!--<input type="text" name="salesmanId" class="form-control" id="bsSuggestSalesman">-->
+                            <!--<div class="input-group-btn">-->
+                                <!--<button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">-->
+                                <!--<span class="caret"></span>-->
+                                <!--</button>-->
+                                <!--<ul class="dropdown-menu dropdown-menu-right" role="menu">-->
+                                <!--</ul>-->
+                            <!--</div>-->
+
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="bsSuggestSalesman">
+                                <div class="input-group-btn">
+                                    <!--<button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">-->
+                                        <!--<span class="caret"></span>-->
+                                    <!--</button>-->
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- /btn-group -->
+                            <!--</div>-->
+                            <!--</div>-->
+                        </li>
+
+                        <li>
                         <p>任务：</p>
                         <select id="taskSelect" name="taskId">
                             <option value="">==请检索==</option>
@@ -21,9 +51,15 @@
                         <!--<input type="text" name="salesmanId"/>-->
                         <!--</li>-->
                         <li>
-                            <p>业务员CODE：</p>
+                            <p>CODE：</p>
                             <input type="text" name="code"/>
                         </li>
+                        <!--<li>-->
+                            <!--<p>业务员：</p>-->
+                            <!--<input type="text" name="code" id="bsSuggestSalesman2"/>-->
+                        <!--</li>-->
+
+
                         <!--<li>-->
                         <!--<p>专属链接：</p>-->
                         <!--<input type="text" name="link"/>-->
@@ -60,7 +96,7 @@
                 <!--<i class="fa fa-plus"></i> 添加-->
             <!--</a>-->
             <a class="btn btn-primary single disabled" onclick="assignCode()" shiro:hasPermission="promote:linkSalesmanTask:edit">
-            <i class="fa fa-edit"></i> 分配CODE
+            <i class="fa fa-edit"></i> 审核通过并分配CODE
             </a>
             <!--<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:linkSalesmanTask:remove">-->
             <!--<i class="fa fa-remove"></i> 删除-->
@@ -69,10 +105,10 @@
             <!--                    <i class="fa fa-download"></i> 导出-->
             <!--                 </a>-->
             <!--                <div style="margin-left: 20px;"></div>-->
-            <a class="btn btn-info multiple disabled" onclick="verifyPass()"
-               shiro:hasPermission="promote:linkSalesmanTask:remove">
-                <i class="fa "></i> 审核通过
-            </a>
+            <!--<a class="btn btn-info multiple disabled" onclick="verifyPass()"-->
+               <!--shiro:hasPermission="promote:linkSalesmanTask:remove">-->
+                <!--<i class="fa "></i> 审核通过-->
+            <!--</a>-->
             <a class="btn btn-warning multiple disabled" onclick="verifyFail()"
                shiro:hasPermission="promote:linkSalesmanTask:remove">
                 <i class="fa "></i> 审核拒绝
@@ -85,20 +121,25 @@
     </div>
 </div>
 <th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-suggest-js" />
+<th:block th:include="include :: bootstrap-typeahead-js" />
 <script th:inline="javascript">
     var editFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:edit')}]];
     var removeFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:remove')}]];
     var prefix = ctx + "promote/linkSalesmanTask";
 
+
+
     function assignCode() {
         // var row = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
         var row = $.btTable.bootstrapTable('getSelections')[0];
         // console.info(row)
-        if(Bee.StringUtils.isNotBlank(row.salesmanId)) {
+        if(Bee.StringUtils.isNotBlank(row.code)) {
             $.modal.msgError("此CODE已分配");
             return;
         }
-        let url = $.table._option.updateUrl.replace("{id}", row.id);
+        let url = "/promote/linkSalesmanTask/custom/assign/code/"+row.id;
+        // let url = $.table._option.updateUrl.replace("{id}", row.id);
         console.info(url)
         // return;;
         $.modal.open("修改" + $.table._option.modalName,url);
@@ -115,7 +156,6 @@
                 url: ctx + 'promote/linkSalesmanTask/custom/pass',
                 data: {"ids": rows.join()},
                 successParse: function (data) {
-                    // console.info(data)
                     $.modal.msgSuccess("操作成功");
                     $.table.refresh();
                 }
@@ -146,7 +186,7 @@
         let taskList = [];
         let salesmanList = [];
         var options = {
-            url: prefix + "/list",
+            url: prefix + "/custom/selectSalesmanTaskList",
             createUrl: prefix + "/add",
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
@@ -263,6 +303,9 @@
             successParse: function (data) {
                 taskList = data.taskList;
                 salesmanList = data.salesmanList;
+
+                console.info(salesmanList)
+
                 $.table.init(options);
 
                 let str = '<option value="">---请选择任务---</option>';
@@ -271,8 +314,30 @@
                 }
                 $('#taskSelect').empty();
                 $('#taskSelect').append($(str));
+
+
+                $("input#bsSuggestSalesman").bsSuggest({
+                    // url: "/rest/sys/getuserlist?keyword="
+                    data:{
+                        value:salesmanList,
+                    },
+                    idField:'id',
+                    keyField:'id',
+                    // allowNoKeyword:true,
+                    // getDataMethod:data,
+                    effectiveFields:['id','name'],
+                    // emptyTip:'输入用户名搜索'
+                }).on('onSetSelectValue', function (e, selectedData, selectedRawData) {
+                    // console.log('onSetSelectValue: ');
+                    // console.info(selectedData)
+                    // $('#salesmanId').val(selectedData.id)
+                });
             }
+
+
         })
+
+
     });
 </script>
 </body>

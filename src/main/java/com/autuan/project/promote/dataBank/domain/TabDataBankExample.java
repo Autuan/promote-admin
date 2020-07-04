@@ -1,5 +1,6 @@
 package com.autuan.project.promote.dataBank.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -1201,6 +1202,66 @@ public class TabDataBankExample {
 
         public Criteria andSalesmanIdNotBetween(String value1, String value2) {
             addCriterion("salesman_id not between", value1, value2, "salesmanId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardIsNull() {
+            addCriterion("reward is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardIsNotNull() {
+            addCriterion("reward is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardEqualTo(BigDecimal value) {
+            addCriterion("reward =", value, "reward");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardNotEqualTo(BigDecimal value) {
+            addCriterion("reward <>", value, "reward");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardGreaterThan(BigDecimal value) {
+            addCriterion("reward >", value, "reward");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("reward >=", value, "reward");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardLessThan(BigDecimal value) {
+            addCriterion("reward <", value, "reward");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("reward <=", value, "reward");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardIn(List<BigDecimal> values) {
+            addCriterion("reward in", values, "reward");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardNotIn(List<BigDecimal> values) {
+            addCriterion("reward not in", values, "reward");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("reward between", value1, value2, "reward");
+            return (Criteria) this;
+        }
+
+        public Criteria andRewardNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("reward not between", value1, value2, "reward");
             return (Criteria) this;
         }
     }
