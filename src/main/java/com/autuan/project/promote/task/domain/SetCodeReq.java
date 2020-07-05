@@ -17,4 +17,5 @@ public class SetCodeReq {
     private String taskId;
     private Integer num;
     private Integer allNum;
+    private String inputCode;
 }

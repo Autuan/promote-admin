@@ -7,6 +7,7 @@ import cn.hutool.core.util.IdUtil;
 import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 
+import cn.hutool.core.util.StrUtil;
 import com.autuan.common.utils.Md5Utils;
 import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.common.utils.security.ShiroUtils;
@@ -62,8 +63,12 @@ public class SalesmanServiceImpl implements ISalesmanService {
         salesman.setCreateBy(ShiroUtils.getLoginName());
         salesman.setId(IdUtil.simpleUUID());
 
+        if(StrUtil.isBlank(salesman.getLevel())) {
+            salesman.setLevel("普通会员");
+        }
         salesman.setApplyTime(LocalDateTime.now());
         salesman.setPassword(Md5Utils.hash("123456"));
+        salesman.setHeadImg("http://promote.yupai.net/admin/profile/upload/def/head_img_def.jpg");
         return salesmanMapper.insertSalesman(salesman);
     }
 
@@ -77,6 +82,10 @@ public class SalesmanServiceImpl implements ISalesmanService {
     public int updateSalesman(Salesman salesman) {
         salesman.setUpdateTime(LocalDateTime.now());
         salesman.setUpdateBy(ShiroUtils.getLoginName());
+
+        if(StrUtil.isNotBlank(salesman.getPassword())) {
+            salesman.setPassword(Md5Utils.hash(salesman.getPassword()));
+        }
         return salesmanMapper.updateSalesman(salesman);
     }
 

@@ -12,16 +12,16 @@
         <input id="prefix" field="*{prefix}" type="hidden">
 
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">CODE前缀：</label>
-            <div class="col-sm-6">
-                <input class="form-control keyInput" id="codePrefix" type="text" disabled="true" th:value="${task.codePrefix}">
-            </div>
-            <label class="col-sm-2 control-label">位数：</label>
-            <div class="col-sm-2">
-                <input class="form-control keyInput" id="digit" type="text" disabled="true" th:value="${task.codePrefixDigit}">
-            </div>
-        </div>
+        <!--<div class="form-group">-->
+            <!--<label class="col-sm-2 control-label">CODE前缀：</label>-->
+            <!--<div class="col-sm-6">-->
+                <!--<input class="form-control keyInput" id="codePrefix" type="text" disabled="true" th:value="${task.codePrefix}">-->
+            <!--</div>-->
+            <!--<label class="col-sm-2 control-label">位数：</label>-->
+            <!--<div class="col-sm-2">-->
+                <!--<input class="form-control keyInput" id="digit" type="text" disabled="true" th:value="${task.codePrefixDigit}">-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="form-group">
             <label class="col-sm-3 control-label">总数：</label>
             <div class="col-sm-3">
@@ -37,23 +37,29 @@
             <div class="col-sm-3">
                 <input class="form-control keyInput" type="text" disabled="true" th:value="${unusedNum}">
             </div>
-            <label class="col-sm-3 control-label">已收回：</label>
-            <div class="col-sm-3">
-                <input class="form-control keyInput" type="text" disabled="true" th:value="${recoveryNum}">
-            </div>
+            <!--<label class="col-sm-3 control-label">已收回：</label>-->
+            <!--<div class="col-sm-3">-->
+                <!--<input class="form-control keyInput" type="text" disabled="true" th:value="${recoveryNum}">-->
+            <!--</div>-->
         </div>
+        <!--<div class="form-group">-->
+            <!--<label class="col-sm-3 control-label">生成：</label>-->
+            <!--<div class="col-sm-3">-->
+                <!--<input class="form-control keyInput" id="num" type="text" placeholder="输入生成数量">-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="form-group">
-            <label class="col-sm-3 control-label">生成：</label>
+            <label class="col-sm-3 control-label">CODE值：</label>
             <div class="col-sm-3">
-                <input class="form-control keyInput" id="num" type="text" placeholder="输入生成数量">
+                <input class="form-control keyInput" id="inputCode" type="text" placeholder="输入CODE">
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">预览：</label>
-            <div class="col-sm-3">
-               <div id="preview">12345</div>
-            </div>
-        </div>
+        <!--<div class="form-group">-->
+            <!--<label class="col-sm-3 control-label">预览：</label>-->
+            <!--<div class="col-sm-3">-->
+               <!--<div id="preview">12345</div>-->
+            <!--</div>-->
+        <!--</div>-->
     </form>
 </div>
 <th:block th:include="include :: footer"/>
@@ -70,11 +76,13 @@
 
     function submitHandler() {
         let param = {
-            digit : $('#digit').val(),
-            prefix : $('#codePrefix').val(),
+            // digit : $('#digit').val(),
+            // prefix : $('#codePrefix').val(),
             taskId : $('#taskId').val(),
             num : $('#num').val(),
             allNum : $('#allNum').val(),
+            inputCode : $('#inputCode').val(),
+
         }
         Base.Network.post({
             url:ctx+'promote/task/custom/setCode',
@@ -89,34 +97,12 @@
     }
     $(function () {
 
-        let digit = $('#digit').val() * 1;
-        let suffix = PrefixInteger(1, digit);
-        let codePrefix = $('#codePrefix').val();
-        let preview = codePrefix + suffix;
-        $('#preview').html(preview);
+        // let digit = $('#digit').val() * 1;
+        // let suffix = PrefixInteger(1, digit);
+        // let codePrefix = $('#codePrefix').val();
+        // let preview = codePrefix + suffix;
+        // $('#preview').html(preview);
 
-        // $('#testParamUrlBtn').click(function () {
-        //     let hrefPrefix = $('#prefix').val();
-        //     let list = getParamList();
-        //     let str = '';
-        //     for (const obj of list) {
-        //         if (obj.type === '0') {
-        //             str += obj.paramKey + '=' + obj.value + '&'
-        //         }
-        //         if (obj.type === '1') {
-        //             str += obj.paramKey + '=code&'
-        //         }
-        //     }
-        //     str = str.substring(0, str.length - 1);
-        //     if (Bee.StringUtils.contains(hrefPrefix, '?')) {
-        //         str = hrefPrefix + '&' + str;
-        //     } else {
-        //         str = hrefPrefix + '?' + str;
-        //     }
-        //     $('#testParamUrl').text(str);
-        // });
-
-        // initStyle();
     })
 </script>
 </body>

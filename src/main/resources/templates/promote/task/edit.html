@@ -49,10 +49,20 @@
 <!--                    <input name="paramId" th:field="*{paramId}" class="form-control" type="text">-->
 <!--                </div>-->
 <!--            </div>-->
-            <div class="form-group">    
+            <div class="form-group">
+                <label class="col-sm-3 control-label">奖励方式：</label>
+                <div class="col-sm-8">
+                    <select id="assignTypeSelect" th:field="*{assignType}" disabled="true" class="form-control m-b" >
+                        <option value="">===请选择===</option>
+                        <option value="0">普通方式</option>
+                        <option value="1">京东拉新</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" id="rewardDiv">
                 <label class="col-sm-3 control-label">推广奖励额：</label>
                 <div class="col-sm-8">
-                    <input name="reward" th:field="*{reward}" class="form-control" type="text" disabled="true">
+                    <input name="reward" th:field="*{reward}" id="reward" class="form-control" type="text" disabled="true">
                 </div>
             </div>
 <!--            <div class="form-group">    -->
@@ -184,6 +194,11 @@
                     }
                 })
             })
+
+            let assignTypeSelect = $('#assignTypeSelect').val()
+            if(assignTypeSelect === 1 || assignTypeSelect === '1') {
+                $('#rewardDiv').hide()
+            }
         })
     </script>
 </body>

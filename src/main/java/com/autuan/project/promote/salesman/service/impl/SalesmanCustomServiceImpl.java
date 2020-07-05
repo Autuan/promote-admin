@@ -3,6 +3,7 @@ package com.autuan.project.promote.salesman.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import com.autuan.common.exception.BusinessException;
 import com.autuan.common.exception.custom.CustomRespondException;
 import com.autuan.common.utils.Md5Utils;
 import com.autuan.common.utils.security.ShiroUtils;
@@ -53,7 +54,7 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     @Autowired
-    private TabSalesmanMapper salesmanMapper;
+    private TabSalesmanMapper tabSalesmanMapper;
     @Autowired
     private TabSalesmanTaskMapper tabSalesmanTaskMapper;
     @Autowired
@@ -62,8 +63,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     private TabDataJdMapper dataJdMapper;
     @Autowired
     private TabDataBankMapper dataBankMapper;
-//    @Autowired
-//    private IDictDataService dictDataService;
+    @Autowired
+    private SalesmanMapper salesmanMapper;
     @Autowired
     private IDataJdCustomService dataJdCustomService;
 
@@ -84,7 +85,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .andMobileEqualTo(salesman.getMobile())
 //                .andPasswordEqualTo(pwd)
                 .andPasswordEqualTo(salesman.getPassword());
-        TabSalesman tabSalesman = salesmanMapper.selectOneByExample(example);
+        TabSalesman tabSalesman = tabSalesmanMapper.selectOneByExample(example);
         return tabSalesman;
     }
 
@@ -102,7 +103,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         TabSalesmanExample example = new TabSalesmanExample();
         example.createCriteria()
                 .andMobileEqualTo(salesman.getMobile());
-        TabSalesman one = salesmanMapper.selectOneByExample(example);
+        TabSalesman one = tabSalesmanMapper.selectOneByExample(example);
         if (null != one && StrUtil.isNotBlank(one.getId())) {
             throw new CustomRespondException("此手机号已注册,请直接登录");
         }
@@ -110,7 +111,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         salesman.setCreateBy("用户注册");
         salesman.setId(IdUtil.simpleUUID());
         salesman.setLevel("普通用户");
-        return salesmanMapper.insertSelective(salesman) == 1;
+        return tabSalesmanMapper.insertSelective(salesman) == 1;
     }
 
     @Override
@@ -120,7 +121,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 //                .andMobileLike("%"+mobile+"%")
                 .andMobileEqualTo(mobile)
         ;
-        TabSalesman tabSalesman = salesmanMapper.selectOneByExample(example);
+        TabSalesman tabSalesman = tabSalesmanMapper.selectOneByExample(example);
         log.info("selectByMobile -> response -> {}", tabSalesman);
         return tabSalesman;
     }
@@ -144,7 +145,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 TabSalesman.builder()
                         .password(Md5Utils.hash("123456"))
                         .build();
-        salesmanMapper.updateByExampleSelective(salesman, example);
+        tabSalesmanMapper.updateByExampleSelective(salesman, example);
     }
 
     /**
@@ -157,14 +158,14 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
      */
     @Override
     public void updatePwd(TabSalesman salesman) {
-        salesmanMapper.updateByPrimaryKeySelective(salesman);
+        tabSalesmanMapper.updateByPrimaryKeySelective(salesman);
     }
 
     @Override
     public List<TabSalesman> listSalesmanThousand() {
         TabSalesmanExample example = new TabSalesmanExample();
         example.limit(1000);
-        return salesmanMapper.selectByExample(example);
+        return tabSalesmanMapper.selectByExample(example);
     }
 
     /**
@@ -454,5 +455,76 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .sorted(Comparator.comparing(HistoryRewardRes::getVerifyDate))
                 .collect(toList());
         return resList;
+    }
+
+
+    @Override
+    public String importData(List<Salesman> list, boolean isUpdateSupport) {
+        if (CollectionUtil.isEmpty(list)) {
+            throw new BusinessException("导入数据不能为空！");
+        }
+        int successNum = 0;
+        int failureNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        StringBuilder failureMsg = new StringBuilder();
+        String operName = ShiroUtils.getLoginName();
+        LocalDateTime now = LocalDateTime.now();
+
+//        String password = configService.selectConfigByKey("sys.user.initPassword");
+        for (Salesman data : list) {
+            try {
+                // 验证是否存在这个用户
+                Salesman oldBean = null;
+                if (null == oldBean) {
+                    // 默认值
+                    data.setId(IdUtil.simpleUUID());
+                    data.setCreateBy(operName);
+                    data.setCreateTime(now);
+                    data.setApplyTime(now);
+                    if(StrUtil.isBlank(data.getPassword())) {
+                        data.setPassword(Md5Utils.hash("123456"));
+                    }
+                    if(StrUtil.isBlank(data.getHeadImg())) {
+                        data.setHeadImg("http://promote.yupai.net/admin/profile/upload/def/head_img_def.jpg");
+                    }
+                    if (StrUtil.isBlank(data.getLevel())) {
+                        data.setLevel("普通会员");
+                    }
+                    if(StrUtil.isBlank(data.getBrokerageBankNo())) {
+                        data.setBrokerageBankNo("0000");
+                    }
+                    if(StrUtil.isBlank(data.getBrokerageBankName())) {
+                        data.setBrokerageBankName("Bank Name");
+                    }
+                    if(StrUtil.isBlank(data.getBrokerageBankAddress())) {
+                        data.setBrokerageBankAddress("Bank Address");
+                    }
+                    if(null == data.getGender()) {
+                        data.setGender(0);
+                    }
+                    salesmanMapper.insertSalesman(data);
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、账号 " + data.getName() + " 导入成功");
+                } else if (isUpdateSupport) {
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、账号 " + data.getName() + " 更新成功");
+                } else {
+                    failureNum++;
+                    failureMsg.append("<br/>" + failureNum + "、账号 " + data.getName() + " 已存在");
+                }
+            } catch (Exception e) {
+                failureNum++;
+                String msg = "<br/>" + failureNum + "、账号 " + data.getName() + " 导入失败：";
+                failureMsg.append(msg + e.getMessage());
+                log.error(msg, e);
+            }
+        }
+        if (failureNum > 0) {
+            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
+            throw new BusinessException(failureMsg.toString());
+        } else {
+            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+        }
+        return successMsg.toString();
     }
 }

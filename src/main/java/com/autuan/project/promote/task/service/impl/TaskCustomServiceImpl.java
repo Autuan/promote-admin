@@ -91,6 +91,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
     public List<TabSalesmanTask> listForCode(String taskId) {
         TabSalesmanTaskExample example = new TabSalesmanTaskExample();
         example.createCriteria()
+                .andTypeNotEqualTo(TaskEnum.TYPE_DISABLE.val())
                 .andCodeIsNotNull()
                 .andTaskIdEqualTo(taskId);
         return tabSalesmanTaskMapper.selectByExample(example);
@@ -152,6 +153,8 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
             List<TabParam> paramList = paramMapper.selectByExample(paramExample);
             TabSalesmanTaskExample tabSalesmanTaskExample = new TabSalesmanTaskExample();
             tabSalesmanTaskExample.createCriteria()
+                    .andTypeEqualTo(TaskEnum.TYPE_USE.val())
+                    .andStatusEqualTo(TaskEnum.STATUS_PASS.val())
                     .andSalesmanIdEqualTo(salesmanId)
                     .andTaskIdEqualTo(taskId);
             TabSalesmanTask link = tabSalesmanTaskMapper.selectOneByExample(tabSalesmanTaskExample);
@@ -255,6 +258,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                 // todo magic code
                 .status(1)
                 .type(0)
+                .createTime(LocalDateTime.now())
 
                 .build();
 
@@ -285,37 +289,49 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
         LocalDateTime now = LocalDateTime.now();
         String loginName = ShiroUtils.getLoginName();
 
-        DecimalFormat df = new DecimalFormat("#");
-        df.setMinimumIntegerDigits(req.getDigit());
+        tabSalesmanTaskMapper.insertSelective(TabSalesmanTask.builder()
+                .id(IdUtil.simpleUUID())
+                .taskId(taskId)
+                .code(req.getInputCode())
+                .createTime(now)
+                .createBy(loginName)
+                // todo magic code
+                .status(0)
+                .type(0)
+                .build());
 
-        int thisMax = req.getNum() + req.getAllNum();
-        String limit = "";
-        for(int i=0;i<req.getDigit();i++) {
-            limit += "9";
-        }
-        if(Integer.valueOf(limit) < thisMax){
-            throw new CustomRespondException("生成数量超过最大位数限制");
-        }
 
-        List<TabSalesmanTask> list = new ArrayList<>(req.getNum());
-        for(int i=req.getAllNum();i<thisMax;i++) {
-        String code = prefix + df.format(i);
-            TabSalesmanTask bean = TabSalesmanTask.builder()
-                    .id(IdUtil.simpleUUID())
-                    .taskId(taskId)
-                    .code(code)
-                    .createTime(now)
-                    .createBy(loginName)
-                    // todo magic code
-                    .status(0)
-                    .type(0)
-                    .build();
-            list.add(bean);
-        }
-        list.size();
-        if(CollectionUtil.isNotEmpty(list)) {
-        tabSalesmanTaskMapper.batchInsert(list);
-        }
+//        DecimalFormat df = new DecimalFormat("#");
+//        df.setMinimumIntegerDigits(req.getDigit());
+//
+//        int thisMax = req.getNum() + req.getAllNum();
+//        String limit = "";
+//        for(int i=0;i<req.getDigit();i++) {
+//            limit += "9";
+//        }
+//        if(Integer.valueOf(limit) < thisMax){
+//            throw new CustomRespondException("生成数量超过最大位数限制");
+//        }
+//
+//        List<TabSalesmanTask> list = new ArrayList<>(req.getNum());
+//        for(int i=req.getAllNum();i<thisMax;i++) {
+//        String code = prefix + df.format(i);
+//            TabSalesmanTask bean = TabSalesmanTask.builder()
+//                    .id(IdUtil.simpleUUID())
+//                    .taskId(taskId)
+//                    .code(code)
+//                    .createTime(now)
+//                    .createBy(loginName)
+//                    // todo magic code
+//                    .status(0)
+//                    .type(0)
+//                    .build();
+//            list.add(bean);
+//        }
+//        list.size();
+//        if(CollectionUtil.isNotEmpty(list)) {
+//        tabSalesmanTaskMapper.batchInsert(list);
+//        }
     }
 
     @Override

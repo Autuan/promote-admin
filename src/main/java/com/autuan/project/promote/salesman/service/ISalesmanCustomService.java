@@ -129,4 +129,6 @@ public interface ISalesmanCustomService {
      * @since: 21:24 2020/6/30 
      */
     List<RankingRes> ranking();
+
+    String importData(List<Salesman> list, boolean updateSupport);
 }

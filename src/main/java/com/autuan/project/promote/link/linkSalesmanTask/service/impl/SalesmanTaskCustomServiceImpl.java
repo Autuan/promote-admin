@@ -1,5 +1,7 @@
 package com.autuan.project.promote.link.linkSalesmanTask.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.autuan.common.exception.custom.CustomRespondException;
 import com.autuan.common.utils.security.ShiroUtils;
@@ -13,6 +15,7 @@ import com.autuan.project.promote.link.linkSalesmanTask.service.ISalesmanTaskCus
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
 import com.autuan.project.promote.task.domain.TabTask;
+import com.autuan.project.promote.task.domain.TaskEnum;
 import com.autuan.project.promote.task.service.ITaskCustomService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,9 +66,11 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
      * @since : 2020/7/1 15:57
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void verify(String ids, int i) {
         TabSalesmanTaskExample example = new TabSalesmanTaskExample();
         List<String> idList = Arrays.asList(Convert.toStrArray(ids));
+
         example.createCriteria()
                 .andIdIn(idList);
         TabSalesmanTask bean = TabSalesmanTask.builder()
@@ -79,11 +85,10 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
     @Override
     public List<TabSalesmanTask> listByTaskId(SalesmanTask salesmanTask) {
         TabSalesmanTaskExample example = new TabSalesmanTaskExample();
-        List<Integer> inList = Lists.newArrayList(0, 3);
+        List<Integer> inList = Lists.newArrayList(TaskEnum.TYPE_ABLE.val(),TaskEnum.TYPE_NOT_USE.val());
         example.createCriteria()
                 .andTaskIdEqualTo(salesmanTask.getTaskId())
-                // todo magic code
-                .andStatusEqualTo(0)
+                .andStatusEqualTo(TaskEnum.STATUS_NOT_APPLY.val())
                 .andTypeIn(inList);
         return tabSalesmanTaskMapper.selectByExample(example);
     }
@@ -94,7 +99,7 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
         // todo comment
         // todo del extra code
         TabSalesmanTaskExample example = new TabSalesmanTaskExample();
-        List<Integer> inList = Lists.newArrayList(0, 3);
+        List<Integer> inList = Lists.newArrayList(TaskEnum.TYPE_ABLE.val(),TaskEnum.TYPE_NOT_USE.val());
         example.createCriteria()
                 .andCodeIsNotNull()
                 .andTypeIn(inList)
@@ -117,9 +122,8 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
 //            throw new CustomRespondException("此CODE已被使用");
 //        }
         bean.setSalesmanId(req.getSalesmanId());
-        // todo magic num
-        bean.setStatus(2);
-        bean.setType(1);
+        bean.setStatus(TaskEnum.STATUS_PASS.val());
+        bean.setType(TaskEnum.TYPE_USE.val());
         bean.setUpdateBy(ShiroUtils.getLoginName());
         bean.setUpdateTime(LocalDateTime.now());
         tabSalesmanTaskMapper.updateByPrimaryKeySelective(bean);
@@ -149,6 +153,53 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
 
         List<TabSalesmanTask> tabSalesmanTasks = tabSalesmanTaskMapper.selectByExample(example);
         return tabSalesmanTasks;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void recoveryCode(String ids) {
+        LocalDateTime now = LocalDateTime.now();
+        String loginName = ShiroUtils.getLoginName();
+
+        List<String> idList = Arrays.asList(Convert.toStrArray(ids));
+        if (CollectionUtil.isEmpty(idList)) {
+            return;
+        }
+        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+        example.createCriteria()
+                .andIdIn(idList);
+        List<TabSalesmanTask> tasks = tabSalesmanTaskMapper.selectByExample(example);
+        if (CollectionUtil.isEmpty(tasks)) {
+            return;
+        }
+        TabSalesmanTask bean = new TabSalesmanTask();
+        bean.setStatus(TaskEnum.STATUS_FAIL.val());
+        bean.setType(TaskEnum.TYPE_DISABLE.val());
+        bean.setUpdateTime(now);
+        bean.setUpdateBy(loginName);
+        tabSalesmanTaskMapper.updateByExampleSelective(bean,example);
+
+        List<TabSalesmanTask> insertList = new ArrayList<>();
+        example.clear();
+        for(TabSalesmanTask task : tasks) {
+            TabSalesmanTask insertBean = TabSalesmanTask.builder()
+                    .id(IdUtil.simpleUUID())
+                    .taskId(task.getTaskId())
+                    .code(task.getCode())
+                    .createBy(loginName)
+                    .createTime(now)
+                    .status(TaskEnum.STATUS_NOT_APPLY.val())
+                    .type(TaskEnum.TYPE_NOT_USE.val())
+                    .build();
+            insertList.add(insertBean);
+            example.or()
+                    .andCodeEqualTo(task.getCode())
+                    .andTaskIdEqualTo(task.getTaskId())
+                    .andSalesmanIdIsNull();
+        }
+        tabSalesmanTaskMapper.deleteByExample(example);
+        tabSalesmanTaskMapper.batchInsert(insertList);
+
     }
 
 

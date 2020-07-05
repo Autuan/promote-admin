@@ -69,6 +69,8 @@ public class SalesmanTaskCustomController  extends BaseController {
     public ReturnResult fail(String ids){
         // 2-通过  3-拒绝
         salesmanTaskCustomServicce.verify(ids, 3);
+        // 回收CODE
+        salesmanTaskCustomServicce.recoveryCode(ids);
         return ReturnResult.ok();
     }
 
@@ -102,4 +104,5 @@ public class SalesmanTaskCustomController  extends BaseController {
         mmap.put("salesmanTask", salesmanTask);
         return "promote/linkSalesmanTask/assignCode";
     }
+
 }

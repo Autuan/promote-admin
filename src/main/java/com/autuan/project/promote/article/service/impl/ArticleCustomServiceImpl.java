@@ -34,7 +34,7 @@ public class ArticleCustomServiceImpl implements IArticleCustomService {
 
     @Override
     public List<TabArticle> getCarouselImg() {
-        TabArticleExample example = new TabArticleExample().page(0,5);
+        TabArticleExample example = new TabArticleExample().page(0,10);
         example.createCriteria()
                 .andTypeEqualTo(2);
         return articleMapper.selectByExample(example);

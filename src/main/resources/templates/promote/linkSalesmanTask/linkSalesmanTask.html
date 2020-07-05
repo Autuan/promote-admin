@@ -111,8 +111,12 @@
             <!--</a>-->
             <a class="btn btn-warning multiple disabled" onclick="verifyFail()"
                shiro:hasPermission="promote:linkSalesmanTask:remove">
-                <i class="fa "></i> 审核拒绝
+                <i class="fa "></i> 审核拒绝并回收CODE
             </a>
+            <!--<a class="btn btn-warning multiple disabled" onclick="verifyFail()"-->
+               <!--shiro:hasPermission="promote:linkSalesmanTask:remove">-->
+                <!--<i class="fa "></i> CODE回收-->
+            <!--</a>-->
         </div>
 
         <div class="col-sm-12 select-table table-striped">
@@ -138,7 +142,7 @@
             $.modal.msgError("此CODE已分配");
             return;
         }
-        let url = "/promote/linkSalesmanTask/custom/assign/code/"+row.id;
+        let url = ctx +"promote/linkSalesmanTask/custom/assign/code/"+row.id;
         // let url = $.table._option.updateUrl.replace("{id}", row.id);
         console.info(url)
         // return;;
@@ -192,6 +196,8 @@
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
             modalName: "业务员任务领取记录",
+            sortName:'createTime',
+            sortOrder:'desc',
             columns: [{
                 checkbox: true
             },
@@ -276,6 +282,13 @@
                 //     field : 'reward',
                 //     title : '奖励额'
                 // },
+                {
+                    field : 'createTime',
+                    title : '创建时间',
+                    formatter: function(value, row, index) {
+                        return Bee.StringUtils.isBlank(value) ? '-' : value.substring(0,10)
+                    }
+                },
                 // {
                 //     field : 'rewardBeginTime',
                 //     title : '奖励开始时间'

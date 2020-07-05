@@ -7,6 +7,7 @@ import com.autuan.framework.web.controller.BaseController;
 import com.autuan.framework.web.domain.AjaxResult;
 import com.autuan.framework.web.page.TableDataInfo;
 import com.autuan.project.front.entity.ReturnResult;
+import com.autuan.project.promote.dataBank.domain.DataBank;
 import com.autuan.project.promote.salesman.domain.Salesman;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -59,5 +61,21 @@ public class SalesmanCustomController extends BaseController {
     public ReturnResult get(@PathVariable("id") String id) {
         Salesman salesman = salesmanService.selectSalesmanById(id);
         return ReturnResult.ok(salesman);
+    }
+
+    @PostMapping("/importExcel")
+    @ResponseBody
+    public AjaxResult importExcel(MultipartFile file, boolean updateSupport) throws Exception {
+        ExcelUtil<Salesman> util = new ExcelUtil<Salesman>(Salesman.class);
+        List<Salesman> list = util.importExcel(file.getInputStream());
+        String message = salesmanCustomService.importData(list, updateSupport);
+        return AjaxResult.success(message);
+    }
+
+    @GetMapping("/importTemplate")
+    @ResponseBody
+    public AjaxResult importTemplate() {
+        ExcelUtil<Salesman> util = new ExcelUtil<Salesman>(Salesman.class);
+        return util.importTemplateExcel("业务员");
     }
 }

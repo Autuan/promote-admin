@@ -34,4 +34,15 @@ public interface ISalesmanTaskCustomService {
      * @since: 19:59 2020/7/4 
      */
     List<TabSalesmanTask> selectSalesmanTaskList(SalesmanTask salesmanTask);
+
+    /***
+     * 回收CODE
+     * @param req 
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : void
+     * @since: 19:55 2020/7/5
+     */
+    void recoveryCode(String ids);
 }
