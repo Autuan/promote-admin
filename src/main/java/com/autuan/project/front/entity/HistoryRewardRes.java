@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class HistoryRewardRes {
         @JsonFormat(pattern = "yyyy-MM-dd")
-//    @DateTimeFormat(pattern = "yyyy-MM")
     private LocalDateTime verifyDate;
     private String approveStatus;
     private String name;

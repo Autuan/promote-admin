@@ -145,7 +145,7 @@ public class DataBankCustomController {
                     String cName =ExcelRead.getStr(j++);
                     String channelCode = ExcelRead.getStr(j++);
                     String customFlagStr = ExcelRead.getStr(j++);
-
+                    // todo magic val
                     list.add(TabDataBank.builder()
                             .applyDate(applyDate)
                             .verifyDate(verifyDate)

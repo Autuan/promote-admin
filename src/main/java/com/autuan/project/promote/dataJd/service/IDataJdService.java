@@ -7,7 +7,7 @@ import java.util.List;
  * 京东联合拉新数据Service接口
  * 
  * @author autuan
- * @date 2020-07-04
+ * @date 2020-07-05
  */
 public interface IDataJdService 
 {

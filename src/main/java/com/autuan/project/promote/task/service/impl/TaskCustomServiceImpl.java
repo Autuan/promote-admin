@@ -330,7 +330,9 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
         addBean.setId(taskId);
 
         tabTaskMapper.insertSelective(addBean);
-
+        // 如果是京东方式,添加京东多级任务奖励
+        // todo magic num
+        if(Integer.valueOf(1).equals(req.getAssignType())) {
         OptionJdRewardReq optReq = OptionJdRewardReq.builder()
                 .taskId(taskId)
                 .rewardCommon(req.getRewardCommon())
@@ -338,6 +340,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                 .rewardNewbie(req.getRewardNewbie())
                 .build();
         dataJdCustomService.optionJdReward(optReq);
+        }
     }
 
 }

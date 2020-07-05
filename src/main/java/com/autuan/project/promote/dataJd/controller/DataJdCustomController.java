@@ -95,24 +95,27 @@ public class DataJdCustomController {
                 if (CollectionUtil.isNotEmpty(objList)) {
                     int j = 0;
                     ExcelRead.setObjList(objList);
-                    LocalDateTime recordTime =  ExcelRead.getLocalDateTime(j++);
-                    String taskInnerId = (String) objList.get(j++);
-                    String taskUrl = (String) objList.get(j++);
-                    String orderNo = (String) objList.get(j++);
+//                    LocalDateTime recordTime =  ExcelRead.getLocalDateTime(j++);
+//                    String taskInnerId = (String) objList.get(j++);
+//                    String taskUrl = (String) objList.get(j++);
+//                    String orderNo = (String) objList.get(j++);
+                    // 任务名称
                     String orderName = (String) objList.get(j++);
-                    String channelFirst = String.valueOf(objList.get(j++));
-                    String channelBelowSource = (String) objList.get(j++);
-                    String checkStatusStr = (String) objList.get(j++);
-                    String checkReason = (String) objList.get(j++);
-
-                    String joinJdPin = String.valueOf(objList.get(j++));
+                    // 下游渠道
+                    String channelBelow = (String) objList.get(j++);
+//                    String channelFirst = String.valueOf(objList.get(j++));
+//                    String channelBelowSource = (String) objList.get(j++);
+//                    String checkStatusStr = (String) objList.get(j++);
+//                    String checkReason = (String) objList.get(j++);
+//                    String joinJdPin = String.valueOf(objList.get(j++));
+                    // 参与推广链接
                     String joinLink = String.valueOf(objList.get(j++));
-                    LocalDateTime joinTime =  ExcelRead.getLocalDateTime(j++);
-                    String joinOrder = String.valueOf(objList.get(j++));
-                    String openJdCreditPin = String.valueOf(objList.get(j++));
-                    String openJdCreditUrl = ExcelRead.getStr(j++);
-                    LocalDateTime openJdCreditTime =  ExcelRead.getLocalDateTime(j++);
+//                    LocalDateTime joinTime =  ExcelRead.getLocalDateTime(j++);
+//                    String joinOrder = String.valueOf(objList.get(j++));
+//                    String openJdCreditUrl = ExcelRead.getStr(j++);
+                    // 业务类型
                     String openJdCreditTypeStr = ExcelRead.getStrDef(j++,"");
+                    // todo magic val
                     Integer openJdCreditType = 0;
                     switch (openJdCreditTypeStr) {
                         case "普通开白条" : openJdCreditType=0;break;
@@ -120,67 +123,38 @@ public class DataJdCustomController {
                         case "新手礼包" : openJdCreditType=2;break;
                         default:break;
                     }
-                    String jdCreditFirstOrderNo = ExcelRead.getStr(j++);
-                    String jdCreditFirstOrderPin =ExcelRead.getStr(j++);
-                    LocalDateTime jdCreditFirstOrderTime =  ExcelRead.getLocalDateTime(j++);
-                    String jdCreditFirstOrderUrl = ExcelRead.getStr(j++);
-                    String bankAndOrderNo = ExcelRead.getStr(j++);
-                    String bankAndPin = ExcelRead.getStr(j++);
-                    String bankAndIncomeMoney = ExcelRead.getStr(j++);
-                    LocalDateTime bankAndIncomeTime =  ExcelRead.getLocalDateTime(j++);
-                    String bankAndPromoteUrl = ExcelRead.getStr(j++);
-                    String joinedFirstOrderWithJdCreditTimeDifference = ExcelRead.getStr(j++);
-                    String joinedFirstOrderWithBankIncomeTimeDifference =ExcelRead.getStr(j++);
-                    String jdCreditOpenOneDayStr = ExcelRead.getStr(j++);
-                    LocalDateTime newbiePackageOperTime =  ExcelRead.getLocalDateTime(j++);
-                    String newbiePackagePin = ExcelRead.getStr(j++);
-                    String newbiePackageUrlId = ExcelRead.getStr(j++);
-                    String newbiePackageResultStr = ExcelRead.getStr(j++);
-                    String jdGoldOrderNo = ExcelRead.getStr(j++);
-                    String jdGoldIsFirstStr = ExcelRead.getStr(j++);
-                    LocalDateTime jdGoldConfirmTime =  ExcelRead.getLocalDateTime(j++);
-                    String jdNewHandRewardId = ExcelRead.getStr(j++);
-//                    String taskId = (String) objList.get(9);
-//                    String salesmanId = (String) objList.get(10);
+                    // 白条开通PIN
+                    String openJdCreditPin = String.valueOf(objList.get(j++));
+                    // 白条开通时间
+                    LocalDateTime openJdCreditTime =  ExcelRead.getLocalDateTime(j++);
+//                    String jdCreditFirstOrderNo = ExcelRead.getStr(j++);
+//                    String jdCreditFirstOrderPin =ExcelRead.getStr(j++);
+//                    LocalDateTime jdCreditFirstOrderTime =  ExcelRead.getLocalDateTime(j++);
+//                    String jdCreditFirstOrderUrl = ExcelRead.getStr(j++);
+//                    String bankAndOrderNo = ExcelRead.getStr(j++);
+//                    String bankAndPin = ExcelRead.getStr(j++);
+//                    String bankAndIncomeMoney = ExcelRead.getStr(j++);
+//                    LocalDateTime bankAndIncomeTime =  ExcelRead.getLocalDateTime(j++);
+//                    String bankAndPromoteUrl = ExcelRead.getStr(j++);
+//                    String joinedFirstOrderWithJdCreditTimeDifference = ExcelRead.getStr(j++);
+//                    String joinedFirstOrderWithBankIncomeTimeDifference =ExcelRead.getStr(j++);
+//                    String jdCreditOpenOneDayStr = ExcelRead.getStr(j++);
+//                    LocalDateTime newbiePackageOperTime =  ExcelRead.getLocalDateTime(j++);
+//                    String newbiePackagePin = ExcelRead.getStr(j++);
+//                    String newbiePackageUrlId = ExcelRead.getStr(j++);
+//                    String newbiePackageResultStr = ExcelRead.getStr(j++);
+//                    String jdGoldOrderNo = ExcelRead.getStr(j++);
+//                    String jdGoldIsFirstStr = ExcelRead.getStr(j++);
+//                    LocalDateTime jdGoldConfirmTime =  ExcelRead.getLocalDateTime(j++);
+//                    String jdNewHandRewardId = ExcelRead.getStr(j++);
 
                     list.add(TabDataJd.builder()
-                            .recordTime(recordTime)
-                            .taskInnerId(taskInnerId)
-                            .taskUrl(taskUrl)
-                            .orderNo(orderNo)
+                            .channelBelow(channelBelow)
                             .orderName(orderName)
-                            .channelFirst(channelFirst)
-                            .channelBelowSource(channelBelowSource)
-                            .checkStatus("是".equals(checkStatusStr) ? 1 : 0)
-                            .checkReason(checkReason)
-                            .joinJdPin(joinJdPin)
                             .joinLink(joinLink)
-                            .joinTime(joinTime)
-                            .joinOrder(joinOrder)
                             .openJdCreditPin(openJdCreditPin)
-                            .openJdCreditUrl(openJdCreditUrl)
                             .openJdCreditTime(openJdCreditTime)
                             .openJdCreditType(openJdCreditType)
-                            .jdCreditFirstOrderNo(jdCreditFirstOrderNo)
-                            .jdCreditFirstOrderPin(jdCreditFirstOrderPin)
-                            .jdCreditFirstOrderTime(jdCreditFirstOrderTime)
-                            .jdCreditFirstOrderUrl(jdCreditFirstOrderUrl)
-                            .bankAndOrderNo(bankAndOrderNo)
-                            .bankAndPin(bankAndPin)
-                            .bankAndIncomeMoney(bankAndIncomeMoney)
-                            .bankAndIncomeTime(bankAndIncomeTime)
-                            .bankAndPromoteUrl(bankAndPromoteUrl)
-                            .joinedFirstOrderWithJdCreditTimeDifference(joinedFirstOrderWithJdCreditTimeDifference)
-                            .joinedFirstOrderWithBankIncomeTimeDifference(joinedFirstOrderWithBankIncomeTimeDifference)
-                            .jdCreditOpenOneDay("是".equals(jdCreditOpenOneDayStr) ? 1 : 0)
-                            .newbiePackageOperTime(newbiePackageOperTime)
-                            .newbiePackagePin(newbiePackagePin)
-                            .newbiePackageUrlId(newbiePackageUrlId)
-                            .newbiePackageResult("success".equals(newbiePackageResultStr) ? 1 : 0)
-                            .jdGoldOrderNo(jdGoldOrderNo)
-                            .jdGoldIsFirst("是".equals(jdGoldIsFirstStr) ? 1 : 0)
-                            .jdGoldConfirmTime(jdGoldConfirmTime)
-                            .jdNewHandRewardId(jdNewHandRewardId)
                             .build());
                 }
             }

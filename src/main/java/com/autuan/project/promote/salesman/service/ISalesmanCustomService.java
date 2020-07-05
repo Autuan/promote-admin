@@ -109,6 +109,14 @@ public interface ISalesmanCustomService {
      */
     List<HistoryRewardRes> thisMoonReward(HistoryRewardReq req);
 
+    /**
+     * 发卡订单统计  
+     * @param req 
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: java.util.List<com.autuan.project.front.entity.HistoryRewardRes>
+     * @since : 2020/7/5 13:28
+     */
     List<HistoryRewardRes> bankList(HistoryRewardReq req);
     
     /***

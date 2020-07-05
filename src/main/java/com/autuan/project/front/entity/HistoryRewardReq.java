@@ -18,7 +18,9 @@ public class HistoryRewardReq {
     private String salesmanId;
 //    @JsonFormat(pattern = "yyyy-MM")
 //    @DateTimeFormat(pattern = "yyyy-MM")
-    private LocalDateTime queryDate;
-
     private String queryDateStr;
+
+    // 方法传参---->
+    private LocalDateTime queryDateEnd;
+    private LocalDateTime queryDateStart;
 }

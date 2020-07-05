@@ -3144,6 +3144,76 @@ public class TabDataJdExample {
             addCriterion("reward not between", value1, value2, "reward");
             return (Criteria) this;
         }
+
+        public Criteria andChannelBelowIsNull() {
+            addCriterion("channel_below is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowIsNotNull() {
+            addCriterion("channel_below is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowEqualTo(String value) {
+            addCriterion("channel_below =", value, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowNotEqualTo(String value) {
+            addCriterion("channel_below <>", value, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowGreaterThan(String value) {
+            addCriterion("channel_below >", value, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowGreaterThanOrEqualTo(String value) {
+            addCriterion("channel_below >=", value, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowLessThan(String value) {
+            addCriterion("channel_below <", value, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowLessThanOrEqualTo(String value) {
+            addCriterion("channel_below <=", value, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowLike(String value) {
+            addCriterion("channel_below like", value, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowNotLike(String value) {
+            addCriterion("channel_below not like", value, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowIn(List<String> values) {
+            addCriterion("channel_below in", values, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowNotIn(List<String> values) {
+            addCriterion("channel_below not in", values, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowBetween(String value1, String value2) {
+            addCriterion("channel_below between", value1, value2, "channelBelow");
+            return (Criteria) this;
+        }
+
+        public Criteria andChannelBelowNotBetween(String value1, String value2) {
+            addCriterion("channel_below not between", value1, value2, "channelBelow");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

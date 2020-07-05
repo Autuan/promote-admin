@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,11 +43,10 @@ public class TabDataJd {
     private LocalDateTime joinTime;
 
     private String joinOrder;
-
     private String openJdCreditPin;
 
     private String openJdCreditUrl;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime openJdCreditTime;
 
     private Integer openJdCreditType;
@@ -104,6 +105,8 @@ public class TabDataJd {
 
     private BigDecimal reward;
 
+    private String channelBelow;
+
     public enum Column {
         id("id", "id", "VARCHAR", false),
         recordTime("record_time", "recordTime", "TIMESTAMP", false),
@@ -149,7 +152,8 @@ public class TabDataJd {
         updateBy("update_by", "updateBy", "VARCHAR", false),
         taskId("task_id", "taskId", "VARCHAR", false),
         salesmanId("salesman_id", "salesmanId", "VARCHAR", false),
-        reward("reward", "reward", "DECIMAL", false);
+        reward("reward", "reward", "DECIMAL", false),
+        channelBelow("channel_below", "channelBelow", "VARCHAR", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

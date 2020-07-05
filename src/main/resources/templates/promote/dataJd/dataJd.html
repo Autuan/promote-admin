@@ -235,69 +235,72 @@
                     title: 'id',
                     visible: false
                 },
-                {
-                    field: 'recordTime',
-                    title: '记录时间'
-                },
-                {
-                    field: 'taskInnerId',
-                    title: '任务链接内部ID'
-                },
-                {
-                    field: 'taskUrl',
-                    title: '任务链接'
-                },
-                {
-                    field: 'orderNo',
-                    title: '订单号'
-                },
+                // {
+                //     field: 'recordTime',
+                //     title: '记录时间'
+                // },
+                // {
+                //     field: 'taskInnerId',
+                //     title: '任务链接内部ID'
+                // },
+                // {
+                //     field: 'taskUrl',
+                //     title: '任务链接'
+                // },
+                // {
+                //     field: 'orderNo',
+                //     title: '订单号'
+                // },
                 {
                     field: 'orderName',
                     title: '任务名称'
                 },
+                // {
+                //     field: 'channelFirst',
+                //     title: '一级渠道'
+                // },
                 {
-                    field: 'channelFirst',
-                    title: '一级渠道'
+                    field: 'channelBelow',
+                    title: '下游渠道'
                 },
-                {
-                    field: 'channelBelowSource',
-                    title: '下游渠道来源'
-                },
-                {
-                    field: 'checkStatus',
-                    title: '打卡是否有效',
-                    formatter: function (value, row, index) {
-                        return value === '1' || value === 1 ? '是' : '否';
-                    }
-                },
-                {
-                    field: 'checkReason',
-                    title: '打卡失效原因'
-                },
-                {
-                    field: 'joinJdPin',
-                    title: '用户参与京东pin'
-                },
+                // {
+                //     field: 'checkStatus',
+                //     title: '打卡是否有效',
+                //     formatter: function (value, row, index) {
+                //         return value === '1' || value === 1 ? '是' : '否';
+                //     }
+                // },
+                // {
+                //     field: 'checkReason',
+                //     title: '打卡失效原因'
+                // },
+                // {
+                //     field: 'joinJdPin',
+                //     title: '用户参与京东pin'
+                // },
                 {
                     field: 'joinLink',
-                    title: '用户参与推广链接'
+                    title: '用户参与推广链接',
+                    formatter: function(value, row, index) {
+                        return $.table.tooltip(value,20);
+                    }
                 },
-                {
-                    field: 'joinTime',
-                    title: '用户参与时间'
-                },
-                {
-                    field: 'joinOrder',
-                    title: '用户参与订单号'
-                },
+                // {
+                //     field: 'joinTime',
+                //     title: '用户参与时间'
+                // },
+                // {
+                //     field: 'joinOrder',
+                //     title: '用户参与订单号'
+                // },
                 {
                     field: 'openJdCreditPin',
-                    title: '白条开通 pin'
+                    title: '白条开通pin'
                 },
-                {
-                    field: 'openJdCreditUrl',
-                    title: '白条开通链接'
-                },
+                // {
+                //     field: 'openJdCreditUrl',
+                //     title: '白条开通链接'
+                // },
                 {
                     field: 'openJdCreditTime',
                     title: '白条开通时间'
@@ -318,95 +321,95 @@
                         }
                     }
                 },
-                {
-                    field: 'jdCreditFirstOrderNo',
-                    title: '白条首单订单号'
-                },
-                {
-                    field: 'jdCreditFirstOrderPin',
-                    title: '白条首单pin'
-                },
-                {
-                    field: 'jdCreditFirstOrderTime',
-                    title: '白条首单交易时间'
-                },
-                {
-                    field: 'jdCreditFirstOrderUrl',
-                    title: '白条首单推广链接'
-                },
-                {
-                    field: 'bankAndOrderNo',
-                    title: '银行+订单号'
-                },
-                {
-                    field: 'bankAndPin',
-                    title: '银行+pin'
-                },
-                {
-                    field: 'bankAndIncomeMoney',
-                    title: '银行+入金金额'
-                },
-                {
-                    field: 'bankAndIncomeTime',
-                    title: '银行+入金时间'
-                },
-                {
-                    field: 'bankAndPromoteUrl',
-                    title: '银行+推广链接'
-                },
-                {
-                    field: 'joinedFirstOrderWithJdCreditTimeDifference',
-                    title: '用户参与与白条首单时间差'
-                },
-                {
-                    field: 'joinedFirstOrderWithBankIncomeTimeDifference',
-                    title: '用户参与与银行+入金时间差'
-                },
-                {
-                    field: 'jdCreditOpenOneDay',
-                    title: '白条开通首单是否同日',
-                    formatter: function (value, row, index) {
-                        return value === '1' || value === 1 ? '是' : '否';
-                    }
-                },
-                {
-                    field: 'newbiePackageOperTime',
-                    title: '新手礼包操作时间'
-                },
-                {
-                    field: 'newbiePackagePin',
-                    title: '新手礼包pin'
-                },
-                {
-                    field: 'newbiePackageUrlId',
-                    title: '新手礼包链接ID'
-                },
-                {
-                    field: 'newbiePackageResult',
-                    title: '新手礼包操作结果',
-                    formatter: function (value, row, index) {
-                        return value === '1' || value === 1 ? 'success' : 'fail';
-                    }
-                },
-                {
-                    field: 'jdGoldOrderNo',
-                    title: '金条贷款订单号'
-                },
-                {
-                    field: 'jdGoldIsFirst',
-                    title: '金条是否首次贷款',
-                    formatter: function (value, row, index) {
-                        return value === '1' || value === 1 ? '是' : '否';
-                    }
-                },
-                {
-                    field: 'jdGoldConfirmTime',
-                    title: '金条贷款完成时间'
-                },
-                {
-                    field: 'jdNewHandRewardId',
-                    title: '新手礼包海帆奖励Id'
-                },
+                // {
+                //     field: 'jdCreditFirstOrderNo',
+                //     title: '白条首单订单号'
+                // },
+                // {
+                //     field: 'jdCreditFirstOrderPin',
+                //     title: '白条首单pin'
+                // },
+                // {
+                //     field: 'jdCreditFirstOrderTime',
+                //     title: '白条首单交易时间'
+                // },
+                // {
+                //     field: 'jdCreditFirstOrderUrl',
+                //     title: '白条首单推广链接'
+                // },
+                // {
+                //     field: 'bankAndOrderNo',
+                //     title: '银行+订单号'
+                // },
+                // {
+                //     field: 'bankAndPin',
+                //     title: '银行+pin'
+                // },
+                // {
+                //     field: 'bankAndIncomeMoney',
+                //     title: '银行+入金金额'
+                // },
+                // {
+                //     field: 'bankAndIncomeTime',
+                //     title: '银行+入金时间'
+                // },
+                // {
+                //     field: 'bankAndPromoteUrl',
+                //     title: '银行+推广链接'
+                // },
+                // {
+                //     field: 'joinedFirstOrderWithJdCreditTimeDifference',
+                //     title: '用户参与与白条首单时间差'
+                // },
+                // {
+                //     field: 'joinedFirstOrderWithBankIncomeTimeDifference',
+                //     title: '用户参与与银行+入金时间差'
+                // },
+                // {
+                //     field: 'jdCreditOpenOneDay',
+                //     title: '白条开通首单是否同日',
+                //     formatter: function (value, row, index) {
+                //         return value === '1' || value === 1 ? '是' : '否';
+                //     }
+                // },
+                // {
+                //     field: 'newbiePackageOperTime',
+                //     title: '新手礼包操作时间'
+                // },
+                // {
+                //     field: 'newbiePackagePin',
+                //     title: '新手礼包pin'
+                // },
+                // {
+                //     field: 'newbiePackageUrlId',
+                //     title: '新手礼包链接ID'
+                // },
+                // {
+                //     field: 'newbiePackageResult',
+                //     title: '新手礼包操作结果',
+                //     formatter: function (value, row, index) {
+                //         return value === '1' || value === 1 ? 'success' : 'fail';
+                //     }
+                // },
+                // {
+                //     field: 'jdGoldOrderNo',
+                //     title: '金条贷款订单号'
+                // },
+                // {
+                //     field: 'jdGoldIsFirst',
+                //     title: '金条是否首次贷款',
+                //     formatter: function (value, row, index) {
+                //         return value === '1' || value === 1 ? '是' : '否';
+                //     }
+                // },
+                // {
+                //     field: 'jdGoldConfirmTime',
+                //     title: '金条贷款完成时间'
+                // },
+                // {
+                //     field: 'jdNewHandRewardId',
+                //     title: '新手礼包海帆奖励Id'
+                // },
                 {
                     title: '操作',
                     align: 'center',

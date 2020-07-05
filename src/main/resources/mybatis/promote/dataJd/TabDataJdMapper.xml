@@ -47,6 +47,7 @@
     <result column="task_id" jdbcType="VARCHAR" property="taskId" />
     <result column="salesman_id" jdbcType="VARCHAR" property="salesmanId" />
     <result column="reward" jdbcType="DECIMAL" property="reward" />
+    <result column="channel_below" jdbcType="VARCHAR" property="channelBelow" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -116,7 +117,7 @@
     jd_credit_open_one_day, newbie_package_oper_time, newbie_package_pin, newbie_package_url_id, 
     newbie_package_result, jd_gold_order_no, jd_gold_is_first, jd_gold_confirm_time, 
     jd_new_hand_reward_id, create_time, update_time, create_by, update_by, task_id, salesman_id, 
-    reward
+    reward, channel_below
   </sql>
   <select id="selectByExample" parameterType="com.autuan.project.promote.dataJd.domain.TabDataJdExample" resultMap="BaseResultMap">
     select
@@ -173,7 +174,8 @@
       jd_gold_order_no, jd_gold_is_first, jd_gold_confirm_time, 
       jd_new_hand_reward_id, create_time, update_time, 
       create_by, update_by, task_id, 
-      salesman_id, reward)
+      salesman_id, reward, channel_below
+      )
     values (#{id,jdbcType=VARCHAR}, #{recordTime,jdbcType=TIMESTAMP}, #{taskInnerId,jdbcType=VARCHAR}, 
       #{taskUrl,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, 
       #{channelFirst,jdbcType=VARCHAR}, #{channelBelowSource,jdbcType=VARCHAR}, #{checkStatus,jdbcType=INTEGER}, 
@@ -190,7 +192,8 @@
       #{jdGoldOrderNo,jdbcType=VARCHAR}, #{jdGoldIsFirst,jdbcType=INTEGER}, #{jdGoldConfirmTime,jdbcType=TIMESTAMP}, 
       #{jdNewHandRewardId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
-      #{salesmanId,jdbcType=VARCHAR}, #{reward,jdbcType=DECIMAL})
+      #{salesmanId,jdbcType=VARCHAR}, #{reward,jdbcType=DECIMAL}, #{channelBelow,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="map">
     insert into tab_data_jd
@@ -336,6 +339,9 @@
           </if>
           <if test="record.reward != null">
             reward,
+          </if>
+          <if test="record.channelBelow != null">
+            channel_below,
           </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
@@ -484,6 +490,9 @@
           </if>
           <if test="record.reward != null">
             #{record.reward,jdbcType=DECIMAL},
+          </if>
+          <if test="record.channelBelow != null">
+            #{record.channelBelow,jdbcType=VARCHAR},
           </if>
         </trim>
       </otherwise>
@@ -641,6 +650,9 @@
           <if test="record.reward != null">
             reward = #{record.reward,jdbcType=DECIMAL},
           </if>
+          <if test="record.channelBelow != null">
+            channel_below = #{record.channelBelow,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -694,7 +706,8 @@
       update_by = #{record.updateBy,jdbcType=VARCHAR},
       task_id = #{record.taskId,jdbcType=VARCHAR},
       salesman_id = #{record.salesmanId,jdbcType=VARCHAR},
-      reward = #{record.reward,jdbcType=DECIMAL}
+      reward = #{record.reward,jdbcType=DECIMAL},
+      channel_below = #{record.channelBelow,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -842,6 +855,9 @@
           <if test="record.reward != null">
             reward = #{record.reward,jdbcType=DECIMAL},
           </if>
+          <if test="record.channelBelow != null">
+            channel_below = #{record.channelBelow,jdbcType=VARCHAR},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -892,7 +908,8 @@
       update_by = #{updateBy,jdbcType=VARCHAR},
       task_id = #{taskId,jdbcType=VARCHAR},
       salesman_id = #{salesmanId,jdbcType=VARCHAR},
-      reward = #{reward,jdbcType=DECIMAL}
+      reward = #{reward,jdbcType=DECIMAL},
+      channel_below = #{channelBelow,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.autuan.project.promote.dataJd.domain.TabDataJdExample" resultMap="BaseResultMap">
@@ -918,7 +935,7 @@
       jd_credit_open_one_day, newbie_package_oper_time, newbie_package_pin, newbie_package_url_id, 
       newbie_package_result, jd_gold_order_no, jd_gold_is_first, jd_gold_confirm_time, 
       jd_new_hand_reward_id, create_time, update_time, create_by, update_by, task_id, 
-      salesman_id, reward)
+      salesman_id, reward, channel_below)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=VARCHAR}, #{item.recordTime,jdbcType=TIMESTAMP}, #{item.taskInnerId,jdbcType=VARCHAR}, 
@@ -939,8 +956,8 @@
         #{item.jdGoldIsFirst,jdbcType=INTEGER}, #{item.jdGoldConfirmTime,jdbcType=TIMESTAMP}, 
         #{item.jdNewHandRewardId,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR}, #{item.updateBy,jdbcType=VARCHAR}, 
-        #{item.taskId,jdbcType=VARCHAR}, #{item.salesmanId,jdbcType=VARCHAR}, #{item.reward,jdbcType=DECIMAL}
-        )
+        #{item.taskId,jdbcType=VARCHAR}, #{item.salesmanId,jdbcType=VARCHAR}, #{item.reward,jdbcType=DECIMAL}, 
+        #{item.channelBelow,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -1087,6 +1104,9 @@
         </if>
         <if test="'reward'.toString() == column.value">
           #{item.reward,jdbcType=DECIMAL}
+        </if>
+        <if test="'channel_below'.toString() == column.value">
+          #{item.channelBelow,jdbcType=VARCHAR}
         </if>
       </foreach>
       )

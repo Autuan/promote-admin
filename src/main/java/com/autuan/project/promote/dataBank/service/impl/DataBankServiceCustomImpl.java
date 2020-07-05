@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -78,6 +79,8 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
             tabSalesmanTaskList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
         }
         Map<String, String> linkMap = tabSalesmanTaskList.stream()
+                .filter(item -> StrUtil.isNotBlank(item.getCode()))
+                .filter(item -> StrUtil.isNotBlank(item.getSalesmanId()))
                 .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId));
 
         // 插入
@@ -94,7 +97,16 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
             dataBank.setCreateTime(now);
             dataBank.setCreateBy(loginName);
             dataBank.setId(IdUtil.simpleUUID());
-            dataBank.setReward(task.getReward());
+            // 只有符合条件的置入奖励值
+            // todo magic num
+            Integer customFlag = dataBank.getCustomFlag();
+            Integer approveStatus = dataBank.getApproveStatus();
+            Integer pass = 1;
+            if(customFlag.equals(pass) && approveStatus.equals(pass)) {
+                dataBank.setReward(task.getReward());
+            } else {
+                dataBank.setReward(BigDecimal.ZERO);
+            }
             insertList.add(dataBank);
         }
         if(CollectionUtil.isNotEmpty(insertList)) {

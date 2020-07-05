@@ -152,7 +152,15 @@
                 // },
                 {
                     field : 'reward',
-                    title : '奖励额'
+                    title : '奖励额',
+                    formatter: function(value, row, index) {
+                        console.info(row.assignType)
+                        if(row.assignType === 1) {
+                            return '京东多级奖励';
+                        } else {
+                            return value;
+                        }
+                    }
                 },
                 // {
                 //     field : 'rewardBeginTime',
