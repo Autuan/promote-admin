@@ -76,13 +76,14 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
         }
         List<TabTask> taskList = tabTaskMapper.selectByExample(tabTaskExample);
         Map<String, String> taskMap = taskList.stream()
-                .collect(Collectors.toMap(TabTask::getName, TabTask::getId));
+                .collect(Collectors.toMap(TabTask::getIndexName, TabTask::getId,(existing, replacement) -> existing));
         // salesmanId
         TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
         for (TabDataJd data : list) {
             String taskId = taskMap.get(data.getOrderName());
             if(StrUtil.isNotBlank(taskId)) {
                 salesmanTaskExample.or()
+                        .andSalesmanIdIsNotNull()
                         .andCodeEqualTo(data.getJoinLink())
                         .andTaskIdEqualTo(taskId);
             }
@@ -92,7 +93,7 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
             tabSalesmanTaskList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
         }
         Map<String, String> linkMap = tabSalesmanTaskList.stream()
-                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId));
+                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId,(existing, replacement) -> existing));
 
         List<TabDataJd> insertList = new ArrayList<>();
         for (TabDataJd data : list) {

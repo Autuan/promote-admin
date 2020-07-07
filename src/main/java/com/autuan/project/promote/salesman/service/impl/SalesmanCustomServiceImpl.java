@@ -316,7 +316,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 //                .andIdIn(receiveList.stream().map(TabSalesmanTask::getTaskId).collect(toList()));
 //        List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
 //        Map<String, TabTask> taskMap = allTasks.stream()
-//                .collect(Collectors.toMap(TabTask::getId, Function.identity()));
+//                .collect(Collectors.toMap(TabTask::getId, Function.identity(),(existing, replacement) -> existing)));
 
         // 开卡订单
         TabDataBankExample dataBankExample = new TabDataBankExample();
@@ -411,7 +411,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .andIdIn(taskIds);
         List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
         Map<String, TabTask> taskMap = allTasks.stream()
-                .collect(Collectors.toMap(TabTask::getId, Function.identity()));
+                .collect(Collectors.toMap(TabTask::getId, Function.identity(),(existing, replacement) -> existing));
 
         // 响应数据
         for (TabDataBank data : dataBanks) {

@@ -47,6 +47,7 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
     private TabSalesmanTaskMapper tabSalesmanTaskMapper;
     @Autowired
     private TabTaskMapper tabTaskMapper;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void importExcel(List<TabDataBank> list) {
@@ -62,33 +63,34 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
         }
         List<TabTask> taskList = tabTaskMapper.selectByExample(tabTaskExample);
         Map<String, TabTask> taskMap = taskList.stream()
-                .collect(Collectors.toMap(TabTask::getName, Function.identity()));
+                .collect(Collectors.toMap(TabTask::getIndexName, Function.identity(), (existing, replacement) -> existing));
         // salesmanId
         TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
         for (TabDataBank dataBank : list) {
             TabTask task = taskMap.get(dataBank.getBankName());
-            if(null != task) {
+            if (null != task) {
                 String taskId = task.getId();
-            salesmanTaskExample.or()
-                    .andCodeEqualTo(dataBank.getChannelCode())
-                    .andTaskIdEqualTo(taskId);
+                salesmanTaskExample.or()
+                        .andSalesmanIdIsNotNull()
+                        .andCodeEqualTo(dataBank.getChannelCode())
+                        .andTaskIdEqualTo(taskId);
             }
         }
         List<TabSalesmanTask> tabSalesmanTaskList = new ArrayList<>();
-        if(CollectionUtil.isNotEmpty(salesmanTaskExample.getOredCriteria())) {
+        if (CollectionUtil.isNotEmpty(salesmanTaskExample.getOredCriteria())) {
             tabSalesmanTaskList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
         }
         Map<String, String> linkMap = tabSalesmanTaskList.stream()
                 .filter(item -> StrUtil.isNotBlank(item.getCode()))
                 .filter(item -> StrUtil.isNotBlank(item.getSalesmanId()))
-                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId));
+                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId, (existing, replacement) -> existing));
 
         // 插入
         List<TabDataBank> insertList = new ArrayList<>();
         for (TabDataBank dataBank : list) {
             TabTask task = taskMap.get(dataBank.getBankName());
             String salesmanId = linkMap.get(dataBank.getChannelCode());
-            if(null == task || StrUtil.isBlank(salesmanId)) {
+            if (null == task || StrUtil.isBlank(salesmanId)) {
                 continue;
             }
             String taskId = task.getId();
@@ -102,14 +104,14 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
             Integer customFlag = dataBank.getCustomFlag();
             Integer approveStatus = dataBank.getApproveStatus();
             Integer pass = 1;
-            if(customFlag.equals(pass) && approveStatus.equals(pass)) {
+            if (customFlag.equals(pass) && approveStatus.equals(pass)) {
                 dataBank.setReward(task.getReward());
             } else {
                 dataBank.setReward(BigDecimal.ZERO);
             }
             insertList.add(dataBank);
         }
-        if(CollectionUtil.isNotEmpty(insertList)) {
+        if (CollectionUtil.isNotEmpty(insertList)) {
             dataBankMapper.batchInsert(insertList);
         }
         // 添加领取记录

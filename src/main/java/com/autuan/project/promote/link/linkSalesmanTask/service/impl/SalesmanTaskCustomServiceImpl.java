@@ -111,16 +111,12 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
             throw new CustomRespondException("业务员已有此任务");
         }
 
-//        TabSalesmanTask bean = tabSalesmanTaskMapper.selectByPrimaryKey(req.getId());
 
         example.clear();
         example.createCriteria()
                 .andTaskIdEqualTo(req.getTaskId())
                 .andCodeEqualTo(req.getCode());
         TabSalesmanTask bean = tabSalesmanTaskMapper.selectOneByExample(example);
-//        if(StrUtil.isNotBlank(bean.getSalesmanId())) {
-//            throw new CustomRespondException("此CODE已被使用");
-//        }
         bean.setSalesmanId(req.getSalesmanId());
         bean.setStatus(TaskEnum.STATUS_PASS.val());
         bean.setType(TaskEnum.TYPE_USE.val());
@@ -149,6 +145,9 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
         }
         if(StrUtil.isNotBlank(salesmanTask.getSalesmanId())) {
             criteria.andSalesmanIdEqualTo(salesmanTask.getSalesmanId());
+        }
+        if(null != salesmanTask.getStatus()) {
+            criteria.andStatusEqualTo(salesmanTask.getStatus());
         }
 
         List<TabSalesmanTask> tabSalesmanTasks = tabSalesmanTaskMapper.selectByExample(example);

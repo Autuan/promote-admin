@@ -17,19 +17,17 @@
                 <input class="form-control keyInput" type="text" id="allNum" disabled="true" th:value="${task.name}">
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-11 control-label gray">单次最多设置30位 领取记录</label>
-        </div>
+        <!--<div class="form-group">-->
+            <!--<label class="col-sm-11 control-label gray">单次最多设置30位 领取记录</label>-->
+        <!--</div>-->
         <div class="form-group">
             <label class="col-sm-3 control-label">业务员：</label>
-<!--            <label class="col-sm-3 control-label"></label>-->
             <div class="col-sm-9">
                 <label class="checkbox-inline check-box col-sm-3" th:each="man :  ${salesmen}">
                     <input type="checkbox" th:value="${man.id}">
                     <span th:text="${man.name}"></span>
                 </label>
             </div>
-<!--            <label th:each="role:${roles}" class="check-box">-->
         </div>
     </form>
 </div>
