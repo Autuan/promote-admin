@@ -20,6 +20,9 @@ import com.autuan.project.promote.link.linkSalesmanTask.service.ISalesmanTaskCus
 import com.autuan.project.promote.param.domain.TabParam;
 import com.autuan.project.promote.param.domain.TabParamExample;
 import com.autuan.project.promote.param.mapper.TabParamMapper;
+import com.autuan.project.promote.salesman.domain.TabSalesman;
+import com.autuan.project.promote.salesman.domain.TabSalesmanExample;
+import com.autuan.project.promote.salesman.mapper.TabSalesmanMapper;
 import com.autuan.project.promote.task.domain.*;
 import com.autuan.project.promote.task.mapper.TabTaskMapper;
 import com.autuan.project.promote.task.mapper.TaskMapper;
@@ -40,6 +43,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author : Autuan.Yu
@@ -59,6 +63,8 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
     private TabSalesmanTaskMapper tabSalesmanTaskMapper;
     @Autowired
     private IDataJdCustomService dataJdCustomService;
+    @Autowired
+    private TabSalesmanMapper salesmanMapper;
 
     /**
      * 设置参数
@@ -266,6 +272,34 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
     }
 
     /**
+     * 批量领取
+     *
+     * @param ao
+     * @throws
+     * @author : Autuan.Yu
+     * @return: void
+     * @since : 2020/7/7 15:56
+     */
+    @Override
+    public void batchReceive(ReceiveAO ao) {
+        List<TabSalesmanTask> insertList = new ArrayList<>();
+        for(String salesmanId : ao.getSalesmanIds()) {
+        TabSalesmanTask bean = TabSalesmanTask.builder()
+                .id(IdUtil.simpleUUID())
+                .taskId(ao.getTaskId())
+                .salesmanId(salesmanId)
+                // todo magic code
+                .status(1)
+                .type(0)
+                .createTime(LocalDateTime.now())
+                .build();
+            insertList.add(bean);
+        }
+
+        tabSalesmanTaskMapper.batchInsert(insertList);
+    }
+
+    /**
      * 已领取任务
      *
      * @param salesmanId
@@ -357,6 +391,38 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
                 .build();
         dataJdCustomService.optionJdReward(optReq);
         }
+    }
+
+    /**
+     * 获取未领取任务的业务员,最多50条
+     *
+     * @param id
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.util.List<com.autuan.project.promote.salesman.domain.TabSalesman>
+     * @since : 2020/7/7 15:38
+     */
+    @Override
+    public List<TabSalesman> getNotReceiveSalesmanByTaskId(String id) {
+        // 获取已经有此任务的会员
+        TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
+        List<Integer> inList = Lists.newArrayList(TaskEnum.TYPE_ABLE.val(),TaskEnum.TYPE_USE.val(),TaskEnum.TYPE_NOT_USE.val());
+        List<Integer> statusInList = Lists.newArrayList(TaskEnum.STATUS_VERIFY_ING.val(),TaskEnum.STATUS_PASS.val());
+        salesmanTaskExample.createCriteria()
+                .andTaskIdEqualTo(id)
+                .andSalesmanIdIsNotNull()
+                .andStatusIn(statusInList)
+                .andTypeIn(inList);
+        List<TabSalesmanTask> receivedLinkList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
+        // 获取未领取任务的会员
+        TabSalesmanExample salesmanExample = new TabSalesmanExample().limit(30);
+        TabSalesmanExample.Criteria salesmanCriteria = salesmanExample.createCriteria();
+        if(CollectionUtil.isNotEmpty(receivedLinkList)) {
+            salesmanCriteria.andIdNotIn(receivedLinkList.stream()
+                                        .map(TabSalesmanTask::getSalesmanId).collect(Collectors.toList())) ;
+        }
+        List<TabSalesman> salesmen = salesmanMapper.selectByExample(salesmanExample);
+        return salesmen;
     }
 
 }

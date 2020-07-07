@@ -4,6 +4,7 @@ import com.autuan.project.front.entity.GeneratorQrCodeVO;
 import com.autuan.project.front.entity.ReceiveAO;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.param.domain.TabParam;
+import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.task.domain.*;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -91,6 +92,15 @@ public interface ITaskCustomService {
     void receive(ReceiveAO ao);
 
     /**
+     * 批量领取  
+     * @param ao 
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: void
+     * @since : 2020/7/7 16:11
+     */
+    void batchReceive(ReceiveAO ao);
+    /**
      * 已领取任务
      * @param salesmanId
      * @throws
@@ -113,4 +123,13 @@ public interface ITaskCustomService {
      */
     void add(TaskAddReq req);
 
+    /**
+     * 获取未领取任务的业务员,最多50条
+     * @param id
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.util.List<com.autuan.project.promote.salesman.domain.TabSalesman>
+     * @since : 2020/7/7 15:38
+     */
+    List<TabSalesman> getNotReceiveSalesmanByTaskId(String id);
 }

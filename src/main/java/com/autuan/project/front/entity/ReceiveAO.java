@@ -2,6 +2,8 @@ package com.autuan.project.front.entity;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @className: ReceiveAO
  * @author: sen.zhou
@@ -14,4 +16,5 @@ import lombok.Data;
 public class ReceiveAO {
     private String taskId;
     private String salesmanId;
+    private List<String> salesmanIds;
 }

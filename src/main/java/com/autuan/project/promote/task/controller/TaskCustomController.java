@@ -5,9 +5,11 @@ import com.autuan.framework.aspectj.lang.annotation.Log;
 import com.autuan.framework.aspectj.lang.enums.BusinessType;
 import com.autuan.framework.web.controller.BaseController;
 import com.autuan.framework.web.page.TableDataInfo;
+import com.autuan.project.front.entity.ReceiveAO;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask;
 import com.autuan.project.promote.param.domain.TabParam;
+import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.task.domain.*;
 import com.autuan.project.promote.task.service.ITaskCustomService;
 import com.autuan.project.promote.task.service.ITaskService;
@@ -58,13 +60,10 @@ public class TaskCustomController extends BaseController {
         Task task = taskService.selectTaskById(id);
         List<TabSalesmanTask> list = taskCustomService.listForCode(id);
         mmap.put("allNum", list.size());
-        // todo del extra code
+        // todo magic str
         long usedNum = list.stream().filter(item -> TaskEnum.TYPE_USE.val().equals(item.getType())).count();
         long unusedNum = list.stream().filter(item -> TaskEnum.TYPE_NOT_USE.val().equals(item.getType())).count();
         long recoveryNum = list.stream().filter(item -> TaskEnum.TYPE_ABLE.val().equals(item.getType())).count();
-//        long recoveryNum = list.stream().filter(item -> 3 == item.getStatus()).count();
-//        long usedNum = list.stream().filter(item -> 2 == item.getStatus()).count();
-//        long unusedNum = list.stream().filter(item -> 0 == item.getStatus()).count();
         mmap.put("task", task);
         mmap.put("usedNum", usedNum);
         mmap.put("unusedNum", unusedNum);
@@ -104,4 +103,20 @@ public class TaskCustomController extends BaseController {
         return ReturnResult.ok();
     }
 
+    @GetMapping("/receiveTask/{id}")
+    public String receiveTask(@PathVariable("id") String id, ModelMap mmap) {
+        Task task = taskService.selectTaskById(id);
+//        List<TabParam> paramList = taskCustomService.getParamList(id);
+        mmap.put("task", task);
+        List<TabSalesman> salesmen = taskCustomService.getNotReceiveSalesmanByTaskId(id);
+        mmap.put("salesmen", salesmen);
+        return prefix + "/receiveTask";
+    }
+
+    @RequestMapping("/batchReceive")
+    @ResponseBody
+    public ReturnResult batchReceive(@RequestBody ReceiveAO req) {
+        taskCustomService.batchReceive(req);
+        return ReturnResult.ok();
+    }
 }

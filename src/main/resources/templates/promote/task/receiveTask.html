@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改任务')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-task-edit" >
+        <input id="taskId" th:value="${task.id}" type="hidden">
+        <input id="prefix" field="*{prefix}" type="hidden">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">任务：</label>
+            <div class="col-sm-8">
+                <input class="form-control keyInput" type="text" id="allNum" disabled="true" th:value="${task.name}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-11 control-label gray">单次最多设置30位 领取记录</label>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">业务员：</label>
+<!--            <label class="col-sm-3 control-label"></label>-->
+            <div class="col-sm-9">
+                <label class="checkbox-inline check-box col-sm-3" th:each="man :  ${salesmen}">
+                    <input type="checkbox" th:value="${man.id}">
+                    <span th:text="${man.name}"></span>
+                </label>
+            </div>
+<!--            <label th:each="role:${roles}" class="check-box">-->
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+<script type="text/javascript">
+    let receiveSalesmanList = [];
+    var prefix = ctx + "promote/task";
+    $("#form-task-edit").validate({
+        focusCleanup: true
+    });
+    function PrefixInteger(num, n) {
+        return (Array(n).join(0) + num).slice(-n);
+    }
+
+    function submitHandler() {
+
+
+        // let checked = $('input[type="checkbox"]:checked').val();
+        let salesmanIds = [];
+        $("input[type='checkbox']:checked").each(function() {
+            // if ($(this).is(":checked")) {
+                salesmanIds.push($(this).val());
+            // }
+        });
+        let param = {
+            taskId : $('#taskId').val(),
+            salesmanIds :salesmanIds,
+        }
+        console.info(salesmanIds)
+        // return;
+        Base.Network.post({
+            url:ctx+'promote/task/custom/batchReceive',
+            data:param,
+            contentType:'application/json',
+            successParse:function (data) {
+                $.modal.close();
+                parent.$.modal.msgSuccess('操作成功');
+                parent.$.table.refresh();
+            }
+        })
+    }
+    $(function () {
+
+        // let taskId = $('#taskId').val();
+        // Base.Network.post({
+        //     url: ctx + 'promote/linkSalesmanTask/custom/listByTaskId',
+        //     data: {
+        //         taskId: taskId
+        //     },
+        //     successParse: function (data) {
+        //         receiveSalesmanList = data;
+        //     }
+        // })
+    })
+</script>
+</body>
+</html>

@@ -73,7 +73,10 @@
 <!--                    <i class="fa fa-download"></i> 导出-->
 <!--                 </a>-->
                 <a class="btn btn-warning" onclick="setParam()" shiro:hasPermission="promote:task:edit">
-                    <i class="fa fa-download"></i> 配置参数
+                    <i class="fa"></i> 配置参数
+                </a>
+                <a class="btn btn-info" onclick="receiveTask()" shiro:hasPermission="promote:task:edit">
+                    <i class="fa"></i> 任务领取
                 </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
@@ -103,6 +106,16 @@
             $.modal.open("配置参数" + $.table._option.modalName, ctx+'promote/task/custom/param/'+rows[0]);
         };
 
+        function receiveTask() {
+            var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+            if (rows.length !== 1) {
+                $.modal.alertWarning("请选择一条记录");
+                return;
+            }
+            console.info(rows[0])
+            // return;
+            $.modal.open("任务领取" + $.table._option.modalName, ctx+'promote/task/custom/receiveTask/'+rows[0]);
+        };
         $(function() {
             let taskList = [];
             let salesmanList = [];
