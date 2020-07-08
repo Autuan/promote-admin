@@ -1,9 +1,6 @@
 package com.autuan.project.front.controller;
 
-import com.autuan.project.front.entity.CalcuRewardReq;
-import com.autuan.project.front.entity.HistoryRewardReq;
-import com.autuan.project.front.entity.HistoryRewardRes;
-import com.autuan.project.front.entity.ReturnResult;
+import com.autuan.project.front.entity.*;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
 import com.autuan.project.promote.salesman.domain.RankingRes;
@@ -73,7 +70,7 @@ public class SalesmanFrontController {
      */
     @RequestMapping("/historyReward")
     public ReturnResult historyReward(@RequestBody HistoryRewardReq req) {
-        List<HistoryRewardRes> res = salesmanCustomService.historyReward(req);
+        List<RewardCount> res = salesmanCustomService.historyReward(req);
         return ReturnResult.ok(res);
     }
 

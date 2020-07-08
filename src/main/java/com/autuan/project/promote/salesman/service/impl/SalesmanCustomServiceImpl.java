@@ -11,6 +11,7 @@ import com.autuan.common.utils.text.Convert;
 import com.autuan.project.front.entity.CalcuRewardReq;
 import com.autuan.project.front.entity.HistoryRewardReq;
 import com.autuan.project.front.entity.HistoryRewardRes;
+import com.autuan.project.front.entity.RewardCount;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.dataBank.domain.TabDataBankExample;
 import com.autuan.project.promote.dataBank.mapper.TabDataBankMapper;
@@ -273,13 +274,36 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     }
 
     @Override
-    public List<HistoryRewardRes> historyReward(HistoryRewardReq req) {
-        String[] dateStrArray = req.getQueryDateStr().split("-");
-        LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1, 0, 0, 0);
-        LocalDateTime endTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getMonth().maxLength(), 23, 59, 59);
-        req.setQueryDateStart(startTime);
-        req.setQueryDateEnd(endTime);
-        return queryMoonData(req);
+    public List<RewardCount> historyReward(HistoryRewardReq req) {
+        // 查询所有月
+//        TabSalesmanExample salesmanExample = new TabSalesmanExample();
+//        salesmanExample.createCriteria()
+//                .andIdEqualTo(req.getSalesmanId());
+//        TabSalesman salesman = tabSalesmanMapper.selectOneByExample(salesmanExample);
+        // 可能导入更早的数据,写死开始月
+        LocalDateTime queryTime = LocalDateTime.of(2020,6,1,0,0);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getMonth().maxLength(), 23, 59, 59);
+        List<RewardCount> result = new ArrayList<>();
+        while (queryTime.isBefore(endTime)) {
+            LocalDateTime queryStartTime = LocalDateTime.of(queryTime.getYear(), queryTime.getMonthValue(), 1, 0, 0, 0);
+            LocalDateTime queryEndTime = LocalDateTime.of(queryStartTime.getYear(), queryStartTime.getMonthValue(), queryStartTime.getMonth().maxLength(), 23,59,59);
+
+            req.setQueryDateStart(queryStartTime);
+            req.setQueryDateEnd(queryEndTime);
+
+            List<HistoryRewardRes> queryResult = queryMoonData(req);
+
+            RewardCount bean = RewardCount.builder()
+                    .month(queryStartTime)
+                    .count(queryResult.stream().map(HistoryRewardRes::getReward).reduce(BigDecimal.ZERO, BigDecimal::add))
+                    .build();
+            result.add(bean);
+
+            queryTime = queryTime.plusMonths(1);
+        }
+
+        return result;
     }
 
 
