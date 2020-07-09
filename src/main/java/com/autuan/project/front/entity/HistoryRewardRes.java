@@ -29,4 +29,6 @@ public class HistoryRewardRes {
     private String orderNo;
     private BigDecimal reward;
 
+    private String type;
+
 }

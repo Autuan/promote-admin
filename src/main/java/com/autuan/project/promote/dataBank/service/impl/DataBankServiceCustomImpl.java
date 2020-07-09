@@ -50,7 +50,8 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void importExcel(List<TabDataBank> list) {
+    public String importExcel(List<TabDataBank> list) {
+        StringBuilder strBuilder = new StringBuilder();
         LocalDateTime now = LocalDateTime.now();
         String loginName = ShiroUtils.getLoginName();
 
@@ -83,14 +84,27 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
         Map<String, String> linkMap = tabSalesmanTaskList.stream()
                 .filter(item -> StrUtil.isNotBlank(item.getCode()))
                 .filter(item -> StrUtil.isNotBlank(item.getSalesmanId()))
-                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId, (existing, replacement) -> existing));
+                .collect(Collectors.toMap(
+                        item-> item.getCode()+"-"+item.getTaskId(),
+                        TabSalesmanTask::getSalesmanId, (existing, replacement) -> existing));
+//                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId, (existing, replacement) -> existing));
 
         // 插入
         List<TabDataBank> insertList = new ArrayList<>();
+        int line = 0;
+        int errorNum = 0;
         for (TabDataBank dataBank : list) {
+            line++;
             TabTask task = taskMap.get(dataBank.getBankName());
-            String salesmanId = linkMap.get(dataBank.getChannelCode());
-            if (null == task || StrUtil.isBlank(salesmanId)) {
+            if (null == task) {
+                strBuilder.append("<br/> 第" + line + "条数据未导入： 未查询到任务.  任务索引名:" + dataBank.getBankName());
+                errorNum++;
+                continue;
+            }
+            String salesmanId = linkMap.get(dataBank.getChannelCode()+"-"+task.getId());
+            if (StrUtil.isBlank(salesmanId)) {
+                strBuilder.append("<br/> 第" + line + "条数据未导入： 未查询到业务员.  业务员CODE:" + dataBank.getChannelCode());
+                errorNum++;
                 continue;
             }
             String taskId = task.getId();
@@ -114,27 +128,9 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
         if (CollectionUtil.isNotEmpty(insertList)) {
             dataBankMapper.batchInsert(insertList);
         }
-        // 添加领取记录
-//        TabSalesmanTaskExample linkExample = new TabSalesmanTaskExample();
-//        List<TabSalesmanTask> linkDataList = new ArrayList<>(addition.size());
-//        for (String str : addition) {
-//            String[] split = str.split("-");
-//            linkExample.or()
-//                    .andSalesmanIdEqualTo(split[1])
-//                    .andTaskIdEqualTo(split[0]);
-//
-//            linkDataList.add(TabSalesmanTask.builder()
-//                    .id(IdUtil.simpleUUID())
-//                    .code(IdUtil.simpleUUID())
-//                    .salesmanId(split[1])
-//                    .taskId(split[0])
-//                    .createTime(now)
-//                    .createBy(loginName)
-//                    .build());
-//        }
-//        tabSalesmanTaskMapper.deleteByExample(linkExample);
-//        tabSalesmanTaskMapper.batchInsert(linkDataList);
 
+        strBuilder.insert(0, "共 " + list.size() + " 条数据,成功：" + (list.size() - errorNum) + " 失败: " + errorNum);
+        return strBuilder.toString();
     }
 
     @Override

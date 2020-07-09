@@ -10,6 +10,7 @@ import com.autuan.project.promote.dataJd.domain.DataJd;
 import com.autuan.project.promote.dataJd.domain.OptionJdRewardReq;
 import com.autuan.project.promote.dataJd.domain.TabDataJd;
 import com.autuan.project.promote.dataJd.service.IDataJdCustomService;
+import com.autuan.project.promote.task.domain.TaskEnum;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -51,6 +52,7 @@ public class DataJdCustomController {
     public AjaxResult importExcel(HttpServletRequest request) throws ParseException {
         //读取excel的结果
         List<List<Object>> inputList = Lists.newArrayList();
+        String msg = "";
         try {
             if (ServletFileUpload.isMultipartContent(request)) {
                 String excelTempPath = RuoYiConfig.getProfile();
@@ -84,8 +86,6 @@ public class DataJdCustomController {
             return AjaxResult.error(e.getMessage());
         }
 
-        //导入有误的条目
-        List<String> errorList = Lists.newArrayList();
         //获取管理员id
         //对导入的集合进行处理,第一行为标题
         if (!CollectionUtils.isEmpty(inputList) && inputList.size() > 1) {
@@ -95,58 +95,25 @@ public class DataJdCustomController {
                 if (CollectionUtil.isNotEmpty(objList)) {
                     int j = 0;
                     ExcelRead.setObjList(objList);
-//                    LocalDateTime recordTime =  ExcelRead.getLocalDateTime(j++);
-//                    String taskInnerId = (String) objList.get(j++);
-//                    String taskUrl = (String) objList.get(j++);
-//                    String orderNo = (String) objList.get(j++);
                     // 任务名称
                     String orderName = (String) objList.get(j++);
                     // 下游渠道
                     String channelBelow = (String) objList.get(j++);
-//                    String channelFirst = String.valueOf(objList.get(j++));
-//                    String channelBelowSource = (String) objList.get(j++);
-//                    String checkStatusStr = (String) objList.get(j++);
-//                    String checkReason = (String) objList.get(j++);
-//                    String joinJdPin = String.valueOf(objList.get(j++));
                     // 参与推广链接
                     String joinLink = String.valueOf(objList.get(j++));
-//                    LocalDateTime joinTime =  ExcelRead.getLocalDateTime(j++);
-//                    String joinOrder = String.valueOf(objList.get(j++));
-//                    String openJdCreditUrl = ExcelRead.getStr(j++);
                     // 业务类型
                     String openJdCreditTypeStr = ExcelRead.getStrDef(j++,"");
-                    // todo magic val
-                    Integer openJdCreditType = 0;
+                    Integer openJdCreditType = null;
                     switch (openJdCreditTypeStr) {
-                        case "普通开白条" : openJdCreditType=0;break;
-                        case "小金库白条" : openJdCreditType=1;break;
-                        case "新手礼包" : openJdCreditType=2;break;
+                        case "普通开白条" : openJdCreditType= TaskEnum.JD_COMMON.val();break;
+                        case "小金库白条" : openJdCreditType=TaskEnum.JD_GOLD.val();break;
+                        case "新手礼包" : openJdCreditType=TaskEnum.JD_NEWBIE.val();break;
                         default:break;
                     }
                     // 白条开通PIN
                     String openJdCreditPin = String.valueOf(objList.get(j++));
                     // 白条开通时间
                     LocalDateTime openJdCreditTime =  ExcelRead.getLocalDateTime(j++);
-//                    String jdCreditFirstOrderNo = ExcelRead.getStr(j++);
-//                    String jdCreditFirstOrderPin =ExcelRead.getStr(j++);
-//                    LocalDateTime jdCreditFirstOrderTime =  ExcelRead.getLocalDateTime(j++);
-//                    String jdCreditFirstOrderUrl = ExcelRead.getStr(j++);
-//                    String bankAndOrderNo = ExcelRead.getStr(j++);
-//                    String bankAndPin = ExcelRead.getStr(j++);
-//                    String bankAndIncomeMoney = ExcelRead.getStr(j++);
-//                    LocalDateTime bankAndIncomeTime =  ExcelRead.getLocalDateTime(j++);
-//                    String bankAndPromoteUrl = ExcelRead.getStr(j++);
-//                    String joinedFirstOrderWithJdCreditTimeDifference = ExcelRead.getStr(j++);
-//                    String joinedFirstOrderWithBankIncomeTimeDifference =ExcelRead.getStr(j++);
-//                    String jdCreditOpenOneDayStr = ExcelRead.getStr(j++);
-//                    LocalDateTime newbiePackageOperTime =  ExcelRead.getLocalDateTime(j++);
-//                    String newbiePackagePin = ExcelRead.getStr(j++);
-//                    String newbiePackageUrlId = ExcelRead.getStr(j++);
-//                    String newbiePackageResultStr = ExcelRead.getStr(j++);
-//                    String jdGoldOrderNo = ExcelRead.getStr(j++);
-//                    String jdGoldIsFirstStr = ExcelRead.getStr(j++);
-//                    LocalDateTime jdGoldConfirmTime =  ExcelRead.getLocalDateTime(j++);
-//                    String jdNewHandRewardId = ExcelRead.getStr(j++);
 
                     list.add(TabDataJd.builder()
                             .channelBelow(channelBelow)
@@ -158,9 +125,9 @@ public class DataJdCustomController {
                             .build());
                 }
             }
-            dataJdCustomService.importExcel(list);
+            msg = dataJdCustomService.importExcel(list);
         }
-        return AjaxResult.success(errorList);
+        return AjaxResult.success(msg);
     }
 
 

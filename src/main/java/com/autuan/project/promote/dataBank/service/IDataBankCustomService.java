@@ -15,7 +15,7 @@ public interface IDataBankCustomService {
      * @return : void
      * @since: 21:12 2020/6/25 
      */
-    void importExcel(List<TabDataBank> list);
+    String importExcel(List<TabDataBank> list);
 
 
     /**
@@ -25,5 +25,5 @@ public interface IDataBankCustomService {
      * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
      * @return 结果
      */
-    public String importData(List<DataBank> userList, Boolean isUpdateSupport);
+     String importData(List<DataBank> userList, Boolean isUpdateSupport);
 }

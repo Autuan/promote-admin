@@ -14,6 +14,20 @@ import lombok.NoArgsConstructor;
  **/
 @AllArgsConstructor
 public enum TaskEnum {
+    /**
+     * 普通开白条
+     */
+    JD_COMMON(0),
+    /**
+     * 京东金库
+     */
+    JD_GOLD(1),
+    /**
+     * 新手礼包
+     */
+    JD_NEWBIE(2),
+
+
     TYPE_NOT_USE(0),
     TYPE_USE(1),
     TYPE_DISABLE(2),
@@ -23,6 +37,8 @@ public enum TaskEnum {
     STATUS_VERIFY_ING(1),
     STATUS_PASS(2),
     STATUS_FAIL(3);
+
+
 
     private Integer status;
 

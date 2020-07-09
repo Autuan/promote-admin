@@ -26,7 +26,7 @@ public interface IDataJdCustomService {
      * @return: void
      * @since : 2020/7/1 11:13
      */
-    void importExcel(List<TabDataJd> list);
+    String importExcel(List<TabDataJd> list);
 
     /***
      * 配置京东任务奖励

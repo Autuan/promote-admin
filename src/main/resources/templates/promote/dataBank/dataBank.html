@@ -26,18 +26,18 @@
                                 <p>银行名称：</p>
                                 <input type="text" name="bankName"/>
                             </li>
+                            <!--<li>-->
+                                <!--<p>手机号：</p>-->
+                                <!--<input type="text" name="cMobile"/>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<p>用户名：</p>-->
+                                <!--<input type="text" name="cName"/>-->
+                            <!--</li>-->
                             <li>
-                                <p>手机号：</p>
-                                <input type="text" name="cMobile"/>
+                                <p>CODE：</p>
+                                <input type="text" name="channelCode"/>
                             </li>
-                            <li>
-                                <p>用户名：</p>
-                                <input type="text" name="cName"/>
-                            </li>
-<!--                            <li>-->
-<!--                                <p>渠道code：</p>-->
-<!--                                <input type="text" name="channelCode"/>-->
-<!--                            </li>-->
 <!--                            <li>-->
 <!--                                <p>custom_flag  0-否 1-是：</p>-->
 <!--                                <input type="text" name="customFlag"/>-->
@@ -137,11 +137,13 @@
                 },
                 {
                     field : 'cmobile',
-                    title : '手机号'
+                    title : '手机号',
+                    visible: false
                 },
                 {
                     field : 'cname',
-                    title : '用户名'
+                    title : '用户名',
+                    visible: false
                 },
                 {
                     field : 'channelCode', 

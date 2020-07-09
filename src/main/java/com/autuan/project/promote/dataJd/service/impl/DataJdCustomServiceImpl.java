@@ -50,6 +50,7 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
     private IDictDataService dictDataService;
     @Autowired
     private IDictTypeService dictTypeService;
+
     /**
      * 批量导入
      *
@@ -60,13 +61,11 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
      * @since : 2020/7/1 11:13
      */
     @Override
-    public void importExcel(List<TabDataJd> list) {
+    public String importExcel(List<TabDataJd> list) {
+        StringBuilder strBuilder = new StringBuilder();
         LocalDateTime now = LocalDateTime.now();
         String loginName = ShiroUtils.getLoginName();
 
-//        BigDecimal rewardNewbie = new BigDecimal(6);
-//        BigDecimal rewardCommon = new BigDecimal(28);
-//        BigDecimal rewardGold = new BigDecimal(8);
         // 使用code 和 name 分别查出 taskId 和 salesmanId
         // taskId
         TabTaskExample tabTaskExample = new TabTaskExample();
@@ -93,12 +92,29 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
             tabSalesmanTaskList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
         }
         Map<String, String> linkMap = tabSalesmanTaskList.stream()
-                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId,(existing, replacement) -> existing));
+                .collect(Collectors.toMap(
+                        item-> item.getCode()+"-"+item.getTaskId(),
+                        TabSalesmanTask::getSalesmanId,(existing, replacement) -> existing));
+//                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId,(existing, replacement) -> existing));
 
         List<TabDataJd> insertList = new ArrayList<>();
+        int line = 0;
+        int errorNum = 0;
         for (TabDataJd data : list) {
+            line++;
             String taskId = taskMap.get(data.getOrderName());
-            String salesmanId = linkMap.get(data.getJoinLink());
+            if(StrUtil.isBlank(taskId) ) {
+                strBuilder.append("<br/> 第" + line + "条数据未导入： 未查询到任务.  任务索引名:" + data.getOrderName());
+                errorNum++;
+                continue;
+            }
+            String salesmanId = linkMap.get(data.getJoinLink()+"-"+taskId);
+
+            if( StrUtil.isBlank(salesmanId)) {
+                strBuilder.append("<br/> 第" + line + "条数据未导入： 未查询到业务员.  业务员CODE:" + data.getJoinLink());
+                errorNum++;
+                continue;
+            }
 
             List<DictData> dictDatas = dictDataService.selectDictDataByType("JD_REWARD_" + taskId);
             // todo magic val
@@ -115,15 +131,14 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
             BigDecimal rewardCommon = new BigDecimal(rewardCommonStr);
             BigDecimal rewardGold = new BigDecimal(rewardGoldStr);
 
-            if(StrUtil.isBlank(taskId) || StrUtil.isBlank(salesmanId)) {
-                continue;
-            }
+
             data.setTaskId(taskId);
             data.setSalesmanId(salesmanId);
             data.setCreateTime(now);
             data.setCreateBy(loginName);
             data.setId(IdUtil.simpleUUID());
             // 根据类型计算reward
+            // todo magic nnum
             Integer type = data.getOpenJdCreditType();
             BigDecimal reward = rewardCommon;
             switch (type){
@@ -138,12 +153,12 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
         if(CollectionUtil.isNotEmpty(insertList)) {
             dataJdMapper.batchInsert(insertList);
         }
+        strBuilder.insert(0, "共 " + list.size() + " 条数据,成功：" + (list.size() - errorNum) + " 失败: " + errorNum);
+        return strBuilder.toString();
     }
 
     @Override
     public void optionJdReward(OptionJdRewardReq req) {
-        // todo 魔法值
-//        List<DictData> dictData = dictDataService.selectDictDataByType("jd_reward_num");
 
         String dictName = "JD_REWARD_" + req.getTaskId();
 
@@ -188,8 +203,8 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
     public Map<String, BigDecimal> getRewardOption(Set<String> ids) {
         Map<String,BigDecimal> result = new HashMap<>(ids.size() * 3);
         for(String taskId : ids) {
-            List<DictData> dictDatas = dictDataService.selectDictDataByType("JD_REWARD_" + taskId);
             // todo magic val
+            List<DictData> dictDatas = dictDataService.selectDictDataByType("JD_REWARD_" + taskId);
             String rewardNewbieStr = dictDatas.stream().filter(item -> "新手礼包".equals(item.getDictLabel()))
                     .map(DictData::getDictValue)
                     .findFirst().orElse("0");
@@ -204,8 +219,8 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
             BigDecimal rewardGold = new BigDecimal(rewardGoldStr);
 
             result.put("rewardNewbie"+taskId,rewardNewbie);
-            result.put("rewardCommon"+taskId,rewardNewbie);
-            result.put("rewardGold"+taskId,rewardNewbie);
+            result.put("rewardCommon"+taskId,rewardCommon);
+            result.put("rewardGold"+taskId,rewardGold);
         }
         return result;
     }
@@ -248,18 +263,19 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
             String taskId = data.getTaskId();
             Integer type = data.getOpenJdCreditType();
             BigDecimal reward = BigDecimal.ZERO;
+            String typeStr = "";
             switch (type){
-                case 0 : reward =rewardOption.get("rewardCommon"+taskId);break;
-                case 1 : reward =rewardOption.get("rewardGold"+taskId);break;
-                case 2 : reward =rewardOption.get("rewardNewbie"+taskId);break;
+                case 0 : reward =rewardOption.get("rewardCommon"+taskId);typeStr="普通开白条: ";break;
+                case 1 : reward =rewardOption.get("rewardGold"+taskId);typeStr="京东小金库: ";break;
+                case 2 : reward =rewardOption.get("rewardNewbie"+taskId);typeStr="新手礼包: ";break;
                 default:break;
             }
             resList.add(HistoryRewardRes.builder()
                     .verifyDate(data.getOpenJdCreditTime())
                     .name(data.getOrderName())
-                    .orderNo(data.getJoinLink())
-                    .reward(reward)
-//                    .approveStatus(data.getApproveStatus() == 1 ? "审核通过" : "审核拒绝")
+                    .orderNo(data.getOpenJdCreditPin())
+                    .reward(data.getReward())
+                    .type(typeStr)
                     .build());
         }
 

@@ -309,9 +309,10 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 
     @Override
     public List<HistoryRewardRes> thisMoonReward(HistoryRewardReq req) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), 1, 0, 0, 0);
-        LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getMonth().maxLength(), 23, 59, 59);
+        String[] dateStrArray = req.getQueryDateStr().split("-");
+        LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1, 0, 0, 0);
+        LocalDateTime endTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getMonth().maxLength(), 23, 59, 59);
+
         req.setQueryDateStart(startTime);
         req.setQueryDateEnd(endTime);
         return queryMoonData(req);
@@ -325,22 +326,6 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getMonth().maxLength(), 23, 59, 59);
 
-
-        // 该业务员领取的所有任务
-//        TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
-//        salesmanTaskExample.createCriteria()
-//                .andSalesmanIdEqualTo(salesmanId);
-//        List<TabSalesmanTask> receiveList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
-//        if (CollectionUtil.isEmpty(receiveList)) {
-//            return null;
-//        }
-//        // 所有业务
-//        TabTaskExample taskExample = new TabTaskExample();
-//        taskExample.createCriteria()
-//                .andIdIn(receiveList.stream().map(TabSalesmanTask::getTaskId).collect(toList()));
-//        List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
-//        Map<String, TabTask> taskMap = allTasks.stream()
-//                .collect(Collectors.toMap(TabTask::getId, Function.identity(),(existing, replacement) -> existing)));
 
         // 开卡订单
         TabDataBankExample dataBankExample = new TabDataBankExample();

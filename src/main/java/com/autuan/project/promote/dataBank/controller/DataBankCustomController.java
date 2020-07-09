@@ -90,6 +90,7 @@ public class DataBankCustomController {
     @RequestMapping("/importExcel")
     @ResponseBody
     public AjaxResult importExcel(HttpServletRequest request) throws ParseException {
+        String message = "";
         //读取excel的结果
         List<List<Object>> inputList = Lists.newArrayList();
         try {
@@ -125,8 +126,7 @@ public class DataBankCustomController {
             return AjaxResult.error(e.getMessage());
         }
 
-        //导入有误的条目
-        List<String> errorList = Lists.newArrayList();
+
         //获取管理员id
         //对导入的集合进行处理,第一行为标题
         if (!CollectionUtils.isEmpty(inputList) && inputList.size() > 1) {
@@ -161,8 +161,8 @@ public class DataBankCustomController {
                             .build());
                 }
             }
-                dataBankCustomService.importExcel(list);
+             message=   dataBankCustomService.importExcel(list);
         }
-        return AjaxResult.success(errorList);
+        return AjaxResult.success(message);
     }
 }
