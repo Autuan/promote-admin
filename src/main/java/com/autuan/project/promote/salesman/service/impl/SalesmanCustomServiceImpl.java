@@ -303,7 +303,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
             queryTime = queryTime.plusMonths(1);
         }
 
-        return result;
+        return  CollectionUtil.reverse(result);
     }
 
 
