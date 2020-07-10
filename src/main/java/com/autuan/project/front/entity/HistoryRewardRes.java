@@ -22,13 +22,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HistoryRewardRes {
-        @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime verifyDate;
     private String approveStatus;
     private String name;
     private String orderNo;
     private BigDecimal reward;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime applyTime;
     private String type;
+    private String info;
 
 }

@@ -340,22 +340,14 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
 
 
-//        List<TabDataBank> taskList = new ArrayList<>();
-//        for (TabTask task : allTasks) {
-//            List<TabDataBank> dataBank = dataBanks.stream()
-//                    .filter(data -> task.getId().equals(data.getTaskId()))
-//                    .collect(toList());
-//            taskList.addAll(dataBank);
-//        }
         List<HistoryRewardRes> resList = new ArrayList<>();
         for (TabDataBank data : dataBanks) {
-//            TabTask task = taskMap.get(data.getTaskId());
-//            BigDecimal reward = task.getReward();
             resList.add(HistoryRewardRes.builder()
                     .verifyDate(data.getVerifyDate())
                     .name(data.getBankName())
                     .orderNo(data.getApplyId())
                     .reward(data.getReward())
+                    .applyTime(data.getApplyDate())
                     .approveStatus(data.getApproveStatus() == 1 ? "审核通过" : "审核拒绝")
                     .build());
         }
@@ -400,6 +392,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .andTaskIdIsNotNull()
                 .andSalesmanIdEqualTo(salesmanId)
                 .andVerifyDateBetween(startTime, endTime);
+//        dataBankExample.setOrderByClause("verify_date desc");
         List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
         // 京东推广
         TabDataJdExample dataJdExample = new TabDataJdExample();
@@ -407,6 +400,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .andTaskIdIsNotNull()
                 .andSalesmanIdEqualTo(salesmanId)
                 .andOpenJdCreditTimeBetween(startTime,endTime);
+//        dataJdExample.setOrderByClause("open_jd_credit_time desc");
         List<TabDataJd> dataJds = dataJdMapper.selectByExample(dataJdExample);
         // 任务ID集合
         List<String> taskIds = dataBanks.stream().map(TabDataBank::getTaskId).collect(toList());
@@ -431,6 +425,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                     .verifyDate(data.getVerifyDate())
                     .name(data.getBankName())
                     .reward(data.getReward())
+                    .info(data.getCName()+","+data.getCMobile())
                     .approveStatus(isPass ? "通过" : "拒绝")
                     .build());
         }
@@ -452,16 +447,23 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                     case 2 : reward =rewardNewbie;break;
                     default:break;
                 }
-                HistoryRewardRes bean = HistoryRewardRes.builder()
+            String pinStr = data.getOpenJdCreditPin();
+                if(pinStr.length() > 4) {
+                    pinStr = pinStr.substring(0, 2) + "****" + pinStr.substring(pinStr.length() - 2, pinStr.length());
+                } else {
+                    pinStr = "****";
+                }
+            HistoryRewardRes bean = HistoryRewardRes.builder()
                         .verifyDate(data.getOpenJdCreditTime())
                         .name(data.getOrderName())
                         .reward(reward)
+                        .info("京东账号:"+pinStr)
                         .approveStatus("通过")
                         .build();
             resList.add(bean);
         }
         resList = resList.stream()
-                .sorted(Comparator.comparing(HistoryRewardRes::getVerifyDate))
+                .sorted(Comparator.comparing(HistoryRewardRes::getVerifyDate).reversed())
                 .collect(toList());
         return resList;
     }
