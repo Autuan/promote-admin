@@ -101,6 +101,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="salesmanId != null  and salesmanId != ''"> and salesman_id = #{salesmanId}</if>
             <if test="reward != null "> and reward = #{reward}</if>
             <if test="channelBelow != null  and channelBelow != ''"> and channel_below = #{channelBelow}</if>
+
+
+            <if test="queryTimeStart != null and queryTimeStart != ''">and open_jd_credit_time &gt;= concat(#{queryTimeStart}, '00:00:00')</if>
+            <if test="queryTimeEnd != null and queryTimeEnd != ''"> and open_jd_credit_time &lt;= concat(#{queryTimeEnd}, '23:59:59')</if>
         </where>
         ORDER BY open_jd_credit_time DESC
     </select>

@@ -74,4 +74,15 @@ public interface IGroupCustomService {
      * @since: 12:07 2020/7/4
      */
     List<GroupDataRes> groupData(GroupDataReq req);
+
+    /***
+     *查询会员是否有资格查看小组数据
+     * @param req
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : boolean
+     * @since: 17:46 2020/7/12
+     */
+    boolean groupDataPower(GroupDataReq req);
 }

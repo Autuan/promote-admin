@@ -24,6 +24,11 @@ public class DataBank extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    // ------------ 自定义 ----------------
+    private String queryTimeStart;
+    private String queryTimeEnd;
+    // ------------ OVER -----------------
+
     /** id */
     private String id;
     /** 申请日期 */

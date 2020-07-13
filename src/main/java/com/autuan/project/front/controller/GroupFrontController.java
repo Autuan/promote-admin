@@ -28,4 +28,19 @@ public class GroupFrontController {
         List<GroupDataRes> res = groupCustomService.groupData(req);
         return ReturnResult.ok(res);
     }
+
+    /***
+     * 查询会员是否有资格查看小组数据
+     * @param req
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : com.autuan.project.front.entity.ReturnResult
+     * @since: 17:45 2020/7/12
+     */
+    @RequestMapping("/groupDataPower")
+    public ReturnResult groupDataPower(@RequestBody GroupDataReq req) {
+        boolean bool = groupCustomService.groupDataPower(req);
+        return ReturnResult.ok(bool);
+    }
 }

@@ -36,7 +36,7 @@
                         </li>
                         <li>
                             <p>所属小组：</p>
-                            <input type="text" name="groupId"/>
+                            <select name="groupId" class=" " id="groupId"></select>
                         </li>
                         <!--<li>-->
                             <!--<p>学历：</p>-->
@@ -228,6 +228,13 @@
             url: ctx + 'promote/group/custom/list',
             successParse: function (data) {
                 groupArray = data;
+                let str = '<option value="">---请选择小组---</option>';
+                for (let i=0;i<data.length;i++) {
+                    str += `<option value="${data[i].id}">${data[i].name}</option>`
+                }
+                $('#groupId').empty();
+                $('#groupId').append($(str));
+
                 $.table.init(options);
             }
         })

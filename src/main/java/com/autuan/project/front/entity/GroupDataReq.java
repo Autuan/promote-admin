@@ -19,4 +19,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GroupDataReq {
     private String groupId;
+    private String querySalesmanId;
 }

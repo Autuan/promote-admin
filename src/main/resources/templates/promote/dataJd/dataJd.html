@@ -10,12 +10,14 @@
             <form id="formId">
                 <div class="select-list">
                     <ul>
-                        <!--                            <li class="select-time">-->
-                        <!--                                <p>记录时间：</p>-->
-                        <!--                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginRecordTime]"/>-->
-                        <!--                                <span>-</span>-->
-                        <!--                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endRecordTime]"/>-->
-                        <!--                            </li>-->
+                        <li class="select-time">
+                            <p>白条开通时间：</p>
+                            <input type="text" class="time-input" id="queryTimeStart" placeholder="开始时间"
+                                   name="queryTimeStart"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" id="queryTimeEnd" placeholder="结束时间"
+                                   name="queryTimeEnd"/>
+                        </li>
                         <li>
                             <p>任务链接内部ID：</p>
                             <input type="text" name="taskInnerId"/>
@@ -58,10 +60,10 @@
                         <!--                                <p>用户参与京东pin：</p>-->
                         <!--                                <input type="text" name="joinJdPin"/>-->
                         <!--                            </li>-->
-                                                    <li>
-                                                        <p>用户参与推广链接：</p>
-                                                        <input type="text" name="joinLink"/>
-                                                    </li>
+                        <li>
+                            <p>用户参与推广链接：</p>
+                            <input type="text" name="joinLink"/>
+                        </li>
                         <!--                            <li class="select-time">-->
                         <!--                                <p>用户参与时间：</p>-->
                         <!--                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginJoinTime]"/>-->
@@ -80,21 +82,21 @@
                         <!--                                <p>白条开通链接：</p>-->
                         <!--                                <input type="text" name="openJdCreditUrl"/>-->
                         <!--                            </li>-->
-                                                    <!--<li class="select-time">-->
-                                                        <!--<p>白条开通时间：</p>-->
-                                                        <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginOpenJdCreditTime]"/>-->
-                                                        <!--<span>-</span>-->
-                                                        <!--<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endOpenJdCreditTime]"/>-->
-                                                    <!--</li>-->
-                                                    <li>
-                                                        <p>白条开通方式：</p>
-                                                        <select name="openJdCreditType" th:with="type=${@dict.getType('')}">
-                                                            <option value="">所有</option>
-                                                            <option value="0">普通开白条</option>
-                                                            <option value="1">小金库白条</option>
-                                                            <option value="2">新手礼包</option>
-                                                        </select>
-                                                    </li>
+                        <!--<li class="select-time">-->
+                        <!--<p>白条开通时间：</p>-->
+                        <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginOpenJdCreditTime]"/>-->
+                        <!--<span>-</span>-->
+                        <!--<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endOpenJdCreditTime]"/>-->
+                        <!--</li>-->
+                        <li>
+                            <p>白条开通方式：</p>
+                            <select name="openJdCreditType" th:with="type=${@dict.getType('')}">
+                                <option value="">所有</option>
+                                <option value="0">普通开白条</option>
+                                <option value="1">小金库白条</option>
+                                <option value="2">新手礼包</option>
+                            </select>
+                        </li>
                         <!--                            <li>-->
                         <!--                                <p>白条首单订单号：</p>-->
                         <!--                                <input type="text" name="jdCreditFirstOrderNo"/>-->
@@ -287,8 +289,8 @@
                 {
                     field: 'joinLink',
                     title: '用户参与推广链接',
-                    formatter: function(value, row, index) {
-                        return $.table.tooltip(value,20);
+                    formatter: function (value, row, index) {
+                        return $.table.tooltip(value, 20);
                     }
                 },
                 // {
@@ -319,11 +321,17 @@
                             // case 0:
                             // case '0':return '-';break;
                             case 0:
-                            case '0':return '普通开白条';break;
+                            case '0':
+                                return '普通开白条';
+                                break;
                             case 1:
-                            case '1':return '小金库白条';break;
+                            case '1':
+                                return '小金库白条';
+                                break;
                             case 2:
-                            case '2':return '新手礼包';break;
+                            case '2':
+                                return '新手礼包';
+                                break;
                         }
                     }
                 },

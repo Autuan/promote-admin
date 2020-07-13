@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,6 +39,7 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
     private TabSalesmanMapper salesmanMapper;
     @Autowired
     private ISalesmanCustomService salesmanCustomService;
+
     /**
      * 查询是否已是组长
      *
@@ -84,10 +86,10 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void add(TabGroup group) {
-        if(haveThisHeader(group.getGroupHeader())) {
+        if (haveThisHeader(group.getGroupHeader())) {
             throw new CustomRespondException("此销售员已是组长");
         }
-        if(joinedGroup(group.getGroupHeader())) {
+        if (joinedGroup(group.getGroupHeader())) {
             throw new CustomRespondException("此销售员已有小组");
         }
         group.setCreateTime(LocalDateTime.now());
@@ -97,9 +99,9 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
         groupMapper.insertSelective(group);
         salesmanMapper.updateByPrimaryKeySelective(
                 TabSalesman.builder()
-                .id(group.getGroupHeader())
-                .groupId(groupId)
-                .build());
+                        .id(group.getGroupHeader())
+                        .groupId(groupId)
+                        .build());
     }
 
     /**
@@ -119,7 +121,7 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
                 .andIdNotEqualTo(group.getId())
                 .andGroupHeaderEqualTo(group.getGroupHeader());
         boolean haveThisHeaderBool = groupMapper.selectByExample(example).size() > 0;
-        if(haveThisHeaderBool) {
+        if (haveThisHeaderBool) {
             throw new CustomRespondException("此销售员已是组长");
         }
         TabSalesmanExample salesmanExample = new TabSalesmanExample();
@@ -128,7 +130,7 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
                 .andGroupIdNotEqualTo(group.getId())
                 .andIdEqualTo(group.getGroupHeader());
         boolean joinedBool = salesmanMapper.selectByExample(salesmanExample).size() > 0;
-        if(joinedGroup(group.getGroupHeader())) {
+        if (joinedGroup(group.getGroupHeader())) {
             throw new CustomRespondException("此销售员已有小组");
         }
         groupMapper.updateByPrimaryKeySelective(group);
@@ -159,35 +161,40 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
         groupExample.createCriteria()
                 .andIdEqualTo(req.getGroupId());
         TabGroup group = groupMapper.selectOneByExample(groupExample);
+        String groupHeader = group.getGroupHeader();
+        boolean isGroupHeader = groupHeader.equals(req.getQuerySalesmanId());
+        if (! isGroupHeader) {
+            throw new CustomRespondException("您无权查看此页面");
+        }
 
         // 查出当前小组所有成员
         TabSalesmanExample salesmanExample = new TabSalesmanExample();
         salesmanExample.createCriteria()
                 .andGroupIdEqualTo(req.getGroupId());
-        List<TabSalesman> salesmanList = salesmanMapper.selectByExample(salesmanExample);
 
+        List<TabSalesman> salesmanList = salesmanMapper.selectByExample(salesmanExample);
         // 查出每个成员业绩
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime createTime = group.getCreateTime();
         List<LocalDateTime> queryDateList = new ArrayList<>();
         int monthDiff = monthDiff(createTime, now);
-        for(int i=0;i<=monthDiff;i++) {
+        for (int i = 0; i <= monthDiff; i++) {
             LocalDateTime queryDate = createTime.plusMonths(i);
             queryDateList.add(queryDate);
         }
 
         List<GroupDataRes> resList = new ArrayList<>();
-        for(TabSalesman salesman : salesmanList) {
+        for (TabSalesman salesman : salesmanList) {
             String salesmanId = salesman.getId();
             List<GroupDataDetailDTO> detailList = new ArrayList<>();
-            for(LocalDateTime queryDate : queryDateList) {
+            for (LocalDateTime queryDate : queryDateList) {
                 CalcuRewardReq reqBean = CalcuRewardReq.builder()
                         .queryMoon(queryDate)
                         .salesmanId(salesmanId)
                         .build();
                 CalcuRewardRes calcuRewardRes = salesmanCustomService.calcuReward(reqBean);
                 GroupDataDetailDTO dto = GroupDataDetailDTO.builder()
-.count(calcuRewardRes.getThisMoonReward())
+                        .count(calcuRewardRes.getThisMoonReward())
                         .date(queryDate)
                         .id(queryDate.toString())
                         .build();
@@ -206,13 +213,25 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
         return resList;
     }
 
+    @Override
+    public boolean groupDataPower(GroupDataReq req) {
+        TabGroupExample groupExample = new TabGroupExample();
+        groupExample.createCriteria()
+                .andIdEqualTo(req.getGroupId());
+        TabGroup group = groupMapper.selectOneByExample(groupExample);
+        String groupHeader = group.getGroupHeader();
+        boolean isGroupHeader = groupHeader.equals(req.getQuerySalesmanId());
+        return isGroupHeader;
+    }
+
     /**
      * 获取两个时间点的月份差
+     *
      * @param dt1 第一个时间点
      * @param dt2 第二个时间点
      * @return int，即需求的月数差
      */
-    private int monthDiff(LocalDateTime dt1,LocalDateTime dt2){
+    private int monthDiff(LocalDateTime dt1, LocalDateTime dt2) {
         //获取第一个时间点的月份
         int month1 = dt1.getMonthValue();
         //获取第一个时间点的年份
@@ -222,6 +241,6 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
         //获取第一个时间点的年份
         int year2 = dt2.getYear();
         //返回两个时间点的月数差
-        return (year2 - year1) *12 + (month2 - month1);
+        return (year2 - year1) * 12 + (month2 - month1);
     }
 }
