@@ -70,8 +70,6 @@
                 <label class="col-sm-3 control-label">小组</label>
                 <div class="col-sm-8">
                     <select name="groupId" class="form-control m-b" id="groupId" >
-                        <!--                        <option value="0">男</option>-->
-                        <!--                        <option value="1">女</option>-->
                     </select>
                 </div>
             </div>
@@ -102,8 +100,6 @@
         });
 
         function submitHandler() {
-            console.info($('[name=groupId]').val())
-            console.info($('#form-salesman-edit').serialize())
             if ($.validate.form()) {
                 $.operate.save(prefix + "/edit", $('#form-salesman-edit').serialize());
             }

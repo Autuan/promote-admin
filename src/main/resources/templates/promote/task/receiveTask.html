@@ -17,9 +17,6 @@
                 <input class="form-control keyInput" type="text" id="allNum" disabled="true" th:value="${task.name}">
             </div>
         </div>
-        <!--<div class="form-group">-->
-            <!--<label class="col-sm-11 control-label gray">单次最多设置30位 领取记录</label>-->
-        <!--</div>-->
         <div class="form-group">
             <label class="col-sm-3 control-label">业务员：</label>
             <div class="col-sm-9">
@@ -45,21 +42,14 @@
     }
 
     function submitHandler() {
-
-
-        // let checked = $('input[type="checkbox"]:checked').val();
         let salesmanIds = [];
         $("input[type='checkbox']:checked").each(function() {
-            // if ($(this).is(":checked")) {
                 salesmanIds.push($(this).val());
-            // }
         });
         let param = {
             taskId : $('#taskId').val(),
             salesmanIds :salesmanIds,
         }
-        console.info(salesmanIds)
-        // return;
         Base.Network.post({
             url:ctx+'promote/task/custom/batchReceive',
             data:param,
@@ -71,19 +61,6 @@
             }
         })
     }
-    $(function () {
-
-        // let taskId = $('#taskId').val();
-        // Base.Network.post({
-        //     url: ctx + 'promote/linkSalesmanTask/custom/listByTaskId',
-        //     data: {
-        //         taskId: taskId
-        //     },
-        //     successParse: function (data) {
-        //         receiveSalesmanList = data;
-        //     }
-        // })
-    })
 </script>
 </body>
 </html>

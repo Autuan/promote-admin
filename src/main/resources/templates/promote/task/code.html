@@ -11,17 +11,6 @@
         <input id="taskId" th:value="${task.id}" type="hidden">
         <input id="prefix" field="*{prefix}" type="hidden">
 
-
-        <!--<div class="form-group">-->
-            <!--<label class="col-sm-2 control-label">CODE前缀：</label>-->
-            <!--<div class="col-sm-6">-->
-                <!--<input class="form-control keyInput" id="codePrefix" type="text" disabled="true" th:value="${task.codePrefix}">-->
-            <!--</div>-->
-            <!--<label class="col-sm-2 control-label">位数：</label>-->
-            <!--<div class="col-sm-2">-->
-                <!--<input class="form-control keyInput" id="digit" type="text" disabled="true" th:value="${task.codePrefixDigit}">-->
-            <!--</div>-->
-        <!--</div>-->
         <div class="form-group">
             <label class="col-sm-3 control-label">总数：</label>
             <div class="col-sm-3">
@@ -37,29 +26,13 @@
             <div class="col-sm-3">
                 <input class="form-control keyInput" type="text" disabled="true" th:value="${unusedNum}">
             </div>
-            <!--<label class="col-sm-3 control-label">已收回：</label>-->
-            <!--<div class="col-sm-3">-->
-                <!--<input class="form-control keyInput" type="text" disabled="true" th:value="${recoveryNum}">-->
-            <!--</div>-->
         </div>
-        <!--<div class="form-group">-->
-            <!--<label class="col-sm-3 control-label">生成：</label>-->
-            <!--<div class="col-sm-3">-->
-                <!--<input class="form-control keyInput" id="num" type="text" placeholder="输入生成数量">-->
-            <!--</div>-->
-        <!--</div>-->
         <div class="form-group">
             <label class="col-sm-3 control-label">CODE值：</label>
             <div class="col-sm-3">
                 <input class="form-control keyInput" id="inputCode" type="text" placeholder="输入CODE">
             </div>
         </div>
-        <!--<div class="form-group">-->
-            <!--<label class="col-sm-3 control-label">预览：</label>-->
-            <!--<div class="col-sm-3">-->
-               <!--<div id="preview">12345</div>-->
-            <!--</div>-->
-        <!--</div>-->
     </form>
 </div>
 <th:block th:include="include :: footer"/>
@@ -76,8 +49,6 @@
 
     function submitHandler() {
         let param = {
-            // digit : $('#digit').val(),
-            // prefix : $('#codePrefix').val(),
             taskId : $('#taskId').val(),
             num : $('#num').val(),
             allNum : $('#allNum').val(),
@@ -95,15 +66,6 @@
             }
         })
     }
-    $(function () {
-
-        // let digit = $('#digit').val() * 1;
-        // let suffix = PrefixInteger(1, digit);
-        // let codePrefix = $('#codePrefix').val();
-        // let preview = codePrefix + suffix;
-        // $('#preview').html(preview);
-
-    })
 </script>
 </body>
 </html>

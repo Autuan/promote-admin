@@ -34,28 +34,10 @@
                                 <input type="text" class="time-input" id="queryTimeEnd" placeholder="结束时间"
                                        name="queryTimeEnd"/>
                             </li>
-                            <!--<li class="select-time">-->
-                                <!--<p>审核日期：</p>-->
-                                <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginVerifyDate]"/>-->
-                                <!--<span>-</span>-->
-                                <!--<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endVerifyDate]"/>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<p>手机号：</p>-->
-                                <!--<input type="text" name="cMobile"/>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<p>用户名：</p>-->
-                                <!--<input type="text" name="cName"/>-->
-                            <!--</li>-->
                             <li>
                                 <p>CODE：</p>
                                 <input type="text" name="channelCode"/>
                             </li>
-<!--                            <li>-->
-<!--                                <p>custom_flag  0-否 1-是：</p>-->
-<!--                                <input type="text" name="customFlag"/>-->
-<!--                            </li>-->
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -66,18 +48,9 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-<!--                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="promote:dataBank:add">-->
-<!--                    <i class="fa fa-plus"></i> 添加-->
-<!--                </a>-->
-<!--                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="promote:dataBank:edit">-->
-<!--                    <i class="fa fa-edit"></i> 修改-->
-<!--                </a>-->
                 <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:dataBank:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
-<!--                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:dataBank:export">-->
-<!--                    <i class="fa fa-download"></i> 导出-->
-<!--                 </a>-->
                 <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="promote:dataBank:edit">
                     <i class="fa fa-upload"></i> 导入
                 </a>
@@ -100,7 +73,6 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                // importUrl: prefix + "/custom/importData",
                 importUrl: prefix + "/custom/importExcel",
                 importTemplateUrl: prefix + "/custom/importTemplate",
                 modalName: "数据导入-开卡订单",
@@ -193,7 +165,6 @@
         <div class="col-xs-offset-1">
             <input type="file" id="file" name="file"/>
             <div class="mt10 pt5">
-<!--                <input type="checkbox" id="updateSupport" name="updateSupport" title="如果登录账户已经存在，更新这条数据。"> 是否更新已经存在的用户数据-->
                 &nbsp;	<a onclick="$.table.importTemplate()" class="btn btn-default btn-xs"><i class="fa fa-file-excel-o"></i> 下载模板</a>
             </div>
             <font color="red" class="pull-left mt10">

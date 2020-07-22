@@ -65,7 +65,6 @@
 
         <div>
             <div class="form-group">
-                <!--                <a class="btn btn-info col-sm-8">生成测试链接</a>-->
                 <label class="col-sm-3 control-label">生成测试链接：</label>
                 <div class="col-sm-8">
                     <a class="btn btn-info" href="javascript:void(0);" id="testParamUrlBtn">点击生成</a>
@@ -74,7 +73,6 @@
         </div>
         <div>
             <div class="form-group">
-                <!--                <a class="btn btn-info col-sm-8">生成测试链接</a>-->
                 <label class="col-sm-3 control-label"></label>
                 <div class="col-sm-8">
                                         <div  class="col-sm-6" id="testParamUrl"></div>
@@ -128,22 +126,14 @@
         let param = {
             list :  getParamList(),
         }
-        // console.info(param)
         Base.Network.post({
             url:ctx+'promote/task/custom/setTaskParam',
             data:param,
             contentType:'application/json',
             successParse:function (data) {
-                // console.info(data)
                 $.modal.close();
                 parent.$.modal.msgSuccess('操作成功');
                 parent.$.table.refresh();
-                // let str = '<option value="">---请选择文章---</option>';
-                // for (let i=0;i<data.length;i++) {
-                //     str += `<option value="${data[i].id}">${data[i].title}</option>`
-                // }
-                // $('#articleSelect').empty();
-                // $('#articleSelect').append($(str));
             }
         })
     }

@@ -31,12 +31,10 @@
                 <label class="col-sm-3 control-label">首页展示方式</label>
                 <div class="col-sm-8">
                     <select name="type" class="form-control m-b">
-<!--                        <option value="">所有</option>-->
                         <option value="0">不展示</option>
                         <option value="1">首页轮播</option>
                         <option value="2">首页推荐</option>
                     </select>
-<!--                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>-->
                 </div>
             </div>
             <div class="form-group">
@@ -113,12 +111,8 @@
                 ],
             }).on("filebatchselected", function(event, files) {
                 // 选择文件后立即触发上传方法
-                // console.log(files)
-                // if(files)
                 // $("#fileinput-demo-1").fileinput("upload");
             }).on("fileuploaded", function(event, data, previewId, index) {
-                // console.info('fileupload')
-                // console.info(data.response.url)
                 $('#image').val(data.response.url);
             });
         });

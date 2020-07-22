@@ -14,42 +14,10 @@
                                 <p>任务名称：</p>
                                 <input type="text" name="name"/>
                             </li>
-<!--                            <li>-->
-<!--                                <p>任务链接前缀：</p>-->
-<!--                                <input type="text" name="prefix"/>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <p>外键:参数表：</p>-->
-<!--                                <input type="text" name="paramId"/>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <p>奖励额：</p>-->
-<!--                                <input type="text" name="reward"/>-->
-<!--                            </li>-->
-<!--                            <li class="select-time">-->
-<!--                                <p>奖励开始时间：</p>-->
-<!--                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginRewardBeginTime]"/>-->
-<!--                                <span>-</span>-->
-<!--                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endRewardBeginTime]"/>-->
-<!--                            </li>-->
-<!--                            <li class="select-time">-->
-<!--                                <p>奖励结束时间：</p>-->
-<!--                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginRewardStopTime]"/>-->
-<!--                                <span>-</span>-->
-<!--                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endRewardStopTime]"/>-->
-<!--                            </li>-->
                             <li>
                                 <p>标签：</p>
                                 <input type="text" name="tags"/>
                             </li>
-<!--                            <li>-->
-<!--                                <p>文章ID(推广攻略)：</p>-->
-<!--                                <input type="text" name="articleId"/>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <p>优先级：</p>-->
-<!--                                <input type="text" name="priority"/>-->
-<!--                            </li>-->
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -66,12 +34,6 @@
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="promote:task:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
-                <!--<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:task:remove">-->
-                    <!--<i class="fa fa-remove"></i> 删除-->
-                <!--</a>-->
-<!--                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:task:export">-->
-<!--                    <i class="fa fa-download"></i> 导出-->
-<!--                 </a>-->
                 <a class="btn btn-warning" onclick="setParam()" shiro:hasPermission="promote:task:edit">
                     <i class="fa"></i> 配置参数
                 </a>
@@ -91,8 +53,6 @@
         var prefix = ctx + "promote/task";
 
         function setCode(id){
-            console.info('set code')
-            console.info(id)
             $.modal.open("配置code" + $.table._option.modalName, ctx+'promote/task/custom/code/'+id);
         }
         function setParam() {
@@ -101,8 +61,6 @@
                 $.modal.alertWarning("请选择一条记录");
                 return;
             }
-            console.info(rows[0])
-            // return;
             $.modal.open("配置参数" + $.table._option.modalName, ctx+'promote/task/custom/param/'+rows[0]);
         };
 
@@ -112,8 +70,6 @@
                 $.modal.alertWarning("请选择一条记录");
                 return;
             }
-            console.info(rows[0])
-            // return;
             $.modal.open("任务领取" + $.table._option.modalName, ctx+'promote/task/custom/receiveTask/'+rows[0]);
         };
         $(function() {
@@ -145,11 +101,6 @@
                         title : '缩略图',
                         formatter: function(value, row, index) {
                             return $.table.imageView(value);
-                            // if(value) {
-                            //     return `<img src="${value}" style="height: 100px;"></img>`;
-                            // } else {
-                            //     return '未上传图片';
-                            // }
                         }
                     },
                     {
@@ -162,10 +113,6 @@
                     title : '任务链接前缀',
                     width:400,
                 },
-                // {
-                //     field : 'paramId',
-                //     title : '外键:参数表'
-                // },
                 {
                     field : 'reward',
                     title : '奖励额',
@@ -179,15 +126,6 @@
                         }
                     }
                 },
-                // {
-                //     field : 'rewardBeginTime',
-                //     title : '奖励开始时间'
-                // },
-                // {
-                //     field : 'rewardStopTime',
-                //     title : '奖励结束时间'
-                // },
-
                 {
                     field : 'articleTitle',
                     title : '推广攻略文章',
@@ -205,7 +143,6 @@
                         var actions = [];
                         actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="setCode(\'' + row.id + '\')"><i class="fa fa-edit"></i>CODE</a> ');
-                        // actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
                 }]
@@ -219,8 +156,6 @@
                     $.table.init(options);
                 }
             })
-
-
         });
     </script>
 </body>

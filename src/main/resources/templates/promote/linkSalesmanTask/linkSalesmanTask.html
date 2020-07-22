@@ -12,32 +12,13 @@
                     <ul>
                         <li>
                             <p>业务员：</p>
-                            <!--<div class="col-sm-4">-->
-                            <!--<div class="input-group">-->
-                            <!--<input name="salesmanId2" class="form-control" type="hidden" id="salesmanId">-->
-
-                            <!--<input type="text" name="salesmanId" class="form-control" id="bsSuggestSalesman">-->
-                            <!--<div class="input-group-btn">-->
-                                <!--<button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">-->
-                                <!--<span class="caret"></span>-->
-                                <!--</button>-->
-                                <!--<ul class="dropdown-menu dropdown-menu-right" role="menu">-->
-                                <!--</ul>-->
-                            <!--</div>-->
-
                             <div class="input-group">
                                 <input type="text" class="form-control" name="salesmanId" id="bsSuggestSalesman">
                                 <div class="input-group-btn">
-                                    <!--<button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">-->
-                                        <!--<span class="caret"></span>-->
-                                    <!--</button>-->
                                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                     </ul>
                                 </div>
                             </div>
-                            <!-- /btn-group -->
-                            <!--</div>-->
-                            <!--</div>-->
                         </li>
 
                         <li>
@@ -59,32 +40,6 @@
                             <p>CODE：</p>
                             <input type="text" name="code"/>
                         </li>
-                        <!--<li>-->
-                            <!--<p>业务员：</p>-->
-                            <!--<input type="text" name="code" id="bsSuggestSalesman2"/>-->
-                        <!--</li>-->
-
-
-                        <!--<li>-->
-                        <!--<p>专属链接：</p>-->
-                        <!--<input type="text" name="link"/>-->
-                        <!--</li>-->
-                        <!--<li>-->
-                        <!--<p>奖励额：</p>-->
-                        <!--<input type="text" name="reward"/>-->
-                        <!--</li>-->
-                        <!--<li class="select-time">-->
-                        <!--<p>奖励开始时间：</p>-->
-                        <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginRewardBeginTime]"/>-->
-                        <!--<span>-</span>-->
-                        <!--<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endRewardBeginTime]"/>-->
-                        <!--</li>-->
-                        <!--<li class="select-time">-->
-                        <!--<p>奖励结束时间：</p>-->
-                        <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginRewardStopTime]"/>-->
-                        <!--<span>-</span>-->
-                        <!--<input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endRewardStopTime]"/>-->
-                        <!--</li>-->
                         <li>
                             <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
                                     class="fa fa-search"></i>&nbsp;搜索</a>
@@ -97,31 +52,13 @@
         </div>
 
         <div class="btn-group-sm" id="toolbar" role="group">
-            <!--<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="promote:linkSalesmanTask:add">-->
-                <!--<i class="fa fa-plus"></i> 添加-->
-            <!--</a>-->
             <a class="btn btn-primary single disabled" onclick="assignCode()" shiro:hasPermission="promote:linkSalesmanTask:edit">
             <i class="fa fa-edit"></i> 审核通过并分配CODE
             </a>
-            <!--<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:linkSalesmanTask:remove">-->
-            <!--<i class="fa fa-remove"></i> 删除-->
-            <!--</a>-->
-            <!--                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:linkSalesmanTask:export">-->
-            <!--                    <i class="fa fa-download"></i> 导出-->
-            <!--                 </a>-->
-            <!--                <div style="margin-left: 20px;"></div>-->
-            <!--<a class="btn btn-info multiple disabled" onclick="verifyPass()"-->
-               <!--shiro:hasPermission="promote:linkSalesmanTask:remove">-->
-                <!--<i class="fa "></i> 审核通过-->
-            <!--</a>-->
             <a class="btn btn-warning multiple disabled" onclick="verifyFail()"
                shiro:hasPermission="promote:linkSalesmanTask:remove">
                 <i class="fa "></i> 审核拒绝并回收CODE
             </a>
-            <!--<a class="btn btn-warning multiple disabled" onclick="verifyFail()"-->
-               <!--shiro:hasPermission="promote:linkSalesmanTask:remove">-->
-                <!--<i class="fa "></i> CODE回收-->
-            <!--</a>-->
         </div>
 
         <div class="col-sm-12 select-table table-striped">
@@ -146,9 +83,6 @@
             return;
         }
         let url = ctx +"promote/linkSalesmanTask/custom/assign/code/"+row.id;
-        // let url = $.table._option.updateUrl.replace("{id}", row.id);
-        console.info(url)
-        // return;;
         $.modal.open("修改" + $.table._option.modalName,url);
     };
 
@@ -279,14 +213,6 @@
                         }
                     }
                 },
-                // {
-                //     field : 'link',
-                //     title : '专属链接'
-                // },
-                // {
-                //     field : 'reward',
-                //     title : '奖励额'
-                // },
                 {
                     field : 'createTime',
                     title : '创建时间',
@@ -294,14 +220,6 @@
                         return Bee.StringUtils.isBlank(value) ? '-' :  value.replace("T"," ");
                     }
                 },
-                // {
-                //     field : 'rewardBeginTime',
-                //     title : '奖励开始时间'
-                // },
-                // {
-                //     field : 'rewardStopTime',
-                //     title : '奖励结束时间'
-                // },
                 {
                     title: '操作',
                     align: 'center',
@@ -320,12 +238,9 @@
 
         Base.Network.post({
             url: ctx + 'promote/linkSalesmanTask/custom/list',
-            // data:param,
             successParse: function (data) {
                 taskList = data.taskList;
                 salesmanList = data.salesmanList;
-
-                console.info(salesmanList)
 
                 $.table.init(options);
 
@@ -338,20 +253,13 @@
 
 
                 $("input#bsSuggestSalesman").bsSuggest({
-                    // url: "/rest/sys/getuserlist?keyword="
                     data:{
                         value:salesmanList,
                     },
                     idField:'id',
                     keyField:'id',
-                    // allowNoKeyword:true,
-                    // getDataMethod:data,
                     effectiveFields:['id','name'],
-                    // emptyTip:'输入用户名搜索'
                 }).on('onSetSelectValue', function (e, selectedData, selectedRawData) {
-                    // console.log('onSetSelectValue: ');
-                    // console.info(selectedData)
-                    // $('#salesmanId').val(selectedData.id)
                 });
             }
 
