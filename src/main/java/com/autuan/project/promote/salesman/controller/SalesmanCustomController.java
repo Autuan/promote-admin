@@ -9,6 +9,7 @@ import com.autuan.framework.web.page.TableDataInfo;
 import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.dataBank.domain.DataBank;
 import com.autuan.project.promote.salesman.domain.Salesman;
+import com.autuan.project.promote.salesman.domain.SalesmanQueryReq;
 import com.autuan.project.promote.salesman.domain.TabSalesman;
 import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
 import com.autuan.project.promote.salesman.service.ISalesmanService;
@@ -46,6 +47,20 @@ public class SalesmanCustomController extends BaseController {
         TabSalesman tabSalesman = salesmanCustomService.selectByMobile(mobile);
         return ReturnResult.ok(tabSalesman);
     }
+
+    /**
+     * 查询业务员列表
+     */
+    @RequiresPermissions("promote:salesman:list")
+    @PostMapping("/list")
+    @ResponseBody
+    public TableDataInfo list(SalesmanQueryReq salesman) {
+        startPage();
+        List<TabSalesman> list = salesmanCustomService.list(salesman);
+        return getDataTable(list);
+    }
+
+
 
     @RequiresPermissions("promote:salesman:edit")
     @PostMapping("/resetPwd")

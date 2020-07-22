@@ -1,3 +1,6 @@
+<!--
+ * todo 代码优化
+-->
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
@@ -37,6 +40,14 @@
                         <li>
                             <p>所属小组：</p>
                             <select name="groupId" class=" " id="groupId"></select>
+                        </li>
+                        <li class="select-time">
+                            <p>申请时间：</p>
+                            <input type="text" class="time-input" id="queryTimeStart" placeholder="开始时间"
+                                   name="queryApplyTimeStart"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" id="queryTimeEnd" placeholder="结束时间"
+                                   name="queryApplyTimeEnd"/>
                         </li>
                         <!--<li>-->
                             <!--<p>学历：</p>-->
@@ -120,7 +131,7 @@
 
 
         var options = {
-            url: prefix + "/list",
+            url: prefix + "/custom/list",
             createUrl: prefix + "/add",
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",

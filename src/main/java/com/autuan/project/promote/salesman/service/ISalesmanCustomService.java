@@ -5,10 +5,7 @@ import com.autuan.project.front.entity.HistoryRewardReq;
 import com.autuan.project.front.entity.HistoryRewardRes;
 import com.autuan.project.front.entity.RewardCount;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
-import com.autuan.project.promote.salesman.domain.CalcuRewardRes;
-import com.autuan.project.promote.salesman.domain.RankingRes;
-import com.autuan.project.promote.salesman.domain.Salesman;
-import com.autuan.project.promote.salesman.domain.TabSalesman;
+import com.autuan.project.promote.salesman.domain.*;
 
 import java.util.List;
 
@@ -132,4 +129,15 @@ public interface ISalesmanCustomService {
     List<RankingRes> ranking();
 
     String importData(List<Salesman> list, boolean updateSupport);
+
+    /***
+     * 列表查询
+     * @param salesman 
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.util.List<com.autuan.project.promote.salesman.domain.TabSalesman>
+     * @since: 20:08 2020/7/22
+     */
+    List<TabSalesman> list(SalesmanQueryReq salesman);
 }

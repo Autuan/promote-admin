@@ -1,6 +1,7 @@
 package com.autuan.project.promote.salesman.controller;
 
 import java.util.List;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,13 @@ import com.autuan.framework.web.page.TableDataInfo;
 
 /**
  * 业务员Controller
- * 
+ *
  * @author autuan
  * @date 2020-06-29
  */
 @Controller
 @RequestMapping("/promote/salesman")
-public class SalesmanController extends BaseController
-{
+public class SalesmanController extends BaseController {
     private String prefix = "promote/salesman";
 
     @Autowired
@@ -36,8 +36,7 @@ public class SalesmanController extends BaseController
 
     @RequiresPermissions("promote:salesman:view")
     @GetMapping()
-    public String salesman()
-    {
+    public String salesman() {
         return prefix + "/salesman";
     }
 
@@ -47,8 +46,7 @@ public class SalesmanController extends BaseController
     @RequiresPermissions("promote:salesman:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(Salesman salesman)
-    {
+    public TableDataInfo list(Salesman salesman) {
         startPage();
         List<Salesman> list = salesmanService.selectSalesmanList(salesman);
         return getDataTable(list);
@@ -60,8 +58,7 @@ public class SalesmanController extends BaseController
     @RequiresPermissions("promote:salesman:export")
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(Salesman salesman)
-    {
+    public AjaxResult export(Salesman salesman) {
         List<Salesman> list = salesmanService.selectSalesmanList(salesman);
         ExcelUtil<Salesman> util = new ExcelUtil<Salesman>(Salesman.class);
         return util.exportExcel(list, "salesman");
@@ -71,8 +68,7 @@ public class SalesmanController extends BaseController
      * 新增业务员
      */
     @GetMapping("/add")
-    public String add()
-    {
+    public String add() {
         return prefix + "/add";
     }
 
@@ -83,8 +79,7 @@ public class SalesmanController extends BaseController
     @Log(title = "业务员", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(Salesman salesman)
-    {
+    public AjaxResult addSave(Salesman salesman) {
         return toAjax(salesmanService.insertSalesman(salesman));
     }
 
@@ -92,8 +87,7 @@ public class SalesmanController extends BaseController
      * 修改业务员
      */
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") String id, ModelMap mmap)
-    {
+    public String edit(@PathVariable("id") String id, ModelMap mmap) {
         Salesman salesman = salesmanService.selectSalesmanById(id);
         mmap.put("salesman", salesman);
         return prefix + "/edit";
@@ -106,8 +100,7 @@ public class SalesmanController extends BaseController
     @Log(title = "业务员", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(Salesman salesman)
-    {
+    public AjaxResult editSave(Salesman salesman) {
         return toAjax(salesmanService.updateSalesman(salesman));
     }
 
@@ -116,10 +109,9 @@ public class SalesmanController extends BaseController
      */
     @RequiresPermissions("promote:salesman:remove")
     @Log(title = "业务员", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) {
         return toAjax(salesmanService.deleteSalesmanByIds(ids));
     }
 }

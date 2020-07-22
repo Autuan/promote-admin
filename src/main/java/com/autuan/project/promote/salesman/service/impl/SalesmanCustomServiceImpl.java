@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -537,5 +538,33 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    @Override
+    public List<TabSalesman> list(SalesmanQueryReq salesman) {
+        TabSalesmanExample example = new TabSalesmanExample();
+        TabSalesmanExample.Criteria criteria = example.createCriteria();
+        if(StrUtil.isNotBlank(salesman.getBrokerageBankNo())) {
+            criteria.andBrokerageBankNoLike("%" + salesman.getBrokerageBankNo() + "%");
+        }
+        if(StrUtil.isNotBlank(salesman.getName())) {
+            criteria.andNameLike("%" + salesman.getName() + "%");
+        }
+        if(StrUtil.isNotBlank(salesman.getMobile())) {
+            criteria.andMobileLike("%" + salesman.getMobile() + "%");
+        }
+        if(StrUtil.isNotBlank(salesman.getIdentifyNumber())) {
+            criteria.andIdentifyNumberLike("%" + salesman.getIdentifyNumber() + "%");
+        }
+        if(StrUtil.isNotBlank(salesman.getGroupId())) {
+            criteria.andGroupIdEqualTo(salesman.getGroupId());
+        }
+        if(null != salesman.getQueryApplyTimeStart()) {
+            criteria.andApplyTimeGreaterThan(LocalDateTime.of(salesman.getQueryApplyTimeStart(), LocalTime.MIN));
+        }
+        if(null != salesman.getQueryApplyTimeEnd()) {
+            criteria.andApplyTimeLessThan(LocalDateTime.of(salesman.getQueryApplyTimeEnd(), LocalTime.MAX));
+        }
+        return tabSalesmanMapper.selectByExample(example);
     }
 }

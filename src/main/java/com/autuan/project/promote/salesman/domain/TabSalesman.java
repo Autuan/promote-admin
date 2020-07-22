@@ -3,10 +3,13 @@ package com.autuan.project.promote.salesman.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @Builder
@@ -37,6 +40,7 @@ public class TabSalesman {
 
     private String identifyNumber;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime applyTime;
 
     private String level;
