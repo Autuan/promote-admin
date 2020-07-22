@@ -90,6 +90,7 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
                 .andTaskIdEqualTo(salesmanTask.getTaskId())
                 .andStatusEqualTo(TaskEnum.STATUS_NOT_APPLY.val())
                 .andTypeIn(inList);
+        example.setOrderByClause("code asc");
         return tabSalesmanTaskMapper.selectByExample(example);
     }
 
