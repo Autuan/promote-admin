@@ -25,11 +25,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectArticleList" parameterType="Article" resultMap="ArticleResult">
         <include refid="selectArticleVo"/>
         <where>  
-            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="title != null  and title != ''">  and title like concat('%', #{title}, '%')</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="courseImg != null  and courseImg != ''"> and course_img = #{courseImg}</if>
             <if test="image != null  and image != ''"> and image = #{image}</if>
-            <if test="tags != null  and tags != ''"> and tags = #{tags}</if>
+            <if test="tags != null  and tags != ''">  and tags like concat('%', #{tags}, '%')</if>
             <if test="type != null "> and type = #{type}</if>
         </where>
     </select>
