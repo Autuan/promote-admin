@@ -11,17 +11,17 @@
                 <div class="select-list">
                     <ul>
                         <li class="select-time">
-                            <p>白条开通时间：</p>
+                            <p>开通时间：</p>
                             <input type="text" class="time-input" id="queryTimeStart" placeholder="开始时间"
                                    name="queryTimeStart"/>
                             <span>-</span>
                             <input type="text" class="time-input" id="queryTimeEnd" placeholder="结束时间"
                                    name="queryTimeEnd"/>
                         </li>
-                        <li>
-                            <p>任务链接内部ID：</p>
-                            <input type="text" name="taskInnerId"/>
-                        </li>
+                        <!--<li>-->
+                            <!--<p>任务链接内部ID：</p>-->
+                            <!--<input type="text" name="taskInnerId"/>-->
+                        <!--</li>-->
                         <!--                            <li>-->
                         <!--                                <p>任务链接：</p>-->
                         <!--                                <input type="text" name="taskUrl"/>-->
@@ -90,7 +90,7 @@
                         <!--</li>-->
                         <li>
                             <p>白条开通方式：</p>
-                            <select name="openJdCreditType" th:with="type=${@dict.getType('')}">
+                            <select name="openJdCreditType" >
                                 <option value="">所有</option>
                                 <option value="0">普通开白条</option>
                                 <option value="1">小金库白条</option>

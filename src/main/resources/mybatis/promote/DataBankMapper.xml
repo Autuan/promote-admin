@@ -44,8 +44,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="salesmanId != null  and salesmanId != ''"> and salesman_id = #{salesmanId}</if>
             <if test="reward != null "> and reward = #{reward}</if>
 
-            <if test="queryTimeStart != null and queryTimeStart != ''"> and verify_date &gt;= concat(#{queryTimeStart}, '00:00:00')</if>
-            <if test="queryTimeEnd != null and queryTimeEnd != ''"> and verify_date &lt;= concat(#{queryTimeEnd}, '23:59:59')</if>
+            <if test="queryTimeStart != null and queryTimeStart != ''"> and verify_date &gt;= concat(#{queryTimeStart}, ' 00:00:00')</if>
+            <if test="queryTimeEnd != null and queryTimeEnd != ''"> and verify_date &lt;= concat(#{queryTimeEnd}, ' 23:59:59')</if>
         </where>
         order by apply_date desc
     </select>

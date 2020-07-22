@@ -229,6 +229,7 @@
             successParse: function (data) {
                 groupArray = data;
                 let str = '<option value="">---请选择小组---</option>';
+                str += `<option value="-1">未加入小组</option>`;
                 for (let i=0;i<data.length;i++) {
                     str += `<option value="${data[i].id}">${data[i].name}</option>`
                 }

@@ -41,10 +41,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="identifyNumber != null  and identifyNumber != ''"> and identify_number = #{identifyNumber}</if>
             <if test="applyTime != null "> and apply_time = #{applyTime}</if>
             <if test="level != null  and level != ''"> and level = #{level}</if>
-            <if test="groupId != null  and groupId != ''"> and group_id = #{groupId}</if>
+            <if test="groupId != null  and groupId != '' and groupId != '-1'" > and group_id = #{groupId}</if>
             <if test="education != null  and education != ''"> and education = #{education}</if>
             <if test="gender != null "> and gender = #{gender}</if>
             <if test="headImg != null  and headImg != ''"> and head_img = #{headImg}</if>
+            <if test="groupId != null  and groupId == '-1'"> and group_id is null</if>
         </where>
     </select>
     
