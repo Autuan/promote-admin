@@ -45,4 +45,16 @@ public interface ISalesmanTaskCustomService {
      * @since: 19:55 2020/7/5
      */
     void recoveryCode(String ids);
+
+    /***
+     * code 管理使用
+     * todo 和 listByTaskId 合并
+     * @param salesmanTask
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : java.util.List<com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTask>
+     * @since: 20:36 2020/7/23
+     */
+    List<TabSalesmanTask> listTaskCode(TabSalesmanTask salesmanTask);
 }

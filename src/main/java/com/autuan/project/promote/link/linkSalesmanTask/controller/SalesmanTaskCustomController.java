@@ -96,6 +96,21 @@ public class SalesmanTaskCustomController  extends BaseController {
     }
 
     /**
+     * 查询业务员-任务中间列表
+     */
+    @RequiresPermissions("promote:linkSalesmanTask:list")
+    @PostMapping("/listTaskCode/{taskId}")
+    @ResponseBody
+    public TableDataInfo listTaskCode(@PathVariable String taskId) {
+        TabSalesmanTask salesmanTask = TabSalesmanTask.builder()
+                .taskId(taskId)
+                .build();
+        startPage();
+        List<TabSalesmanTask> list = salesmanTaskCustomServicce.listTaskCode(salesmanTask);
+        return getDataTable(list);
+    }
+
+    /**
      * 修改业务员-任务中间
      */
     @GetMapping("/assign/code/{id}")

@@ -202,5 +202,16 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
 
     }
 
+    @Override
+    public List<TabSalesmanTask> listTaskCode(TabSalesmanTask salesmanTask) {
+        TabSalesmanTaskExample example = new TabSalesmanTaskExample();
+        TabSalesmanTaskExample.Criteria criteria = example.createCriteria();
+        criteria.andTaskIdEqualTo(salesmanTask.getTaskId());
+        criteria.andCodeIsNotNull();
+
+        List<TabSalesmanTask> tabSalesmanTasks = tabSalesmanTaskMapper.selectByExample(example);
+        return tabSalesmanTasks;
+    }
+
 
 }
