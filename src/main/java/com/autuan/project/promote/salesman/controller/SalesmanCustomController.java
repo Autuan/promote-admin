@@ -28,6 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -48,6 +52,12 @@ public class SalesmanCustomController extends BaseController {
 
     private static String[] rowsName;
 
+
+    @GetMapping("/rewardPage")
+    public String rewardPage(String ids,ModelMap mmap) {
+        mmap.put("ids", ids);
+        return prefix + "/rewardPage";
+    }
     /**
      * 查询业务员
      */
@@ -109,11 +119,20 @@ public class SalesmanCustomController extends BaseController {
     public void dataDown(
 //			@RequestBody DataDownReq req,
             String ids,
+            String startTime,
+            String endTime,
             HttpServletResponse response)  {
         try{
-            DataDownReq req = new DataDownReq();
+
             List<String> idList = Arrays.asList(ids.split(","));
-            req.setIds(idList);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate start = LocalDate.parse(startTime, formatter);
+            LocalDate end = LocalDate.parse(endTime, formatter);
+            DataDownReq req = DataDownReq.builder()
+                    .ids(idList)
+                    .startTime(LocalDateTime.of(start, LocalTime.MIN))
+                    .endTime(LocalDateTime.of(end,LocalTime.MAX))
+                    .build();
 //        MessageBean msg = new MessageBean();
 //        Map<String,Object> params = new HashMap<String, Object>();
 //        List<Object[]>  dataList = new ArrayList<Object[]>();
@@ -139,7 +158,8 @@ public class SalesmanCustomController extends BaseController {
 
             response.setContentType("application/vnd.ms-excel;charset=utf-8");
 //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
-            response.setHeader("Content-Disposition","attachment;filename=test.xlsx");
+            String fileName = "account_"+startTime+"_to_"+endTime+".xlsx";
+            response.setHeader("Content-Disposition","attachment;filename="+fileName);
             writer.flush(out);
             writer.close();
             IoUtil.close(out);
@@ -149,53 +169,9 @@ public class SalesmanCustomController extends BaseController {
 //        return AjaxResult.success();
     }
 
-    /**
-     * 设置excel标题及表头
-     * @param objs
-     * @param dataList
-     * @param params
-     * @param cityId
-     * @param year
-     */
-    public void createExcel(Object[] objs,List<Object[]>  dataList,Map<String,Object> params,String cityId,String year){
-            title =   "test市"+ year +"年成绩清单";
-            params.put("cityName", "test");
-        rowsName = new String[]{"序号","项目","分项","考核内容","考核内容得分","评分人","分项得分","大项得分"};
-//        List<CityAssess> cityScoreList = cityAssessService.getCityScoreList(cityId,year);
-//        for(int i = 0 ; i < cityScoreList.size(); i ++){
-//            CityAssess assess = cityScoreList.get(i);
-//            objs = new Object[rowsName.length];
-//            objs[0] = i;
-//            objs[1] = assess.getFirstItemName();
-//            objs[2] = assess.getSecondItemName();
-//            objs[3] = assess.getThirdItemName();
-//            if(null == String.valueOf(assess.getScore())){
-//                objs[4] = 0 + "/" + assess.getTotal();
-//            }else{
-//                objs[4] = assess.getScore() + "/" + assess.getTotal();
-//            }
-//            objs[5] = assess.getMarkerName();
-//            if(null == String.valueOf(assess.getSecondItemScore())){
-//                objs[6] = 0;
-//            }else {
-//                objs[6] = assess.getSecondItemScore();
-//            }
-//            if(null == String.valueOf(assess.getFirstItemScore())){
-//                objs[7] = 0;
-//            }else {
-//                objs[7] = assess.getFirstItemScore();
-//            }
-
-            dataList.add(objs);
-//        }
-
-        //年度总分
-//        String yearScore = null;
-//        YearCityAssess yearAssessInfo = cityAssessService.getYearAssessInfo(cityId,year);
-//        if(null != yearAssessInfo){
-//            yearScore = String.valueOf(yearAssessInfo.getScore());
-//        }
-        params.put("yearScore", "80");
-        params.put("year", year);
+    @RequestMapping(value="/querySalesmanReward")
+@ResponseBody
+    public ReturnResult querySalesmanReward(@RequestBody DataDownReq req) {
+        return ReturnResult.ok(salesmanCustomService.querySalesmanReward(req));
     }
 }

@@ -150,4 +150,6 @@ public interface ISalesmanCustomService {
      * @since : 2020/7/24 16:16  
      */
     Object dataDown(DataDownReq req);
+
+    Object querySalesmanReward(DataDownReq req);
 }

@@ -40,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -582,9 +583,11 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
      */
     @Override
     public Object dataDown(DataDownReq req) {
+        LocalDateTime startTime = Optional.ofNullable(req.getStartTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
+        LocalDateTime endTime = Optional.ofNullable(req.getEndTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
+
         ExcelWriter writer = ExcelUtil.getWriter(true);
         List<List<String>> rows = new ArrayList<>();
-//        return null;
         // 查出业务员
         TabSalesmanExample salesmanExample = new TabSalesmanExample();
         salesmanExample.createCriteria()
@@ -603,10 +606,6 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         taskExample.createCriteria()
                 .andIdIn(tabSalesmanTasks.stream().map(TabSalesmanTask::getTaskId).collect(Collectors.toList()));
         List<TabTask> taskList = taskMapper.selectByExample(taskExample);
-
-        List<TabTask> taskList2 = new ArrayList<>();
-//        taskList.add(TabTask.builder().id("1").name("任务1").build());
-//        taskList.add(TabTask.builder().id("2").name("任务2").build());
         // 生成表头
         List<String> row1 = new ArrayList<>();
         List<String> row2 = new ArrayList<>();
@@ -633,7 +632,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         for(TabSalesmanTask bean : tabSalesmanTasks) {
             dataBankExample.or()
                     .andTaskIdEqualTo(bean.getTaskId())
-                    .andSalesmanIdEqualTo(bean.getSalesmanId());
+                    .andSalesmanIdEqualTo(bean.getSalesmanId())
+                    .andVerifyDateBetween(startTime,endTime);
         }
         List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
 //        Map<String, TabDataBank> dataBankMap = dataBanks.stream()
@@ -645,7 +645,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         for(TabSalesmanTask bean : tabSalesmanTasks) {
             dataJdExample.or()
                     .andTaskIdEqualTo(bean.getTaskId())
-                    .andSalesmanIdEqualTo(bean.getSalesmanId());
+                    .andSalesmanIdEqualTo(bean.getSalesmanId())
+                    .andOpenJdCreditTimeBetween(startTime,endTime);
         }
         List<TabDataJd> dataJds = dataJdMapper.selectByExample(dataJdExample);
 //        Map<String, TabDataJd> dataJdMap = dataJds.stream()
@@ -707,5 +708,119 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 
         writer.write(rows, true);
         return writer;
+    }
+
+    @Override
+    public Object querySalesmanReward(DataDownReq req) {
+        LocalDateTime startTime = Optional.ofNullable(req.getStartTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
+        LocalDateTime endTime = Optional.ofNullable(req.getEndTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
+
+        List<List<String>> rows = new ArrayList<>();
+        // 查出业务员
+        TabSalesmanExample salesmanExample = new TabSalesmanExample();
+        salesmanExample.createCriteria()
+                .andIdIn(req.getIds());
+        List<TabSalesman> salesmen = tabSalesmanMapper.selectByExample(salesmanExample);
+        // 查出选中任务员的任务
+        TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
+        salesmanTaskExample.createCriteria()
+                .andSalesmanIdIn(req.getIds());
+        List<TabSalesmanTask> tabSalesmanTasks = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
+
+        TabTaskExample taskExample = new TabTaskExample();
+        taskExample.createCriteria()
+                .andIdIn(tabSalesmanTasks.stream().map(TabSalesmanTask::getTaskId).collect(Collectors.toList()));
+        List<TabTask> taskList = taskMapper.selectByExample(taskExample);
+
+
+        // 查出任务的奖励
+        // 银行卡
+        TabDataBankExample dataBankExample = new TabDataBankExample();
+        for(TabSalesmanTask bean : tabSalesmanTasks) {
+            dataBankExample.or()
+                    .andTaskIdEqualTo(bean.getTaskId())
+                    .andSalesmanIdEqualTo(bean.getSalesmanId())
+                    .andVerifyDateBetween(startTime,endTime);
+        }
+        List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
+        // 京东
+        TabDataJdExample dataJdExample = new TabDataJdExample();
+        for(TabSalesmanTask bean : tabSalesmanTasks) {
+            dataJdExample.or()
+                    .andTaskIdEqualTo(bean.getTaskId())
+                    .andSalesmanIdEqualTo(bean.getSalesmanId())
+                    .andOpenJdCreditTimeBetween(startTime,endTime);
+        }
+        List<TabDataJd> dataJds = dataJdMapper.selectByExample(dataJdExample);
+        // 以业务员划分
+//        List<String> usedSalesman = new ArrayList<>();
+        int rowNum = 1;
+        List<DataDownTr> trList = new ArrayList<>();
+        for(TabSalesman salesman : salesmen) {
+            String salesmanId = salesman.getId();
+//            List<String> row = new ArrayList<>();
+//            row.add(String.valueOf(rowNum++));
+//            row.add(salesman.getName());
+
+            BigDecimal allSum = BigDecimal.ZERO;
+            List<DataDownOneTask> dataTaskList = new ArrayList<>();
+            for(int i = 0;i<taskList.size();i++) {
+                TabTask task = taskList.get(i);
+                String taskId = task.getId();
+//                row.add(String.valueOf(i+1));
+//                String salesmanId = tabSalesmanTasks.stream()
+//                        .filter(item -> item.getTaskId().equals(task.getId()))
+//                        .filter(item -> usedSalesman.stream().noneMatch(obj -> obj.equals(item.getSalesmanId())))
+//                        .map(TabSalesmanTask::getSalesmanId)
+//                        .findFirst().orElse(null);
+//
+//                TabSalesman salesman = salesmanMap.get(salesmanId);
+//                dataJdMap.get(salesmanId+"-"+taskId)
+                // 数量  dataBanks
+                long countNumJd = dataJds.stream()
+                        .filter(item -> salesmanId.equals(item.getSalesmanId()))
+                        .filter(item -> taskId.equals(item.getTaskId()))
+                        .count();
+                long countNumBank = dataBanks.stream()
+                        .filter(item -> salesmanId.equals(item.getSalesmanId()))
+                        .filter(item -> taskId.equals(item.getTaskId()))
+                        .count();
+
+                // 佣金
+                BigDecimal sumJd = dataJds.stream()
+                        .filter(item -> salesmanId.equals(item.getSalesmanId()))
+                        .filter(item -> taskId.equals(item.getTaskId()))
+                        .map(TabDataJd::getReward)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal sumBank = dataBanks.stream()
+                        .filter(item -> salesmanId.equals(item.getSalesmanId()))
+                        .filter(item -> taskId.equals(item.getTaskId()))
+                        .map(TabDataBank::getReward)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                BigDecimal taskReward = sumJd.add(sumBank);
+//                row.add(String.valueOf(taskReward));
+                allSum = allSum.add(taskReward);
+                DataDownOneTask oneData = DataDownOneTask.builder()
+                        .num(String.valueOf(countNumJd+countNumBank))
+                        .reward(taskReward)
+                        .taskId(taskId)
+                        .build();
+                dataTaskList.add(oneData);
+            }
+//            row.add(String.valueOf(allSum));
+//            rows.add(row);
+            DataDownTr tr = DataDownTr.builder()
+.allSum(allSum)
+                    .list(dataTaskList)
+                    .userName(salesman.getName())
+                    .build();
+            trList.add(tr);
+        }
+        DataDownRes result = DataDownRes.builder()
+                .taskList(taskList)
+                .trList(trList)
+                .build();
+        return result;
     }
 }
