@@ -63,6 +63,9 @@
             <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="promote:salesman:export">
                 <i class="fa fa-upload"></i> 导入
             </a>
+            <a class="btn btn-info" onclick="dataDown()" shiro:hasPermission="promote:salesman:export">
+                <i class="fa fa-upload"></i> 导出业绩
+            </a>
         </div>
         <div class="col-sm-12 select-table table-striped">
             <table id="bootstrap-table"></table>
@@ -74,7 +77,15 @@
     var editFlag = [[${@permission.hasPermi('promote:salesman:edit')}]];
     var removeFlag = [[${@permission.hasPermi('promote:salesman:remove')}]];
     var prefix = ctx + "promote/salesman";
-
+    function dataDown() {
+        var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+        if (rows.length == 0) {
+            $.modal.alertWarning("请至少选择一条记录");
+            return;
+        }
+        console.info(rows.join())
+        window.location.href = ctx + "promote/salesman/custom/dataDown?ids="+rows.join();
+    }
     function resetPwd() {
         var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
         if (rows.length == 0) {

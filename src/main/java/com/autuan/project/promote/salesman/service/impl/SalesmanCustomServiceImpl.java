@@ -1,8 +1,11 @@
 package com.autuan.project.promote.salesman.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.autuan.common.exception.BusinessException;
 import com.autuan.common.exception.custom.CustomRespondException;
 import com.autuan.common.utils.Md5Utils;
@@ -44,6 +47,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 /**
  * @author : Autuan.Yu
@@ -69,7 +73,6 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     private SalesmanMapper salesmanMapper;
     @Autowired
     private IDataJdCustomService dataJdCustomService;
-
     /**
      * 登录方法(返回用户信息)
      *
@@ -566,5 +569,143 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
             criteria.andApplyTimeLessThan(LocalDateTime.of(salesman.getQueryApplyTimeEnd(), LocalTime.MAX));
         }
         return tabSalesmanMapper.selectByExample(example);
+    }
+
+    /**
+     * 获取用于下载的数据
+     *
+     * @param req
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Object
+     * @since : 2020/7/24 16:16
+     */
+    @Override
+    public Object dataDown(DataDownReq req) {
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+        List<List<String>> rows = new ArrayList<>();
+//        return null;
+        // 查出业务员
+        TabSalesmanExample salesmanExample = new TabSalesmanExample();
+        salesmanExample.createCriteria()
+                .andIdIn(req.getIds());
+        List<TabSalesman> salesmen = tabSalesmanMapper.selectByExample(salesmanExample);
+        Map<String,TabSalesman> salesmanMap =  salesmen.stream()
+                .collect(toMap(TabSalesman::getId,
+                        Function.identity()));
+        // 查出选中任务员的任务
+        TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
+        salesmanTaskExample.createCriteria()
+                .andSalesmanIdIn(req.getIds());
+        List<TabSalesmanTask> tabSalesmanTasks = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
+
+        TabTaskExample taskExample = new TabTaskExample();
+        taskExample.createCriteria()
+                .andIdIn(tabSalesmanTasks.stream().map(TabSalesmanTask::getTaskId).collect(Collectors.toList()));
+        List<TabTask> taskList = taskMapper.selectByExample(taskExample);
+
+        List<TabTask> taskList2 = new ArrayList<>();
+//        taskList.add(TabTask.builder().id("1").name("任务1").build());
+//        taskList.add(TabTask.builder().id("2").name("任务2").build());
+        // 生成表头
+        List<String> row1 = new ArrayList<>();
+        List<String> row2 = new ArrayList<>();
+        row1.add("");
+        row1.add("业务类型");
+        row2.add("");
+        row2.add("业务员姓名");
+        for(int i = 0;i<taskList.size();i++) {
+            TabTask task = taskList.get(i);
+            row1.add(task.getName());
+            row1.add("");
+            row2.add("数量");
+            row2.add("佣金");
+            int column = i *2+2 ;
+            writer.merge(0,0, column, column + 1, task.getName(),false);
+        }
+        row1.add("");
+        row2.add("总业绩");
+        rows.add(row1);
+        rows.add(row2);
+        // 查出任务的奖励
+        // 银行卡
+        TabDataBankExample dataBankExample = new TabDataBankExample();
+        for(TabSalesmanTask bean : tabSalesmanTasks) {
+            dataBankExample.or()
+                    .andTaskIdEqualTo(bean.getTaskId())
+                    .andSalesmanIdEqualTo(bean.getSalesmanId());
+        }
+        List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
+//        Map<String, TabDataBank> dataBankMap = dataBanks.stream()
+//                .collect(toMap(item -> item.getSalesmanId() + "-" + item.getTaskId(),
+//                        Function.identity(),
+//                        (existing, replacement) -> existing));
+        // 京东
+        TabDataJdExample dataJdExample = new TabDataJdExample();
+        for(TabSalesmanTask bean : tabSalesmanTasks) {
+            dataJdExample.or()
+                    .andTaskIdEqualTo(bean.getTaskId())
+                    .andSalesmanIdEqualTo(bean.getSalesmanId());
+        }
+        List<TabDataJd> dataJds = dataJdMapper.selectByExample(dataJdExample);
+//        Map<String, TabDataJd> dataJdMap = dataJds.stream()
+//                .collect(toMap(item -> item.getSalesmanId() + "-" + item.getTaskId(),
+//                        Function.identity(),
+//                        (existing, replacement) -> existing));
+        // 以业务员划分
+//        List<String> usedSalesman = new ArrayList<>();
+        int rowNum = 1;
+        for(TabSalesman salesman : salesmen) {
+            String salesmanId = salesman.getId();
+            List<String> row = new ArrayList<>();
+            row.add(String.valueOf(rowNum++));
+            row.add(salesman.getName());
+
+            BigDecimal allSum = BigDecimal.ZERO;
+            for(int i = 0;i<taskList.size();i++) {
+                TabTask task = taskList.get(i);
+                String taskId = task.getId();
+//                row.add(String.valueOf(i+1));
+//                String salesmanId = tabSalesmanTasks.stream()
+//                        .filter(item -> item.getTaskId().equals(task.getId()))
+//                        .filter(item -> usedSalesman.stream().noneMatch(obj -> obj.equals(item.getSalesmanId())))
+//                        .map(TabSalesmanTask::getSalesmanId)
+//                        .findFirst().orElse(null);
+//
+//                TabSalesman salesman = salesmanMap.get(salesmanId);
+//                dataJdMap.get(salesmanId+"-"+taskId)
+                // 数量  dataBanks
+                long countNumJd = dataJds.stream()
+                        .filter(item -> salesmanId.equals(item.getSalesmanId()))
+                        .filter(item -> taskId.equals(item.getTaskId()))
+                        .count();
+                long countNumBank = dataBanks.stream()
+                        .filter(item -> salesmanId.equals(item.getSalesmanId()))
+                        .filter(item -> taskId.equals(item.getTaskId()))
+                        .count();
+
+                // 佣金
+                BigDecimal sumJd = dataJds.stream()
+                        .filter(item -> salesmanId.equals(item.getSalesmanId()))
+                        .filter(item -> taskId.equals(item.getTaskId()))
+                        .map(TabDataJd::getReward)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal sumBank = dataBanks.stream()
+                        .filter(item -> salesmanId.equals(item.getSalesmanId()))
+                        .filter(item -> taskId.equals(item.getTaskId()))
+                        .map(TabDataBank::getReward)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                BigDecimal taskReward = sumJd.add(sumBank);
+                row.add(String.valueOf(countNumJd+countNumBank));
+                row.add(String.valueOf(taskReward));
+                allSum = allSum.add(taskReward);
+            }
+            row.add(String.valueOf(allSum));
+            rows.add(row);
+        }
+
+        writer.write(rows, true);
+        return writer;
     }
 }

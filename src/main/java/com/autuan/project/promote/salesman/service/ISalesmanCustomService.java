@@ -140,4 +140,14 @@ public interface ISalesmanCustomService {
      * @since: 20:08 2020/7/22
      */
     List<TabSalesman> list(SalesmanQueryReq salesman);
+
+    /**
+     * 获取用于下载的数据
+     * @param req 
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: java.lang.Object
+     * @since : 2020/7/24 16:16  
+     */
+    Object dataDown(DataDownReq req);
 }
