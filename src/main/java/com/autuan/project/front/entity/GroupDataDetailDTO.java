@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -25,6 +26,6 @@ public class GroupDataDetailDTO {
 
     private BigDecimal count;
     @JsonFormat(pattern = "yyyy-MM")
-    private LocalDateTime date;
+    private LocalDate date;
     private String id;
 }

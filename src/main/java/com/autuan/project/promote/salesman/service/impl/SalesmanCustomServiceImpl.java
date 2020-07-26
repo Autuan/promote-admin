@@ -200,7 +200,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 //        List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
 
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate queryMoon = Optional.ofNullable(req.getQueryMoon()).orElse(LocalDate.now());
 //        LocalDateTime startTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), 1, 0, 0, 0);
 //        LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getMonth().maxLength(), 23, 59, 59);
 
@@ -236,20 +236,20 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .collect(Collectors.toSet());
         Map<String, BigDecimal> rewardOption = dataJdCustomService.getRewardOption(taskIdSet);
         // 本月预估推广费
-        BigDecimal thisMoonReward = BigDecimal.ZERO;
+        BigDecimal queryMoonReward = BigDecimal.ZERO;
         // 累计推广费
         BigDecimal historyReward = BigDecimal.ZERO;
 
 
-        BigDecimal thisMoonBankCount = dataBanks.stream()
-                .filter(data -> data.getVerifyDate().getYear() == now.getYear())
-                .filter(data -> data.getVerifyDate().getMonthValue() == now.getMonthValue())
+        BigDecimal queryMoonBankCount = dataBanks.stream()
+                .filter(data -> data.getVerifyDate().getYear() == queryMoon.getYear())
+                .filter(data -> data.getVerifyDate().getMonthValue() == queryMoon.getMonthValue())
                 .map(TabDataBank::getReward)
                 .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
         BigDecimal historyRewardBankCount = dataBanks.stream()
                 .map(TabDataBank::getReward)
                 .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-        BigDecimal thisMoonJdCount = BigDecimal.ZERO;
+        BigDecimal queryMoonJdCount = BigDecimal.ZERO;
         BigDecimal historyRewardJdCount = BigDecimal.ZERO;
 
         for(TabDataJd data : dataJds){
@@ -263,17 +263,17 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 default:break;
             }
             historyRewardJdCount = historyRewardJdCount.add(reward);
-            boolean isThisMoon = data.getOpenJdCreditTime().getYear() == now.getYear()
-                    && data.getOpenJdCreditTime().getMonthValue() == now.getMonthValue();
+            boolean isThisMoon = data.getOpenJdCreditTime().getYear() == queryMoon.getYear()
+                    && data.getOpenJdCreditTime().getMonthValue() == queryMoon.getMonthValue();
             if(isThisMoon) {
-                thisMoonJdCount = thisMoonJdCount.add(reward);
+                queryMoonJdCount = queryMoonJdCount.add(reward);
             }
         }
         historyReward = historyRewardJdCount.add(historyRewardBankCount);
-        thisMoonReward = thisMoonBankCount.add(thisMoonJdCount);
+        queryMoonReward = queryMoonBankCount.add(queryMoonJdCount);
         CalcuRewardRes res = CalcuRewardRes.builder()
                 .historyReward(historyReward)
-                .thisMoonReward(thisMoonReward)
+                .queryMoonReward(queryMoonReward)
                 .build();
         return res;
     }
@@ -368,7 +368,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                     .salesmanId(salesman.getId())
                     .build();
             CalcuRewardRes calcuRewardRes = this.calcuReward(rewardReq);
-            BigDecimal thisMoonReward = calcuRewardRes.getThisMoonReward();
+            BigDecimal thisMoonReward = calcuRewardRes.getQueryMoonReward();
             RankingRes resBean = RankingRes.builder()
                     .name(salesman.getName())
                     .headImg(salesman.getHeadImg())

@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CalcuRewardRes {
     private BigDecimal historyReward;
-    private BigDecimal thisMoonReward;
+    private BigDecimal queryMoonReward;
 
     public static CalcuRewardRes zero(){
         return new CalcuRewardRes(BigDecimal.ZERO, BigDecimal.ZERO);

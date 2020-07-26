@@ -20,4 +20,7 @@ import lombok.NoArgsConstructor;
 public class GroupDataReq {
     private String groupId;
     private String querySalesmanId;
+    private String dateStart;
+    private String dateEnd;
+
 }

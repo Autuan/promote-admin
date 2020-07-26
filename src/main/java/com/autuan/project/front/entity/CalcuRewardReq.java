@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -20,5 +21,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CalcuRewardReq {
     private String salesmanId;
-    private LocalDateTime queryMoon;
+//    private LocalDateTime queryMoon;
+    private LocalDate queryMoon;
 }

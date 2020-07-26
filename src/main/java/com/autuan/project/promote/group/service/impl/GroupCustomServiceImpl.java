@@ -15,10 +15,14 @@ import com.autuan.project.promote.salesman.mapper.TabSalesmanMapper;
 import com.autuan.project.promote.salesman.service.ISalesmanCustomService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -156,6 +160,12 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
 
     @Override
     public List<GroupDataRes> groupData(GroupDataReq req) {
+        // 解析日期
+//        req.getDateStart();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dateStart = LocalDate.parse(req.getDateStart()+"-01", formatter);
+        LocalDate dateEndTemp = LocalDate.parse(req.getDateEnd()+"-01", formatter);
+        LocalDate dateEnd = LocalDate.of(dateEndTemp.getYear(),dateEndTemp.getMonth(),dateEndTemp.getMonth().maxLength());
         // 查出当前小组信息
         TabGroupExample groupExample = new TabGroupExample();
         groupExample.createCriteria()
@@ -174,12 +184,15 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
 
         List<TabSalesman> salesmanList = salesmanMapper.selectByExample(salesmanExample);
         // 查出每个成员业绩
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime createTime = group.getCreateTime();
-        List<LocalDateTime> queryDateList = new ArrayList<>();
-        int monthDiff = monthDiff(createTime, now);
+//        LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime createTime = group.getCreateTime();
+
+        List<LocalDate> queryDateList = new ArrayList<>();
+//        int monthDiff = monthDiff(createTime, now);
+        int monthDiff = monthDiff(dateStart, dateEnd);
         for (int i = 0; i <= monthDiff; i++) {
-            LocalDateTime queryDate = createTime.plusMonths(i);
+//            LocalDateTime queryDate = createTime.plusMonths(i);
+            LocalDate queryDate = dateStart.plusMonths(i);
             queryDateList.add(queryDate);
         }
 
@@ -187,14 +200,14 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
         for (TabSalesman salesman : salesmanList) {
             String salesmanId = salesman.getId();
             List<GroupDataDetailDTO> detailList = new ArrayList<>();
-            for (LocalDateTime queryDate : queryDateList) {
+            for (LocalDate queryDate : queryDateList) {
                 CalcuRewardReq reqBean = CalcuRewardReq.builder()
                         .queryMoon(queryDate)
                         .salesmanId(salesmanId)
                         .build();
                 CalcuRewardRes calcuRewardRes = salesmanCustomService.calcuReward(reqBean);
                 GroupDataDetailDTO dto = GroupDataDetailDTO.builder()
-                        .count(calcuRewardRes.getThisMoonReward())
+                        .count(calcuRewardRes.getQueryMoonReward())
                         .date(queryDate)
                         .id(queryDate.toString())
                         .build();
@@ -232,6 +245,18 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
      * @return int，即需求的月数差
      */
     private int monthDiff(LocalDateTime dt1, LocalDateTime dt2) {
+        //获取第一个时间点的月份
+        int month1 = dt1.getMonthValue();
+        //获取第一个时间点的年份
+        int year1 = dt1.getYear();
+        //获取第一个时间点的月份
+        int month2 = dt2.getMonthValue();
+        //获取第一个时间点的年份
+        int year2 = dt2.getYear();
+        //返回两个时间点的月数差
+        return (year2 - year1) * 12 + (month2 - month1);
+    }
+    private int monthDiff(LocalDate dt1, LocalDate dt2) {
         //获取第一个时间点的月份
         int month1 = dt1.getMonthValue();
         //获取第一个时间点的年份
