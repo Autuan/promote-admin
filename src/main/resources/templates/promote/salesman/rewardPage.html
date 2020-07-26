@@ -103,7 +103,7 @@
             data: {
                 ids: $('#ids').val().split(","),
                 startTime: $('#startTime').val() + " 00:00:00",
-                endTime: $('#endTime').val() + " 00:00:00",
+                endTime: $('#endTime').val() + " 23:59:59",
             },
             contentType: 'application/json',
             successParse: function (data) {

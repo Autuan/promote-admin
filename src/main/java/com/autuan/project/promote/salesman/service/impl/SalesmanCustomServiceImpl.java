@@ -582,10 +582,10 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
             criteria.andGroupIdEqualTo(salesman.getGroupId());
         }
         if (null != salesman.getQueryApplyTimeStart()) {
-            criteria.andApplyTimeGreaterThan(LocalDateTime.of(salesman.getQueryApplyTimeStart(), LocalTime.MIN));
+            criteria.andApplyTimeGreaterThan(LocalDateTime.of(salesman.getQueryApplyTimeStart(), LocalTime.of(0,0,0)));
         }
         if (null != salesman.getQueryApplyTimeEnd()) {
-            criteria.andApplyTimeLessThan(LocalDateTime.of(salesman.getQueryApplyTimeEnd(), LocalTime.MAX));
+            criteria.andApplyTimeLessThan(LocalDateTime.of(salesman.getQueryApplyTimeEnd(),LocalTime.of(23,59,59)));
         }
         return tabSalesmanMapper.selectByExample(example);
     }
@@ -601,8 +601,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
      */
     @Override
     public ExcelWriter dataDown(DataDownReq req) {
-        LocalDateTime startTime = Optional.ofNullable(req.getStartTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
-        LocalDateTime endTime = Optional.ofNullable(req.getEndTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
+        LocalDateTime startTime = Optional.ofNullable(req.getStartTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)));
+        LocalDateTime endTime = Optional.ofNullable(req.getEndTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)));
 
         ExcelWriter writer = ExcelUtil.getWriter(true);
         List<List<String>> rows = new ArrayList<>();
@@ -730,8 +730,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 
     @Override
     public DataDownRes querySalesmanReward(DataDownReq req) {
-        LocalDateTime startTime = Optional.ofNullable(req.getStartTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
-        LocalDateTime endTime = Optional.ofNullable(req.getEndTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
+        LocalDateTime startTime = Optional.ofNullable(req.getStartTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)));
+        LocalDateTime endTime = Optional.ofNullable(req.getEndTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)));
 
         List<List<String>> rows = new ArrayList<>();
         // 查出业务员
@@ -786,15 +786,6 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
             for (int i = 0; i < taskList.size(); i++) {
                 TabTask task = taskList.get(i);
                 String taskId = task.getId();
-//                row.add(String.valueOf(i+1));
-//                String salesmanId = tabSalesmanTasks.stream()
-//                        .filter(item -> item.getTaskId().equals(task.getId()))
-//                        .filter(item -> usedSalesman.stream().noneMatch(obj -> obj.equals(item.getSalesmanId())))
-//                        .map(TabSalesmanTask::getSalesmanId)
-//                        .findFirst().orElse(null);
-//
-//                TabSalesman salesman = salesmanMap.get(salesmanId);
-//                dataJdMap.get(salesmanId+"-"+taskId)
                 // 数量  dataBanks
                 long countNumJd = dataJds.stream()
                         .filter(item -> salesmanId.equals(item.getSalesmanId()))
@@ -818,7 +809,6 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 BigDecimal taskReward = sumJd.add(sumBank);
-//                row.add(String.valueOf(taskReward));
                 allSum = allSum.add(taskReward);
                 DataDownOneTask oneData = DataDownOneTask.builder()
                         .num(String.valueOf(countNumJd + countNumBank))
@@ -860,12 +850,12 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         TabSalesmanExample salesmanExample = new TabSalesmanExample();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime lastMonth = now.minusMonths(1);
-        LocalDate queryStart = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().minLength());
+        LocalDate queryStart = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), 1);
         LocalDate queryEnd = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().maxLength());
         salesmanExample.createCriteria()
                 .andApplyTimeBetween(
-                        LocalDateTime.of(queryStart, LocalTime.MIN),
-                        LocalDateTime.of(queryEnd, LocalTime.MAX)
+                        LocalDateTime.of(queryStart, LocalTime.of(0,0,0)),
+                        LocalDateTime.of(queryEnd, LocalTime.of(23,59,59))
                 );
         Long count = tabSalesmanMapper.countByExample(salesmanExample);
         return count.intValue();
@@ -883,12 +873,12 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     public Integer thisMoonCount() {
         TabSalesmanExample salesmanExample = new TabSalesmanExample();
         LocalDateTime now = LocalDateTime.now();
-        LocalDate queryStart = LocalDate.of(now.getYear(), now.getMonth(), now.getMonth().minLength());
+        LocalDate queryStart = LocalDate.of(now.getYear(), now.getMonth(), 1);
         LocalDate queryEnd = LocalDate.of(now.getYear(), now.getMonth(), now.getMonth().maxLength());
         salesmanExample.createCriteria()
                 .andApplyTimeBetween(
-                        LocalDateTime.of(queryStart, LocalTime.MIN),
-                        LocalDateTime.of(queryEnd, LocalTime.MAX)
+                        LocalDateTime.of(queryStart, LocalTime.of(0,0,0)),
+                        LocalDateTime.of(queryEnd, LocalTime.of(23,59,59))
                 );
         Long count = tabSalesmanMapper.countByExample(salesmanExample);
         return count.intValue();
@@ -951,13 +941,35 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         List<TabSalesman> list = tabSalesmanMapper.selectByExample(example);
         LocalDate now = LocalDate.now();
         LocalDate lastMonth = now.minusMonths(1);
-        LocalDate queryStart = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().minLength());
+        LocalDate queryStart = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), 1);
         LocalDate queryEnd = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().maxLength());
 
         DataDownReq req = DataDownReq.builder()
                 .ids(list.stream().map(TabSalesman::getId).collect(toList()))
-                .startTime(LocalDateTime.of(queryStart, LocalTime.MIN))
-                .endTime(LocalDateTime.of(queryEnd, LocalTime.MAX))
+//                .startTime(LocalDateTime.of(queryStart, LocalTime.MIN))
+                .startTime(LocalDateTime.of(queryStart, LocalTime.of(0,0,0)))
+//                .endTime(LocalDateTime.of(queryEnd, LocalTime.MAX))
+                .endTime(LocalDateTime.of(queryEnd, LocalTime.of(23,59,59)))
+                .build();
+        DataDownRes dataDownRes = this.querySalesmanReward(req);
+        return dataDownRes.getAllCountReward();
+    }
+
+    @Override
+    public BigDecimal thisRewardCount() {
+        TabSalesmanExample example = new TabSalesmanExample();
+        example.createCriteria()
+                .andIdIsNotNull();
+        List<TabSalesman> list = tabSalesmanMapper.selectByExample(example);
+        LocalDate now = LocalDate.now();
+        LocalDate queryStart = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        LocalDate queryEnd = LocalDate.of(now.getYear(), now.getMonth(), now.getMonth().maxLength());
+
+        DataDownReq req = DataDownReq.builder()
+                .ids(list.stream().map(TabSalesman::getId).collect(toList()))
+                .startTime(LocalDateTime.of(queryStart, LocalTime.of(0,0,0)))
+//                .endTime(LocalDateTime.of(queryEnd, LocalTime.MAX))
+                .endTime(LocalDateTime.now())
                 .build();
         DataDownRes dataDownRes = this.querySalesmanReward(req);
         return dataDownRes.getAllCountReward();
@@ -1013,6 +1025,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateSalesman(TabSalesman salesman) {
+        salesman.setUpdateBy(ShiroUtils.getLoginName());
+        salesman.setUpdateTime(LocalDateTime.now());
         if("-1".equals(salesman.getGroupId())) {
             int result = tabSalesmanMapper.updateByPrimaryKeySelective(salesman);
 

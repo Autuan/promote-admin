@@ -135,8 +135,8 @@ public class SalesmanCustomController extends BaseController {
             LocalDate end = LocalDate.parse(endTime, formatter);
             DataDownReq req = DataDownReq.builder()
                     .ids(idList)
-                    .startTime(LocalDateTime.of(start, LocalTime.MIN))
-                    .endTime(LocalDateTime.of(end, LocalTime.MAX))
+                    .startTime(LocalDateTime.of(start, LocalTime.of(0,0,0)))
+                    .endTime(LocalDateTime.of(end, LocalTime.of(23,59,59)))
                     .build();
             ExcelWriter writer =  salesmanCustomService.dataDown(req);
             ServletOutputStream out = response.getOutputStream();
@@ -173,8 +173,8 @@ public class SalesmanCustomController extends BaseController {
             LocalDate end = LocalDate.parse(endTime, formatter);
             DataDownReq req = DataDownReq.builder()
                     .ids(idList)
-                    .startTime(LocalDateTime.of(start, LocalTime.MIN))
-                    .endTime(LocalDateTime.of(end, LocalTime.MAX))
+                    .startTime(LocalDateTime.of(start, LocalTime.of(0,0,0)))
+                    .endTime(LocalDateTime.of(end, LocalTime.of(23,59,59)))
                     .build();
             ExcelWriter writer = salesmanCustomService.dataDownAll(req);
             ServletOutputStream out = response.getOutputStream();

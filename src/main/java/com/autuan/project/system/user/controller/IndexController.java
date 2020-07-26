@@ -60,12 +60,16 @@ public class IndexController extends BaseController {
         // 上月招募
         Integer lastMoonCount = salesmanCustomService.lastMoonCount();
         mmap.put("lastMoonCount",lastMoonCount);
+        Integer thisMoonCount = salesmanCustomService.thisMoonCount();
+        mmap.put("thisMoonCount",thisMoonCount);
         // 业绩总记
         BigDecimal allRewardCount = salesmanCustomService.allRewardCount();
         mmap.put("allRewardCount",allRewardCount);
         // 上月业绩总记
         BigDecimal lastRewardCount = salesmanCustomService.lastRewardCount();
         mmap.put("lastRewardCount",lastRewardCount);
+        BigDecimal thisRewardCount = salesmanCustomService.thisRewardCount();
+        mmap.put("thisRewardCount",thisRewardCount);
         return "main";
     }
 }

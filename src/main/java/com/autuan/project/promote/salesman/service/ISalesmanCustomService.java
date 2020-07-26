@@ -202,6 +202,15 @@ public interface ISalesmanCustomService {
      * @since : 2020/7/26 10:22
      */
     BigDecimal lastRewardCount();
+    /**
+     * 本月业绩总计(首页)
+     * @param
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Integer
+     * @since : 2020/7/26 10:22
+     */
+    BigDecimal thisRewardCount();
 
     /**
      * 查询全部业务员业绩
