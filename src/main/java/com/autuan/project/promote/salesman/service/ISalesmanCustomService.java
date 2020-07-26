@@ -1,5 +1,6 @@
 package com.autuan.project.promote.salesman.service;
 
+import cn.hutool.poi.excel.ExcelWriter;
 import com.autuan.project.front.entity.CalcuRewardReq;
 import com.autuan.project.front.entity.HistoryRewardReq;
 import com.autuan.project.front.entity.HistoryRewardRes;
@@ -150,7 +151,7 @@ public interface ISalesmanCustomService {
      * @return: java.lang.Object
      * @since : 2020/7/24 16:16  
      */
-    Object dataDown(DataDownReq req);
+    ExcelWriter dataDown(DataDownReq req);
 
     DataDownRes querySalesmanReward(DataDownReq req);
 
@@ -201,4 +202,24 @@ public interface ISalesmanCustomService {
      * @since : 2020/7/26 10:22
      */
     BigDecimal lastRewardCount();
+
+    /**
+     * 查询全部业务员业绩
+     * @param req
+     * @throws
+     * @author : Autuan.Yu
+     * @return: com.autuan.project.promote.salesman.domain.DataDownRes
+     * @since : 2020/7/26 11:09
+     */
+    DataDownRes querySalesmanRewardAll(DataDownReq req);
+
+    /**
+     * 下载全部业务员业绩
+     * @param req
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Object
+     * @since : 2020/7/26 11:19
+     */
+    ExcelWriter dataDownAll(DataDownReq req);
 }

@@ -117,6 +117,7 @@ public class SalesmanCustomController extends BaseController {
 
     /**
      * 下载选中业务员业绩
+     *
      * @param ids
      * @param startTime
      * @param endTime
@@ -124,13 +125,10 @@ public class SalesmanCustomController extends BaseController {
      */
     @RequestMapping(value = "/dataDown")
     public void dataDown(
-//			@RequestBody DataDownReq req,
             String ids,
-            String startTime,
-            String endTime,
+            String startTime,String endTime,
             HttpServletResponse response) {
         try {
-
             List<String> idList = Arrays.asList(ids.split(","));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate start = LocalDate.parse(startTime, formatter);
@@ -140,31 +138,11 @@ public class SalesmanCustomController extends BaseController {
                     .startTime(LocalDateTime.of(start, LocalTime.MIN))
                     .endTime(LocalDateTime.of(end, LocalTime.MAX))
                     .build();
-//        MessageBean msg = new MessageBean();
-//        Map<String,Object> params = new HashMap<String, Object>();
-//        List<Object[]>  dataList = new ArrayList<Object[]>();
-//        Object[] objs = null;
-            ExcelWriter writer = (ExcelWriter) salesmanCustomService.dataDown(req);
+            ExcelWriter writer =  salesmanCustomService.dataDown(req);
             ServletOutputStream out = response.getOutputStream();
-//        List<String> row1 = CollUtil.newArrayList("aa", "bb", "cc", "dd");
-//        List<String> row2 = CollUtil.newArrayList("aa1", "bb1", "cc1", "dd1");
-//        List<String> row3 = CollUtil.newArrayList("aa2", "bb2", "cc2", "dd2");
-//        List<String> row4 = CollUtil.newArrayList("aa3", "bb3", "cc3", "dd3");
-//        List<String> row5 = CollUtil.newArrayList("aa4", "bb4", "cc4", "dd4");
-//
-//        List<List<String>> rows = CollUtil.newArrayList(row1, row2, row3, row4, row5);
-
-//        ExcelWriter writer = cn.hutool.poi.excel.ExcelUtil.getWriter(true);
-            //合并单元格后的标题行，使用默认标题样式
-//        writer.merge(row1.size() - 1, "测试标题");
-//一次性写出内容，强制输出标题
-//        writer.write(rows, true);
-
-//关闭writer，释放内存
 
 
             response.setContentType("application/vnd.ms-excel;charset=utf-8");
-//test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
             String fileName = "account_" + startTime + "_to_" + endTime + ".xlsx";
             response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             writer.flush(out);
@@ -173,11 +151,48 @@ public class SalesmanCustomController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        return AjaxResult.success();
     }
 
     /**
+     * 下载全部业务员业绩
+     *
+     * @param ids
+     * @param startTime
+     * @param endTime
+     * @param response
+     */
+    @RequestMapping(value = "/dataDownAll")
+    public void dataDownAll(
+            String ids,
+            String startTime,String endTime,
+            HttpServletResponse response) {
+        try {
+            List<String> idList = Arrays.asList(ids.split(","));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate start = LocalDate.parse(startTime, formatter);
+            LocalDate end = LocalDate.parse(endTime, formatter);
+            DataDownReq req = DataDownReq.builder()
+                    .ids(idList)
+                    .startTime(LocalDateTime.of(start, LocalTime.MIN))
+                    .endTime(LocalDateTime.of(end, LocalTime.MAX))
+                    .build();
+            ExcelWriter writer = salesmanCustomService.dataDownAll(req);
+            ServletOutputStream out = response.getOutputStream();
+
+
+            response.setContentType("application/vnd.ms-excel;charset=utf-8");
+            String fileName = "all_" + startTime + "_to_" + endTime + ".xlsx";
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+            writer.flush(out);
+            writer.close();
+            IoUtil.close(out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
      * 查询选中业务员业绩
+     *
      * @param req
      * @throws
      * @author : Autuan.Yu
@@ -190,4 +205,19 @@ public class SalesmanCustomController extends BaseController {
         return ReturnResult.ok(salesmanCustomService.querySalesmanReward(req));
     }
 
+
+    /**
+     * 查询全部业务员业绩
+     *
+     * @param req
+     * @throws
+     * @author : Autuan.Yu
+     * @return: com.autuan.project.front.entity.ReturnResult
+     * @since : 2020/7/26 11:07
+     */
+    @RequestMapping(value = "/querySalesmanRewardAll")
+    @ResponseBody
+    public ReturnResult querySalesmanRewardAll(@RequestBody DataDownReq req) {
+        return ReturnResult.ok(salesmanCustomService.querySalesmanRewardAll(req));
+    }
 }

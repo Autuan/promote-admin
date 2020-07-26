@@ -599,7 +599,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
      * @since : 2020/7/24 16:16
      */
     @Override
-    public Object dataDown(DataDownReq req) {
+    public ExcelWriter dataDown(DataDownReq req) {
         LocalDateTime startTime = Optional.ofNullable(req.getStartTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
         LocalDateTime endTime = Optional.ofNullable(req.getEndTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
 
@@ -960,5 +960,43 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .build();
         DataDownRes dataDownRes = this.querySalesmanReward(req);
         return dataDownRes.getAllCountReward();
+    }
+
+    /**
+     * 查询全部业务员业绩
+     *
+     * @param req
+     * @throws
+     * @author : Autuan.Yu
+     * @return: com.autuan.project.promote.salesman.domain.DataDownRes
+     * @since : 2020/7/26 11:07
+     */
+    @Override
+    public DataDownRes querySalesmanRewardAll(DataDownReq req) {
+        TabSalesmanExample example = new TabSalesmanExample();
+        example.createCriteria()
+                .andIdIsNotNull();
+        List<TabSalesman> list = tabSalesmanMapper.selectByExample(example);
+        req.setIds(list.stream().map(TabSalesman::getId).collect(toList()));
+        return this.querySalesmanReward(req);
+    }
+
+    /**
+     * 下载全部业务员业绩
+     *
+     * @param req
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Object
+     * @since : 2020/7/26 11:19
+     */
+    @Override
+    public ExcelWriter dataDownAll(DataDownReq req) {
+        TabSalesmanExample example = new TabSalesmanExample();
+        example.createCriteria()
+                .andIdIsNotNull();
+        List<TabSalesman> list = tabSalesmanMapper.selectByExample(example);
+        req.setIds(list.stream().map(TabSalesman::getId).collect(toList()));
+        return this.dataDown(req);
     }
 }

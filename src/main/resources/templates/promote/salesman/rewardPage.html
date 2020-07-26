@@ -31,16 +31,22 @@
 
         <div class="form-group">
             <label class="col-sm-3 control-label"></label>
-            <div class="col-sm-4">
-                <a class="btn btn-info" href="javascript:void(0);" onclick="queryData()">查询</a>
+            <div class="col-sm-2">
+                <a class="btn btn-info" href="javascript:void(0);" onclick="queryDataChoose()">查询选中</a>
             </div>
-            <div class="col-sm-4">
-                <a class="btn btn-info" href="javascript:void(0);" onclick="dataDown()">下载</a>
+            <div class="col-sm-2">
+                <a class="btn btn-info" href="javascript:void(0);" onclick="queryDataAll()">查询全部</a>
+            </div>
+            <div class="col-sm-2">
+                <a class="btn btn-info" href="javascript:void(0);" onclick="dataDownChoose()">下载选中</a>
+            </div>
+            <div class="col-sm-2">
+                <a class="btn btn-info" href="javascript:void(0);" onclick="dataDownAll()">下载全部</a>
             </div>
         </div>
     </form>
 
-    <div style="margin-top: 10%;">
+    <div style="margin-top: 30px;margin-bottom: 50px;">
         <table border="1" class="col-sm-12 " align="center" id="dataDiv">
             <tr id="taskTr">
             </tr>
@@ -63,11 +69,19 @@
         autoclose: true,
     });
 
-    function dataDown() {
+    function dataDownChoose() {
+        let primaryUrl = 'dataDown';
+        dataDown(primaryUrl);
+    }
+    function dataDownAll() {
+        let primaryUrl = 'dataDownAll';
+        dataDown(primaryUrl);
+    }
+    function dataDown(primaryUrl) {
         let ids = $('#ids').val();
         let startTime = $('#startTime').val();
         let endTime = $('#endTime').val();
-        let url = `promote/salesman/custom/dataDown?ids=${ids}&startTime=${startTime}&endTime=${endTime}`
+        let url = `promote/salesman/custom/${primaryUrl}?ids=${ids}&startTime=${startTime}&endTime=${endTime}`
         window.location.href = ctx + url;
     }
 
@@ -75,9 +89,17 @@
         $.modal.close();
     }
 
-    function queryData() {
+    function queryDataChoose() {
+        let url = ctx + 'promote/salesman/custom/querySalesmanReward'
+        queryData(url);
+    }
+    function queryDataAll() {
+        let url = ctx + 'promote/salesman/custom/querySalesmanRewardAll'
+        queryData(url);
+    }
+    function queryData(url) {
         Base.Network.post({
-            url: ctx + 'promote/salesman/custom/querySalesmanReward',
+            url: url,
             data: {
                 ids: $('#ids').val().split(","),
                 startTime: $('#startTime').val() + " 00:00:00",
@@ -134,8 +156,8 @@
         var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
 
         $('.datetimepickerInput').val(year + '-' + month + '-' + date)
-        console.info(new Date())
-        queryData();
+        // console.info(new Date())
+        queryDataChoose();
     })
 </script>
 </body>
