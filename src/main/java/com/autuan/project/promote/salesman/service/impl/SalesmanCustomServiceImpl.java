@@ -453,7 +453,9 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                     default:break;
                 }
             String pinStr = data.getOpenJdCreditPin();
-                if(pinStr.length() > 4) {
+                if(StrUtil.isBlank(pinStr)) {
+                    pinStr = "-";
+                } else if(pinStr.length() > 4) {
                     pinStr = pinStr.substring(0, 2) + "****" + pinStr.substring(pinStr.length() - 2, pinStr.length());
                 } else {
                     pinStr = "****";
