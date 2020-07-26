@@ -222,4 +222,14 @@ public interface ISalesmanCustomService {
      * @since : 2020/7/26 11:19
      */
     ExcelWriter dataDownAll(DataDownReq req);
+
+    /**
+     * 修改业务员  
+     * @param salesman 
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: int
+     * @since : 2020/7/26 11:35
+     */
+    int updateSalesman(TabSalesman salesman);
 }

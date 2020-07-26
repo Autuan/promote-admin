@@ -38,6 +38,7 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -998,5 +999,34 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         List<TabSalesman> list = tabSalesmanMapper.selectByExample(example);
         req.setIds(list.stream().map(TabSalesman::getId).collect(toList()));
         return this.dataDown(req);
+    }
+
+    /**
+     * 修改业务员
+     *
+     * @param salesman
+     * @throws
+     * @author : Autuan.Yu
+     * @return: int
+     * @since : 2020/7/26 11:25
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int updateSalesman(TabSalesman salesman) {
+        if("-1".equals(salesman.getGroupId())) {
+            int result = tabSalesmanMapper.updateByPrimaryKeySelective(salesman);
+
+            TabSalesman bean = TabSalesman.builder()
+                    .groupId(null)
+                    .build();
+            TabSalesmanExample example = new TabSalesmanExample();
+            example.createCriteria()
+                    .andIdEqualTo(salesman.getId());
+
+            tabSalesmanMapper.updateByExampleSelective(bean, example, TabSalesman.Column.groupId);
+            return result;
+        } else {
+            return tabSalesmanMapper.updateByPrimaryKeySelective(salesman);
+        }
     }
 }

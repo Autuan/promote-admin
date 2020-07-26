@@ -101,7 +101,7 @@
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/edit", $('#form-salesman-edit').serialize());
+                $.operate.save(prefix + "/custom/edit", $('#form-salesman-edit').serialize());
             }
         }
 
@@ -130,6 +130,7 @@
             url:ctx+'promote/group/custom/list',
             successParse:function (data) {
                 let str = '<option value="">---请选择小组---</option>';
+                str += '<option value="-1">移出所在小组</option>';
                 for (let i=0;i<data.length;i++) {
                     str += `<option value="${data[i].id}">${data[i].name}</option>`
                 }

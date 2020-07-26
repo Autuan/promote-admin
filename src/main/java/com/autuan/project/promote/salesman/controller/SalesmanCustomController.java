@@ -220,4 +220,10 @@ public class SalesmanCustomController extends BaseController {
     public ReturnResult querySalesmanRewardAll(@RequestBody DataDownReq req) {
         return ReturnResult.ok(salesmanCustomService.querySalesmanRewardAll(req));
     }
+
+    @PostMapping("/edit")
+    @ResponseBody
+    public AjaxResult editSave(TabSalesman salesman) {
+        return toAjax(salesmanCustomService.updateSalesman(salesman));
+    }
 }
