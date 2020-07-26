@@ -74,6 +74,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     private SalesmanMapper salesmanMapper;
     @Autowired
     private IDataJdCustomService dataJdCustomService;
+
     /**
      * 登录方法(返回用户信息)
      *
@@ -224,9 +225,9 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .andTaskIdIsNotNull()
                 .andSalesmanIdEqualTo(salesmanId)
 //        .andOpenJdCreditTimeBetween(startTime,endTime)
-                // 1:是
+        // 1:是
 //                .andCustomFlagEqualTo(1)
-                // 1:通过
+        // 1:通过
 //                .andApproveStatusEqualTo(1)
         ;
         List<TabDataJd> dataJds = dataJdMapper.selectByExample(dataJdExample);
@@ -252,20 +253,27 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         BigDecimal queryMoonJdCount = BigDecimal.ZERO;
         BigDecimal historyRewardJdCount = BigDecimal.ZERO;
 
-        for(TabDataJd data : dataJds){
+        for (TabDataJd data : dataJds) {
             String taskId = data.getTaskId();
             Integer type = data.getOpenJdCreditType();
             BigDecimal reward = BigDecimal.ZERO;
-            switch (type){
-                case 0 : reward =rewardOption.get("rewardCommon"+taskId);break;
-                case 1 : reward =rewardOption.get("rewardGold"+taskId);break;
-                case 2 : reward =rewardOption.get("rewardNewbie"+taskId);break;
-                default:break;
+            switch (type) {
+                case 0:
+                    reward = rewardOption.get("rewardCommon" + taskId);
+                    break;
+                case 1:
+                    reward = rewardOption.get("rewardGold" + taskId);
+                    break;
+                case 2:
+                    reward = rewardOption.get("rewardNewbie" + taskId);
+                    break;
+                default:
+                    break;
             }
             historyRewardJdCount = historyRewardJdCount.add(reward);
             boolean isThisMoon = data.getOpenJdCreditTime().getYear() == queryMoon.getYear()
                     && data.getOpenJdCreditTime().getMonthValue() == queryMoon.getMonthValue();
-            if(isThisMoon) {
+            if (isThisMoon) {
                 queryMoonJdCount = queryMoonJdCount.add(reward);
             }
         }
@@ -286,13 +294,13 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 //                .andIdEqualTo(req.getSalesmanId());
 //        TabSalesman salesman = tabSalesmanMapper.selectOneByExample(salesmanExample);
         // 可能导入更早的数据,写死开始月
-        LocalDateTime queryTime = LocalDateTime.of(2020,6,1,0,0);
+        LocalDateTime queryTime = LocalDateTime.of(2020, 6, 1, 0, 0);
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getMonth().maxLength(), 23, 59, 59);
         List<RewardCount> result = new ArrayList<>();
         while (queryTime.isBefore(endTime)) {
             LocalDateTime queryStartTime = LocalDateTime.of(queryTime.getYear(), queryTime.getMonthValue(), 1, 0, 0, 0);
-            LocalDateTime queryEndTime = LocalDateTime.of(queryStartTime.getYear(), queryStartTime.getMonthValue(), queryStartTime.getMonth().maxLength(), 23,59,59);
+            LocalDateTime queryEndTime = LocalDateTime.of(queryStartTime.getYear(), queryStartTime.getMonthValue(), queryStartTime.getMonth().maxLength(), 23, 59, 59);
 
             req.setQueryDateStart(queryStartTime);
             req.setQueryDateEnd(queryEndTime);
@@ -308,7 +316,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
             queryTime = queryTime.plusMonths(1);
         }
 
-        return  CollectionUtil.reverse(result);
+        return CollectionUtil.reverse(result);
     }
 
 
@@ -363,7 +371,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     public List<RankingRes> ranking() {
         List<TabSalesman> salesmanList = this.listSalesmanThousand();
         List<RankingRes> result = new ArrayList<>();
-        for(TabSalesman salesman : salesmanList) {
+        for (TabSalesman salesman : salesmanList) {
             CalcuRewardReq rewardReq = CalcuRewardReq.builder()
                     .salesmanId(salesman.getId())
                     .build();
@@ -383,12 +391,12 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         return res;
     }
 
-    private List<HistoryRewardRes> queryMoonData(HistoryRewardReq req){
+    private List<HistoryRewardRes> queryMoonData(HistoryRewardReq req) {
         List<HistoryRewardRes> resList = new ArrayList<>();
 
         String salesmanId = req.getSalesmanId();
         LocalDateTime startTime = req.getQueryDateStart();
-        LocalDateTime endTime =req.getQueryDateEnd();
+        LocalDateTime endTime = req.getQueryDateEnd();
 
 
         // 所有通过的开卡订单
@@ -404,14 +412,14 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         dataJdExample.createCriteria()
                 .andTaskIdIsNotNull()
                 .andSalesmanIdEqualTo(salesmanId)
-                .andOpenJdCreditTimeBetween(startTime,endTime);
+                .andOpenJdCreditTimeBetween(startTime, endTime);
 //        dataJdExample.setOrderByClause("open_jd_credit_time desc");
         List<TabDataJd> dataJds = dataJdMapper.selectByExample(dataJdExample);
         // 任务ID集合
         List<String> taskIds = dataBanks.stream().map(TabDataBank::getTaskId).collect(toList());
         List<String> collect = dataJds.stream().map(TabDataJd::getTaskId).collect(toList());
         taskIds.addAll(collect);
-        if(CollectionUtil.isEmpty(taskIds)) {
+        if (CollectionUtil.isEmpty(taskIds)) {
             return resList;
         }
         TabTaskExample taskExample = new TabTaskExample();
@@ -419,7 +427,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .andIdIn(taskIds);
         List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
         Map<String, TabTask> taskMap = allTasks.stream()
-                .collect(Collectors.toMap(TabTask::getId, Function.identity(),(existing, replacement) -> existing));
+                .collect(Collectors.toMap(TabTask::getId, Function.identity(), (existing, replacement) -> existing));
 
         // 响应数据
         for (TabDataBank data : dataBanks) {
@@ -430,7 +438,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                     .verifyDate(data.getVerifyDate())
                     .name(data.getBankName())
                     .reward(data.getReward())
-                    .info(data.getCName()+","+data.getCMobile())
+                    .info(data.getCName() + "," + data.getCMobile())
                     .approveStatus(isPass ? "通过" : "拒绝")
                     .build());
         }
@@ -440,33 +448,40 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         Map<String, BigDecimal> rewardOption = dataJdCustomService.getRewardOption(taskIdSet);
         for (TabDataJd data : dataJds) {
             String taskId = data.getTaskId();
-                BigDecimal rewardNewbie = rewardOption.get("rewardNewbie"+taskId);
-                BigDecimal rewardCommon = rewardOption.get("rewardCommon"+taskId);
-                BigDecimal rewardGold = rewardOption.get("rewardGold"+taskId);
+            BigDecimal rewardNewbie = rewardOption.get("rewardNewbie" + taskId);
+            BigDecimal rewardCommon = rewardOption.get("rewardCommon" + taskId);
+            BigDecimal rewardGold = rewardOption.get("rewardGold" + taskId);
 
-                Integer type = data.getOpenJdCreditType();
-                BigDecimal reward = rewardCommon;
-                switch (type){
-                    case 0 : reward =rewardCommon;break;
-                    case 1 : reward =rewardGold;break;
-                    case 2 : reward =rewardNewbie;break;
-                    default:break;
-                }
+            Integer type = data.getOpenJdCreditType();
+            BigDecimal reward = rewardCommon;
+            switch (type) {
+                case 0:
+                    reward = rewardCommon;
+                    break;
+                case 1:
+                    reward = rewardGold;
+                    break;
+                case 2:
+                    reward = rewardNewbie;
+                    break;
+                default:
+                    break;
+            }
             String pinStr = data.getOpenJdCreditPin();
-                if(StrUtil.isBlank(pinStr)) {
-                    pinStr = "-";
-                } else if(pinStr.length() > 4) {
-                    pinStr = pinStr.substring(0, 2) + "****" + pinStr.substring(pinStr.length() - 2, pinStr.length());
-                } else {
-                    pinStr = "****";
-                }
+            if (StrUtil.isBlank(pinStr)) {
+                pinStr = "-";
+            } else if (pinStr.length() > 4) {
+                pinStr = pinStr.substring(0, 2) + "****" + pinStr.substring(pinStr.length() - 2, pinStr.length());
+            } else {
+                pinStr = "****";
+            }
             HistoryRewardRes bean = HistoryRewardRes.builder()
-                        .verifyDate(data.getOpenJdCreditTime())
-                        .name(data.getOrderName())
-                        .reward(reward)
-                        .info("京东账号:"+pinStr)
-                        .approveStatus("通过")
-                        .build();
+                    .verifyDate(data.getOpenJdCreditTime())
+                    .name(data.getOrderName())
+                    .reward(reward)
+                    .info("京东账号:" + pinStr)
+                    .approveStatus("通过")
+                    .build();
             resList.add(bean);
         }
         resList = resList.stream()
@@ -499,25 +514,25 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                     data.setCreateBy(operName);
                     data.setCreateTime(now);
                     data.setApplyTime(now);
-                    if(StrUtil.isBlank(data.getPassword())) {
+                    if (StrUtil.isBlank(data.getPassword())) {
                         data.setPassword(Md5Utils.hash("123456"));
                     }
-                    if(StrUtil.isBlank(data.getHeadImg())) {
+                    if (StrUtil.isBlank(data.getHeadImg())) {
                         data.setHeadImg("http://promote.yupai.net/admin/profile/upload/def/head_img_def.jpg");
                     }
                     if (StrUtil.isBlank(data.getLevel())) {
                         data.setLevel("普通会员");
                     }
-                    if(StrUtil.isBlank(data.getBrokerageBankNo())) {
+                    if (StrUtil.isBlank(data.getBrokerageBankNo())) {
                         data.setBrokerageBankNo("0000");
                     }
-                    if(StrUtil.isBlank(data.getBrokerageBankName())) {
+                    if (StrUtil.isBlank(data.getBrokerageBankName())) {
                         data.setBrokerageBankName("Bank Name");
                     }
-                    if(StrUtil.isBlank(data.getBrokerageBankAddress())) {
+                    if (StrUtil.isBlank(data.getBrokerageBankAddress())) {
                         data.setBrokerageBankAddress("Bank Address");
                     }
-                    if(null == data.getGender()) {
+                    if (null == data.getGender()) {
                         data.setGender(0);
                     }
                     salesmanMapper.insertSalesman(data);
@@ -550,25 +565,25 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     public List<TabSalesman> list(SalesmanQueryReq salesman) {
         TabSalesmanExample example = new TabSalesmanExample();
         TabSalesmanExample.Criteria criteria = example.createCriteria();
-        if(StrUtil.isNotBlank(salesman.getBrokerageBankNo())) {
+        if (StrUtil.isNotBlank(salesman.getBrokerageBankNo())) {
             criteria.andBrokerageBankNoLike("%" + salesman.getBrokerageBankNo() + "%");
         }
-        if(StrUtil.isNotBlank(salesman.getName())) {
+        if (StrUtil.isNotBlank(salesman.getName())) {
             criteria.andNameLike("%" + salesman.getName() + "%");
         }
-        if(StrUtil.isNotBlank(salesman.getMobile())) {
+        if (StrUtil.isNotBlank(salesman.getMobile())) {
             criteria.andMobileLike("%" + salesman.getMobile() + "%");
         }
-        if(StrUtil.isNotBlank(salesman.getIdentifyNumber())) {
+        if (StrUtil.isNotBlank(salesman.getIdentifyNumber())) {
             criteria.andIdentifyNumberLike("%" + salesman.getIdentifyNumber() + "%");
         }
-        if(StrUtil.isNotBlank(salesman.getGroupId())) {
+        if (StrUtil.isNotBlank(salesman.getGroupId())) {
             criteria.andGroupIdEqualTo(salesman.getGroupId());
         }
-        if(null != salesman.getQueryApplyTimeStart()) {
+        if (null != salesman.getQueryApplyTimeStart()) {
             criteria.andApplyTimeGreaterThan(LocalDateTime.of(salesman.getQueryApplyTimeStart(), LocalTime.MIN));
         }
-        if(null != salesman.getQueryApplyTimeEnd()) {
+        if (null != salesman.getQueryApplyTimeEnd()) {
             criteria.andApplyTimeLessThan(LocalDateTime.of(salesman.getQueryApplyTimeEnd(), LocalTime.MAX));
         }
         return tabSalesmanMapper.selectByExample(example);
@@ -595,7 +610,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         salesmanExample.createCriteria()
                 .andIdIn(req.getIds());
         List<TabSalesman> salesmen = tabSalesmanMapper.selectByExample(salesmanExample);
-        Map<String,TabSalesman> salesmanMap =  salesmen.stream()
+        Map<String, TabSalesman> salesmanMap = salesmen.stream()
                 .collect(toMap(TabSalesman::getId,
                         Function.identity()));
         // 查出选中任务员的任务
@@ -615,14 +630,14 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         row1.add("业务类型");
         row2.add("");
         row2.add("业务员姓名");
-        for(int i = 0;i<taskList.size();i++) {
+        for (int i = 0; i < taskList.size(); i++) {
             TabTask task = taskList.get(i);
             row1.add(task.getName());
             row1.add("");
             row2.add("数量");
             row2.add("佣金");
-            int column = i *2+2 ;
-            writer.merge(0,0, column, column + 1, task.getName(),false);
+            int column = i * 2 + 2;
+            writer.merge(0, 0, column, column + 1, task.getName(), false);
         }
         row1.add("");
         row2.add("总业绩");
@@ -631,11 +646,11 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         // 查出任务的奖励
         // 银行卡
         TabDataBankExample dataBankExample = new TabDataBankExample();
-        for(TabSalesmanTask bean : tabSalesmanTasks) {
+        for (TabSalesmanTask bean : tabSalesmanTasks) {
             dataBankExample.or()
                     .andTaskIdEqualTo(bean.getTaskId())
                     .andSalesmanIdEqualTo(bean.getSalesmanId())
-                    .andVerifyDateBetween(startTime,endTime);
+                    .andVerifyDateBetween(startTime, endTime);
         }
         List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
 //        Map<String, TabDataBank> dataBankMap = dataBanks.stream()
@@ -644,11 +659,11 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 //                        (existing, replacement) -> existing));
         // 京东
         TabDataJdExample dataJdExample = new TabDataJdExample();
-        for(TabSalesmanTask bean : tabSalesmanTasks) {
+        for (TabSalesmanTask bean : tabSalesmanTasks) {
             dataJdExample.or()
                     .andTaskIdEqualTo(bean.getTaskId())
                     .andSalesmanIdEqualTo(bean.getSalesmanId())
-                    .andOpenJdCreditTimeBetween(startTime,endTime);
+                    .andOpenJdCreditTimeBetween(startTime, endTime);
         }
         List<TabDataJd> dataJds = dataJdMapper.selectByExample(dataJdExample);
 //        Map<String, TabDataJd> dataJdMap = dataJds.stream()
@@ -658,14 +673,14 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         // 以业务员划分
 //        List<String> usedSalesman = new ArrayList<>();
         int rowNum = 1;
-        for(TabSalesman salesman : salesmen) {
+        for (TabSalesman salesman : salesmen) {
             String salesmanId = salesman.getId();
             List<String> row = new ArrayList<>();
             row.add(String.valueOf(rowNum++));
             row.add(salesman.getName());
 
             BigDecimal allSum = BigDecimal.ZERO;
-            for(int i = 0;i<taskList.size();i++) {
+            for (int i = 0; i < taskList.size(); i++) {
                 TabTask task = taskList.get(i);
                 String taskId = task.getId();
 //                row.add(String.valueOf(i+1));
@@ -700,7 +715,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 BigDecimal taskReward = sumJd.add(sumBank);
-                row.add(String.valueOf(countNumJd+countNumBank));
+                row.add(String.valueOf(countNumJd + countNumBank));
                 row.add(String.valueOf(taskReward));
                 allSum = allSum.add(taskReward);
             }
@@ -713,7 +728,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     }
 
     @Override
-    public Object querySalesmanReward(DataDownReq req) {
+    public DataDownRes querySalesmanReward(DataDownReq req) {
         LocalDateTime startTime = Optional.ofNullable(req.getStartTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MIN));
         LocalDateTime endTime = Optional.ofNullable(req.getEndTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.MAX));
 
@@ -738,27 +753,28 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         // 查出任务的奖励
         // 银行卡
         TabDataBankExample dataBankExample = new TabDataBankExample();
-        for(TabSalesmanTask bean : tabSalesmanTasks) {
+        for (TabSalesmanTask bean : tabSalesmanTasks) {
             dataBankExample.or()
                     .andTaskIdEqualTo(bean.getTaskId())
                     .andSalesmanIdEqualTo(bean.getSalesmanId())
-                    .andVerifyDateBetween(startTime,endTime);
+                    .andVerifyDateBetween(startTime, endTime);
         }
         List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
         // 京东
         TabDataJdExample dataJdExample = new TabDataJdExample();
-        for(TabSalesmanTask bean : tabSalesmanTasks) {
+        for (TabSalesmanTask bean : tabSalesmanTasks) {
             dataJdExample.or()
                     .andTaskIdEqualTo(bean.getTaskId())
                     .andSalesmanIdEqualTo(bean.getSalesmanId())
-                    .andOpenJdCreditTimeBetween(startTime,endTime);
+                    .andOpenJdCreditTimeBetween(startTime, endTime);
         }
         List<TabDataJd> dataJds = dataJdMapper.selectByExample(dataJdExample);
         // 以业务员划分
 //        List<String> usedSalesman = new ArrayList<>();
-        int rowNum = 1;
+//        int rowNum = 1;
+        BigDecimal allCountReward = BigDecimal.ZERO;
         List<DataDownTr> trList = new ArrayList<>();
-        for(TabSalesman salesman : salesmen) {
+        for (TabSalesman salesman : salesmen) {
             String salesmanId = salesman.getId();
 //            List<String> row = new ArrayList<>();
 //            row.add(String.valueOf(rowNum++));
@@ -766,7 +782,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 
             BigDecimal allSum = BigDecimal.ZERO;
             List<DataDownOneTask> dataTaskList = new ArrayList<>();
-            for(int i = 0;i<taskList.size();i++) {
+            for (int i = 0; i < taskList.size(); i++) {
                 TabTask task = taskList.get(i);
                 String taskId = task.getId();
 //                row.add(String.valueOf(i+1));
@@ -804,7 +820,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 //                row.add(String.valueOf(taskReward));
                 allSum = allSum.add(taskReward);
                 DataDownOneTask oneData = DataDownOneTask.builder()
-                        .num(String.valueOf(countNumJd+countNumBank))
+                        .num(String.valueOf(countNumJd + countNumBank))
                         .reward(taskReward)
                         .taskId(taskId)
                         .build();
@@ -813,16 +829,136 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 //            row.add(String.valueOf(allSum));
 //            rows.add(row);
             DataDownTr tr = DataDownTr.builder()
-.allSum(allSum)
+                    .allSum(allSum)
                     .list(dataTaskList)
                     .userName(salesman.getName())
                     .build();
             trList.add(tr);
+
+            allCountReward = allCountReward.add(allSum);
         }
+
         DataDownRes result = DataDownRes.builder()
                 .taskList(taskList)
                 .trList(trList)
+                .allCountReward(allCountReward)
                 .build();
         return result;
+    }
+
+    /**
+     * 上月招募数量
+     *
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Object
+     * @since : 2020/7/26 9:56
+     */
+    @Override
+    public Integer lastMoonCount() {
+        TabSalesmanExample salesmanExample = new TabSalesmanExample();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime lastMonth = now.minusMonths(1);
+        LocalDate queryStart = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().minLength());
+        LocalDate queryEnd = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().maxLength());
+        salesmanExample.createCriteria()
+                .andApplyTimeBetween(
+                        LocalDateTime.of(queryStart, LocalTime.MIN),
+                        LocalDateTime.of(queryEnd, LocalTime.MAX)
+                );
+        Long count = tabSalesmanMapper.countByExample(salesmanExample);
+        return count.intValue();
+    }
+
+    /**
+     * 本月招募数量
+     *
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Integer
+     * @since : 2020/7/26 9:57
+     */
+    @Override
+    public Integer thisMoonCount() {
+        TabSalesmanExample salesmanExample = new TabSalesmanExample();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate queryStart = LocalDate.of(now.getYear(), now.getMonth(), now.getMonth().minLength());
+        LocalDate queryEnd = LocalDate.of(now.getYear(), now.getMonth(), now.getMonth().maxLength());
+        salesmanExample.createCriteria()
+                .andApplyTimeBetween(
+                        LocalDateTime.of(queryStart, LocalTime.MIN),
+                        LocalDateTime.of(queryEnd, LocalTime.MAX)
+                );
+        Long count = tabSalesmanMapper.countByExample(salesmanExample);
+        return count.intValue();
+    }
+
+    /**
+     * 总计招募数量
+     *
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Integer
+     * @since : 2020/7/26 9:56
+     */
+    @Override
+    public Integer allCount() {
+        TabSalesmanExample salesmanExample = new TabSalesmanExample();
+        salesmanExample.createCriteria()
+                .andIdIsNotNull();
+        Long count = tabSalesmanMapper.countByExample(salesmanExample);
+        return count.intValue();
+    }
+
+    /**
+     * 业绩总计(首页)
+     *
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Integer
+     * @since : 2020/7/26 10:22
+     */
+    @Override
+    public BigDecimal allRewardCount() {
+        TabSalesmanExample example = new TabSalesmanExample();
+        example.createCriteria()
+                .andIdIsNotNull();
+        List<TabSalesman> list = tabSalesmanMapper.selectByExample(example);
+        DataDownReq req = DataDownReq.builder()
+                .ids(list.stream().map(TabSalesman::getId).collect(toList()))
+                // 写死在 2019 年1月份
+                .startTime(LocalDateTime.of(2019, 1, 1, 1, 1))
+                .endTime(LocalDateTime.now())
+                .build();
+        DataDownRes dataDownRes = this.querySalesmanReward(req);
+        return dataDownRes.getAllCountReward();
+    }
+
+    /**
+     * 上月业绩总计(首页)
+     *
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Integer
+     * @since : 2020/7/26 10:22
+     */
+    @Override
+    public BigDecimal lastRewardCount() {
+        TabSalesmanExample example = new TabSalesmanExample();
+        example.createCriteria()
+                .andIdIsNotNull();
+        List<TabSalesman> list = tabSalesmanMapper.selectByExample(example);
+        LocalDate now = LocalDate.now();
+        LocalDate lastMonth = now.minusMonths(1);
+        LocalDate queryStart = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().minLength());
+        LocalDate queryEnd = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().maxLength());
+
+        DataDownReq req = DataDownReq.builder()
+                .ids(list.stream().map(TabSalesman::getId).collect(toList()))
+                .startTime(LocalDateTime.of(queryStart, LocalTime.MIN))
+                .endTime(LocalDateTime.of(queryEnd, LocalTime.MAX))
+                .build();
+        DataDownRes dataDownRes = this.querySalesmanReward(req);
+        return dataDownRes.getAllCountReward();
     }
 }

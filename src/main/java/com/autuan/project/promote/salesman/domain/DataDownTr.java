@@ -21,7 +21,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataDownTr {
+    /**
+     * 用户名
+     */
     private String userName;
+    /**
+     * 每行业务员
+     */
     private List<DataDownOneTask> list;
+    /**
+     * 业绩和
+     */
     private BigDecimal allSum;
 }

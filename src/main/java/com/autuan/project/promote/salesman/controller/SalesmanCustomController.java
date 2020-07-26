@@ -54,10 +54,11 @@ public class SalesmanCustomController extends BaseController {
 
 
     @GetMapping("/rewardPage")
-    public String rewardPage(String ids,ModelMap mmap) {
+    public String rewardPage(String ids, ModelMap mmap) {
         mmap.put("ids", ids);
         return prefix + "/rewardPage";
     }
+
     /**
      * 查询业务员
      */
@@ -80,7 +81,6 @@ public class SalesmanCustomController extends BaseController {
         List<TabSalesman> list = salesmanCustomService.list(salesman);
         return getDataTable(list);
     }
-
 
 
     @RequiresPermissions("promote:salesman:edit")
@@ -115,14 +115,21 @@ public class SalesmanCustomController extends BaseController {
         return util.importTemplateExcel("业务员");
     }
 
-    @RequestMapping(value="/dataDown")
+    /**
+     * 下载选中业务员业绩
+     * @param ids
+     * @param startTime
+     * @param endTime
+     * @param response
+     */
+    @RequestMapping(value = "/dataDown")
     public void dataDown(
 //			@RequestBody DataDownReq req,
             String ids,
             String startTime,
             String endTime,
-            HttpServletResponse response)  {
-        try{
+            HttpServletResponse response) {
+        try {
 
             List<String> idList = Arrays.asList(ids.split(","));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -131,7 +138,7 @@ public class SalesmanCustomController extends BaseController {
             DataDownReq req = DataDownReq.builder()
                     .ids(idList)
                     .startTime(LocalDateTime.of(start, LocalTime.MIN))
-                    .endTime(LocalDateTime.of(end,LocalTime.MAX))
+                    .endTime(LocalDateTime.of(end, LocalTime.MAX))
                     .build();
 //        MessageBean msg = new MessageBean();
 //        Map<String,Object> params = new HashMap<String, Object>();
@@ -158,8 +165,8 @@ public class SalesmanCustomController extends BaseController {
 
             response.setContentType("application/vnd.ms-excel;charset=utf-8");
 //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
-            String fileName = "account_"+startTime+"_to_"+endTime+".xlsx";
-            response.setHeader("Content-Disposition","attachment;filename="+fileName);
+            String fileName = "account_" + startTime + "_to_" + endTime + ".xlsx";
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             writer.flush(out);
             writer.close();
             IoUtil.close(out);
@@ -169,9 +176,18 @@ public class SalesmanCustomController extends BaseController {
 //        return AjaxResult.success();
     }
 
-    @RequestMapping(value="/querySalesmanReward")
-@ResponseBody
+    /**
+     * 查询选中业务员业绩
+     * @param req
+     * @throws
+     * @author : Autuan.Yu
+     * @return: com.autuan.project.front.entity.ReturnResult
+     * @since : 2020/7/26 10:21
+     */
+    @RequestMapping(value = "/querySalesmanReward")
+    @ResponseBody
     public ReturnResult querySalesmanReward(@RequestBody DataDownReq req) {
         return ReturnResult.ok(salesmanCustomService.querySalesmanReward(req));
     }
+
 }

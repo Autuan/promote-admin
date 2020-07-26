@@ -7,6 +7,7 @@ import com.autuan.project.front.entity.RewardCount;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.salesman.domain.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -151,5 +152,53 @@ public interface ISalesmanCustomService {
      */
     Object dataDown(DataDownReq req);
 
-    Object querySalesmanReward(DataDownReq req);
+    DataDownRes querySalesmanReward(DataDownReq req);
+
+    /**
+     * 上月招募数量
+     * @param
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Object
+     * @since : 2020/7/26 9:56
+     */
+    Integer lastMoonCount();
+    /**
+     * 本月招募数量
+     * @param
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Integer
+     * @since : 2020/7/26 9:57
+     */
+    Integer thisMoonCount();
+
+    /**
+     *  总计招募数量
+     * @param
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Integer
+     * @since : 2020/7/26 9:56
+     */
+    Integer allCount();
+
+    /**
+     * 业绩总计(首页)
+     * @param  
+     * @throws 
+     * @author : Autuan.Yu
+     * @return: java.lang.Integer
+     * @since : 2020/7/26 10:22  
+     */
+    BigDecimal allRewardCount();
+    /**
+     * 上月业绩总计(首页)
+     * @param
+     * @throws
+     * @author : Autuan.Yu
+     * @return: java.lang.Integer
+     * @since : 2020/7/26 10:22
+     */
+    BigDecimal lastRewardCount();
 }
