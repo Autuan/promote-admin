@@ -28,6 +28,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.autuan.project.promote.base.constant.Constant.YES;
+
 /**
  * @className: DataBankServiceCustomImpl
  * @author: sen.zhou
@@ -87,8 +89,6 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
                 .collect(Collectors.toMap(
                         item-> item.getCode()+"-"+item.getTaskId(),
                         TabSalesmanTask::getSalesmanId, (existing, replacement) -> existing));
-//                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId, (existing, replacement) -> existing));
-
         // 插入
         List<TabDataBank> insertList = new ArrayList<>();
         int line = 0;
@@ -114,11 +114,9 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
             dataBank.setCreateBy(loginName);
             dataBank.setId(IdUtil.simpleUUID());
             // 只有符合条件的置入奖励值
-            // todo magic num
             Integer customFlag = dataBank.getCustomFlag();
             Integer approveStatus = dataBank.getApproveStatus();
-            Integer pass = 1;
-            if (customFlag.equals(pass) && approveStatus.equals(pass)) {
+            if (customFlag.equals(YES) && approveStatus.equals(YES)) {
                 dataBank.setReward(task.getReward());
             } else {
                 dataBank.setReward(BigDecimal.ZERO);
@@ -142,22 +140,14 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
-        String operName = ShiroUtils.getLoginName();
-//        String password = configService.selectConfigByKey("sys.user.initPassword");
         for (DataBank dataBank : list) {
             try {
-                // 验证是否存在这个用户
-//                User u = userMapper.selectUserByLoginName(user.getLoginName());
                 DataBank data = null;
                 if (null == data) {
-//                    user.setPassword(password);
-//                    user.setCreateBy(operName);
                     dataBankService.insertDataBank(dataBank);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、账号 " + dataBank.getCName() + " 导入成功");
                 } else if (isUpdateSupport) {
-//                    user.setUpdateBy(operName);
-//                    this.updateUser(user);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、账号 " + dataBank.getCName() + " 更新成功");
                 } else {

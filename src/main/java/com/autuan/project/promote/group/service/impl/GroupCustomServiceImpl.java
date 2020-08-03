@@ -161,7 +161,6 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
     @Override
     public List<GroupDataRes> groupData(GroupDataReq req) {
         // 解析日期
-//        req.getDateStart();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dateStart = LocalDate.parse(req.getDateStart()+"-01", formatter);
         LocalDate dateEndTemp = LocalDate.parse(req.getDateEnd()+"-01", formatter);
@@ -184,14 +183,9 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
 
         List<TabSalesman> salesmanList = salesmanMapper.selectByExample(salesmanExample);
         // 查出每个成员业绩
-//        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime createTime = group.getCreateTime();
-
         List<LocalDate> queryDateList = new ArrayList<>();
-//        int monthDiff = monthDiff(createTime, now);
         int monthDiff = monthDiff(dateStart, dateEnd);
         for (int i = 0; i <= monthDiff; i++) {
-//            LocalDateTime queryDate = createTime.plusMonths(i);
             LocalDate queryDate = dateStart.plusMonths(i);
             queryDateList.add(queryDate);
         }
@@ -221,8 +215,6 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
                     .build();
             resList.add(dataRes);
         }
-        // 计算小组业绩 todo 前台计算
-
         return resList;
     }
 
