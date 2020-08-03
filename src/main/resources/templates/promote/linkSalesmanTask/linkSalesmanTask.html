@@ -74,8 +74,6 @@
     var removeFlag = [[${@permission.hasPermi('promote:linkSalesmanTask:remove')}]];
     var prefix = ctx + "promote/linkSalesmanTask";
 
-
-
     function assignCode() {
         var row = $.btTable.bootstrapTable('getSelections')[0];
         if(Bee.StringUtils.isNotBlank(row.code)) {
@@ -115,7 +113,6 @@
                 url: ctx + 'promote/linkSalesmanTask/custom/fail',
                 data: {"ids": rows.join()},
                 successParse: function (data) {
-                    // console.info(data)
                     $.modal.msgSuccess("操作成功");
                     $.table.refresh();
                 }
@@ -226,9 +223,7 @@
                     formatter: function(value, row, index) {
                         var actions = [];
                         if(Bee.StringUtils.isBlank(row.code)) {
-
-                        // actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         }
                         return actions.join('');
                     }
@@ -241,16 +236,13 @@
             successParse: function (data) {
                 taskList = data.taskList;
                 salesmanList = data.salesmanList;
-
                 $.table.init(options);
-
                 let str = '<option value="">---请选择任务---</option>';
                 for (let i = 0; i < taskList.length; i++) {
                     str += `<option value="${taskList[i].id}">${taskList[i].name}</option>`
                 }
                 $('#taskSelect').empty();
                 $('#taskSelect').append($(str));
-
 
                 $("input#bsSuggestSalesman").bsSuggest({
                     data:{
@@ -262,11 +254,7 @@
                 }).on('onSetSelectValue', function (e, selectedData, selectedRawData) {
                 });
             }
-
-
         })
-
-
     });
 </script>
 </body>

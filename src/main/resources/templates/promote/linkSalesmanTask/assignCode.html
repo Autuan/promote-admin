@@ -79,13 +79,8 @@
             autoclose: true
         });
 
-
-
         $(function () {
-
             let codeList = [];
-            let salesmanList = [];
-
             $('#searchCode').click(function () {
                 let list = codeList;
                 let name = $('#searchCodeInput').val()
@@ -108,14 +103,14 @@
                     // console.info(data)
                     $('#taskIdShow').val(data.name)
                 }
-            })
+            });
             Base.Network.post({
                 url: ctx + 'promote/salesman/custom/get/'+$('#salesmanId').val(),
                 successParse: function (data) {
                     // console.info(data)
                     $('#salesmanIdShow').val(data.name)
                 }
-            })
+            });
 
 
             Base.Network.post({

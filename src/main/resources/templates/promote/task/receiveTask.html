@@ -37,9 +37,6 @@
     $("#form-task-edit").validate({
         focusCleanup: true
     });
-    function PrefixInteger(num, n) {
-        return (Array(n).join(0) + num).slice(-n);
-    }
 
     function submitHandler() {
         let salesmanIds = [];
@@ -49,7 +46,7 @@
         let param = {
             taskId : $('#taskId').val(),
             salesmanIds :salesmanIds,
-        }
+        };
         Base.Network.post({
             url:ctx+'promote/task/custom/batchReceive',
             data:param,
