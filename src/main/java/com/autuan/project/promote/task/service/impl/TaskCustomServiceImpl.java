@@ -324,6 +324,7 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
         TabSalesmanTaskExample example = new TabSalesmanTaskExample();
         example.createCriteria()
                 .andTaskIdEqualTo(req.getTaskId())
+                .andTypeNotEqualTo(2)
                 .andCodeEqualTo(req.getInputCode());
         TabSalesmanTask one = tabSalesmanTaskMapper.selectOneByExample(example);
         if( null != one) {
