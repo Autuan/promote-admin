@@ -106,12 +106,7 @@
                 maxFileCount:1,
                 dropZoneTitle:'拖拽文件到这里',
                 initialPreviewAsData: true,
-                initialPreview: [
-                    // "/img/profile.jpg"
-                ],
-            }).on("filebatchselected", function(event, files) {
-                // 选择文件后立即触发上传方法
-                // $("#fileinput-demo-1").fileinput("upload");
+                initialPreview: [],
             }).on("fileuploaded", function(event, data, previewId, index) {
                 $('#image').val(data.response.url);
             });

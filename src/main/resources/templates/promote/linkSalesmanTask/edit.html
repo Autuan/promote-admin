@@ -94,7 +94,7 @@
                 }
                 $('#salesmanSelect').empty();
                 $('#salesmanSelect').append($(str));
-            })
+            });
 
             Base.Network.post({
                 url: ctx + 'promote/task/custom/get/'+$('#taskId').val(),
@@ -102,7 +102,7 @@
                     console.info(data)
                     $('#taskIdShow').val(data.name)
                 }
-            })
+            });
             Base.Network.post({
                 url: ctx + 'promote/linkSalesmanTask/custom/list',
                 successParse: function (data) {

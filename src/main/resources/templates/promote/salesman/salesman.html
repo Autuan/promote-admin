@@ -63,9 +63,6 @@
             <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="promote:salesman:export">
                 <i class="fa fa-upload"></i> 导入
             </a>
-            <!--<a class="btn btn-info" onclick="dataDown()" shiro:hasPermission="promote:salesman:export">-->
-                <!--<i class="fa fa-upload"></i> 导出业绩-->
-            <!--</a>-->
             <a class="btn btn-info" onclick="rewardOpen()" shiro:hasPermission="promote:salesman:export">
                 业绩查看
             </a>
@@ -100,7 +97,6 @@
                 url: ctx + 'promote/salesman/custom/resetPwd',
                 data: {"ids": rows.join()},
                 successParse: function (data) {
-                    console.info(data)
                     $.modal.msgSuccess("重置成功");
                     $.table.refresh();
                 }
@@ -112,8 +108,6 @@
     $(function () {
         let groupArray = [];
         // 填充小组
-
-
         var options = {
             url: prefix + "/custom/list",
             createUrl: prefix + "/add",
@@ -140,7 +134,6 @@
                     field: 'mobile',
                     title: '手机号'
                 },
-
                 {
                     field: 'brokerageBankNo',
                     title: '结算卡卡号'

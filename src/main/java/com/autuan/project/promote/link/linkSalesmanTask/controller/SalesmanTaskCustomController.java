@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.autuan.project.promote.base.constant.Constant.*;
+
 /**
  * @className: SalesmanTaskCustomController
  * @author: sen.zhou
@@ -58,8 +60,7 @@ public class SalesmanTaskCustomController  extends BaseController {
     @PostMapping("/pass")
     @ResponseBody
     public ReturnResult pass(String ids){
-        // 2-通过  3-拒绝
-        salesmanTaskCustomServicce.verify(ids, 2);
+        salesmanTaskCustomServicce.verify(ids, TASK_PASS);
         return ReturnResult.ok();
     }
 
@@ -67,8 +68,7 @@ public class SalesmanTaskCustomController  extends BaseController {
     @PostMapping("/fail")
     @ResponseBody
     public ReturnResult fail(String ids){
-        // 2-通过  3-拒绝
-        salesmanTaskCustomServicce.verify(ids, 3);
+        salesmanTaskCustomServicce.verify(ids, TASK_FAIL);
         // 回收CODE
         salesmanTaskCustomServicce.recoveryCode(ids);
         return ReturnResult.ok();
@@ -77,7 +77,6 @@ public class SalesmanTaskCustomController  extends BaseController {
     @PostMapping("/assignCode")
     @ResponseBody
     @RequiresPermissions("promote:task:edit")
-//    @Log(title = "设置参数", businessType = BusinessType.INSERT)
     public ReturnResult assignCode(@RequestBody TabSalesmanTask req) {
         salesmanTaskCustomServicce.assignCode(req);
         return ReturnResult.ok();
@@ -119,5 +118,4 @@ public class SalesmanTaskCustomController  extends BaseController {
         mmap.put("salesmanTask", salesmanTask);
         return "promote/linkSalesmanTask/assignCode";
     }
-
 }

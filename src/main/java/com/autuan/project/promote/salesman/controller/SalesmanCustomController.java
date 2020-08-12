@@ -34,6 +34,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.autuan.project.promote.base.constant.Constant.*;
+
 /**
  * 业务员Controller
  *
@@ -130,13 +132,12 @@ public class SalesmanCustomController extends BaseController {
             HttpServletResponse response) {
         try {
             List<String> idList = Arrays.asList(ids.split(","));
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate start = LocalDate.parse(startTime, formatter);
-            LocalDate end = LocalDate.parse(endTime, formatter);
+            LocalDate start = LocalDate.parse(startTime, FORMATTER_YMD);
+            LocalDate end = LocalDate.parse(endTime, FORMATTER_YMD);
             DataDownReq req = DataDownReq.builder()
                     .ids(idList)
-                    .startTime(LocalDateTime.of(start, LocalTime.of(0,0,0)))
-                    .endTime(LocalDateTime.of(end, LocalTime.of(23,59,59)))
+                    .startTime(LocalDateTime.of(start,MIN_TIME))
+                    .endTime(LocalDateTime.of(end, MAX_TIME))
                     .build();
             ExcelWriter writer =  salesmanCustomService.dataDown(req);
             ServletOutputStream out = response.getOutputStream();
@@ -168,9 +169,9 @@ public class SalesmanCustomController extends BaseController {
             HttpServletResponse response) {
         try {
             List<String> idList = Arrays.asList(ids.split(","));
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate start = LocalDate.parse(startTime, formatter);
-            LocalDate end = LocalDate.parse(endTime, formatter);
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate start = LocalDate.parse(startTime, FORMATTER_YMD);
+            LocalDate end = LocalDate.parse(endTime, FORMATTER_YMD);
             DataDownReq req = DataDownReq.builder()
                     .ids(idList)
                     .startTime(LocalDateTime.of(start, LocalTime.of(0,0,0)))

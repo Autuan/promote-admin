@@ -107,10 +107,8 @@
             },
             contentType: 'application/json',
             successParse: function (data) {
-                console.info(data)
                 let taskList = data.taskList;
                 let trList = data.trList;
-
 
                 let taskStr = "<td>业务类型</td>";
                 let tipStr = "<td>业务员姓名</td>";
@@ -126,7 +124,6 @@
 
                 $('#tipTr').empty();
                 $('#tipTr').append($(tipStr))
-
 
                 let trStr = '';
                 for (let j = 0; j < trList.length; j++) {
@@ -154,7 +151,6 @@
         var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
 
         $('.datetimepickerInput').val(year + '-' + month + '-' + date)
-        // console.info(new Date())
         queryDataChoose();
     })
 </script>

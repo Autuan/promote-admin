@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.autuan.project.promote.base.constant.Constant.*;
+
 /**
  * @className: ArticleCustomServiceImpl
  * @author: sen.zhou
@@ -26,28 +28,27 @@ public class ArticleCustomServiceImpl implements IArticleCustomService {
     private TabArticleMapper articleMapper;
     @Override
     public List<TabArticle> getCarouselArticle() {
-        TabArticleExample example = new TabArticleExample().page(0,5);
+        TabArticleExample example = new TabArticleExample().page(PAGE_DEF,PAGE_SIZE_5);
         example.createCriteria()
-                .andTypeEqualTo(1);
+                .andTypeEqualTo(ARTICLE_CAROUSEL);
         return articleMapper.selectByExample(example);
     }
 
     @Override
     public List<TabArticle> getCarouselImg() {
-        TabArticleExample example = new TabArticleExample().page(0,10);
+        TabArticleExample example = new TabArticleExample().page(PAGE_DEF,PAGE_SIZE_10);
         example.createCriteria()
-                .andTypeEqualTo(2);
+                .andTypeEqualTo(ARTICLE_RECOMMEND);
         return articleMapper.selectByExample(example);
     }
 
     @Override
     public List<TabArticle> list(TabArticle article) {
-        TabArticleExample example = new TabArticleExample().page(0,50);
+        TabArticleExample example = new TabArticleExample().page(PAGE_DEF,PAGE_SIZE_50);
         TabArticleExample.Criteria criteria = example.createCriteria();
         if(StrUtil.isNotBlank(article.getTitle())) {
             criteria.andTitleLike("%"+article.getTitle()+"%");
         }
         return articleMapper.selectByExample(example);
-//        return null;
     }
 }

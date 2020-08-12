@@ -30,6 +30,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.autuan.project.promote.base.constant.Constant.*;
+
 /**
  * @author : Autuan.Yu
  * @description :  描述
@@ -65,7 +67,6 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
         StringBuilder strBuilder = new StringBuilder();
         LocalDateTime now = LocalDateTime.now();
         String loginName = ShiroUtils.getLoginName();
-
         // 使用code 和 name 分别查出 taskId 和 salesmanId
         // taskId
         TabTaskExample tabTaskExample = new TabTaskExample();
@@ -95,7 +96,6 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
                 .collect(Collectors.toMap(
                         item-> item.getCode()+"-"+item.getTaskId(),
                         TabSalesmanTask::getSalesmanId,(existing, replacement) -> existing));
-//                .collect(Collectors.toMap(TabSalesmanTask::getCode, TabSalesmanTask::getSalesmanId,(existing, replacement) -> existing));
 
         List<TabDataJd> insertList = new ArrayList<>();
         int line = 0;
@@ -118,19 +118,15 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
 
             List<DictData> dictDatas = dictDataService.selectDictDataByType("JD_REWARD_" + taskId);
             // todo magic val
-            String rewardNewbieStr = dictDatas.stream().filter(item -> "新手礼包".equals(item.getDictLabel()))
+            BigDecimal rewardNewbie = dictDatas.stream().filter(item -> "新手礼包".equals(item.getDictLabel()))
                     .map(DictData::getDictValue)
-                    .findFirst().orElse("0");
-            String rewardCommonStr = dictDatas.stream().filter(item -> "京东白条".equals(item.getDictLabel()))
+                    .findFirst().map(BigDecimal::new).orElse(BigDecimal.ZERO);
+            BigDecimal rewardCommon = dictDatas.stream().filter(item -> "京东白条".equals(item.getDictLabel()))
                     .map(DictData::getDictValue)
-                    .findFirst().orElse("0");
-            String rewardGoldStr = dictDatas.stream().filter(item -> "京东金条".equals(item.getDictLabel()))
+                    .findFirst().map(BigDecimal::new).orElse(BigDecimal.ZERO);
+            BigDecimal rewardGold = dictDatas.stream().filter(item -> "京东金条".equals(item.getDictLabel()))
                     .map(DictData::getDictValue)
-                    .findFirst().orElse("0");
-            BigDecimal rewardNewbie = new BigDecimal(rewardNewbieStr);
-            BigDecimal rewardCommon = new BigDecimal(rewardCommonStr);
-            BigDecimal rewardGold = new BigDecimal(rewardGoldStr);
-
+                    .findFirst().map(BigDecimal::new).orElse(BigDecimal.ZERO);
 
             data.setTaskId(taskId);
             data.setSalesmanId(salesmanId);
@@ -138,13 +134,12 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
             data.setCreateBy(loginName);
             data.setId(IdUtil.simpleUUID());
             // 根据类型计算reward
-            // todo magic nnum
             Integer type = data.getOpenJdCreditType();
             BigDecimal reward = rewardCommon;
             switch (type){
-                case 0 : reward =rewardCommon;break;
-                case 1 : reward =rewardGold;break;
-                case 2 : reward =rewardNewbie;break;
+                case JD_TYPE_COMMON : reward =rewardCommon;break;
+                case JD_TYPE_GOLD : reward =rewardGold;break;
+                case JD_TYPE_NEWBIE : reward =rewardNewbie;break;
                 default:break;
             }
             data.setReward(reward);
@@ -159,7 +154,7 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
 
     @Override
     public void optionJdReward(OptionJdRewardReq req) {
-
+        // todo magic val
         String dictName = "JD_REWARD_" + req.getTaskId();
 
         DictType dictType = new DictType();
@@ -169,7 +164,6 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
         dictTypeService.insertDictType(dictType);
 
         DictData newbieDictData = new DictData();
-//        dictData.setDictCode(dictType.getDictId());
         newbieDictData.setDictLabel("新手礼包");
         newbieDictData.setDictValue(req.getRewardNewbie().toString());
         newbieDictData.setDictType(dictName);
@@ -178,7 +172,6 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
         dictDataService.insertDictData(newbieDictData);
 
         DictData commonDictData = new DictData();
-//        dictData.setDictCode(dictType.getDictId());
         commonDictData.setDictLabel("京东白条");
         commonDictData.setDictValue(req.getRewardCommon().toString());
         commonDictData.setDictType(dictName);
@@ -187,7 +180,6 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
         dictDataService.insertDictData(commonDictData);
 
         DictData goldDictData = new DictData();
-//        dictData.setDictCode(dictType.getDictId());
         goldDictData.setDictLabel("京东金条");
         goldDictData.setDictValue(req.getRewardGold().toString());
         goldDictData.setDictType(dictName);
@@ -195,8 +187,6 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
         goldDictData.setStatus("0");
 
         dictDataService.insertDictData(goldDictData);
-
-
     }
 
     @Override
@@ -205,18 +195,15 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
         for(String taskId : ids) {
             // todo magic val
             List<DictData> dictDatas = dictDataService.selectDictDataByType("JD_REWARD_" + taskId);
-            String rewardNewbieStr = dictDatas.stream().filter(item -> "新手礼包".equals(item.getDictLabel()))
+            BigDecimal rewardNewbie = dictDatas.stream().filter(item -> "新手礼包".equals(item.getDictLabel()))
                     .map(DictData::getDictValue)
-                    .findFirst().orElse("0");
-            String rewardCommonStr = dictDatas.stream().filter(item -> "京东白条".equals(item.getDictLabel()))
+                    .findFirst().map(BigDecimal::new).orElse(BigDecimal.ZERO);
+            BigDecimal rewardCommon = dictDatas.stream().filter(item -> "京东白条".equals(item.getDictLabel()))
                     .map(DictData::getDictValue)
-                    .findFirst().orElse("0");
-            String rewardGoldStr = dictDatas.stream().filter(item -> "京东金条".equals(item.getDictLabel()))
+                    .findFirst().map(BigDecimal::new).orElse(BigDecimal.ZERO);
+            BigDecimal rewardGold = dictDatas.stream().filter(item -> "京东金条".equals(item.getDictLabel()))
                     .map(DictData::getDictValue)
-                    .findFirst().orElse("0");
-            BigDecimal rewardNewbie = new BigDecimal(rewardNewbieStr);
-            BigDecimal rewardCommon = new BigDecimal(rewardCommonStr);
-            BigDecimal rewardGold = new BigDecimal(rewardGoldStr);
+                    .findFirst().map(BigDecimal::new).orElse(BigDecimal.ZERO);
 
             result.put("rewardNewbie"+taskId,rewardNewbie);
             result.put("rewardCommon"+taskId,rewardCommon);
@@ -238,10 +225,8 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
     public List<HistoryRewardRes> jdList(HistoryRewardReq req) {
         String salesmanId = req.getSalesmanId();
         String[] dateStrArray = req.getQueryDateStr().split("-");
-        LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1, 0, 0, 0);
+        LocalDateTime startTime = LocalDateTime.of(Integer.parseInt(dateStrArray[0]), Integer.parseInt(dateStrArray[1]), 1, 0, 0, 0);
         LocalDateTime endTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getMonth().maxLength(), 23, 59, 59);
-
-
 
         // 开卡订单
         TabDataJdExample example = new TabDataJdExample();
@@ -250,7 +235,6 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
                 .andJoinLinkIsNotNull()
                 .andSalesmanIdEqualTo(salesmanId)
                 .andOpenJdCreditTimeBetween(startTime, endTime);
-
         List<TabDataJd> dataJds = dataJdMapper.selectByExample(example);
 
         Set<String> taskIdSet = dataJds.stream()
@@ -260,16 +244,7 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
 
         List<HistoryRewardRes> resList = new ArrayList<>();
         for(TabDataJd data : dataJds){
-            String taskId = data.getTaskId();
-            Integer type = data.getOpenJdCreditType();
-            BigDecimal reward = BigDecimal.ZERO;
             String typeStr = "";
-            switch (type){
-                case 0 : reward =rewardOption.get("rewardCommon"+taskId);typeStr="普通开白条: ";break;
-                case 1 : reward =rewardOption.get("rewardGold"+taskId);typeStr="京东小金库: ";break;
-                case 2 : reward =rewardOption.get("rewardNewbie"+taskId);typeStr="新手礼包: ";break;
-                default:break;
-            }
             resList.add(HistoryRewardRes.builder()
                     .verifyDate(data.getOpenJdCreditTime())
                     .name(data.getOrderName())
@@ -278,8 +253,6 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
                     .type(typeStr)
                     .build());
         }
-
-
         return resList;
     }
 }

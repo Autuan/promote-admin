@@ -208,7 +208,7 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
         TabSalesmanTaskExample.Criteria criteria = example.createCriteria();
         criteria.andTaskIdEqualTo(salesmanTask.getTaskId());
         criteria.andCodeIsNotNull();
-        // 2 停用
+        // 2 停用 todo magic val
         criteria.andTypeNotEqualTo(2);
 
         List<TabSalesmanTask> tabSalesmanTasks = tabSalesmanTaskMapper.selectByExample(example);

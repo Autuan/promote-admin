@@ -1,26 +1,18 @@
 package com.autuan.project.promote.dataBank.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DateUtil;
-import com.autuan.common.exception.custom.CustomRespondException;
-import com.autuan.common.utils.datetime.LocalDateTimeUtil;
 import com.autuan.common.utils.excel.ExcelRead;
 import com.autuan.common.utils.poi.ExcelUtil;
-import com.autuan.common.utils.security.ShiroUtils;
 import com.autuan.framework.config.RuoYiConfig;
 import com.autuan.framework.web.domain.AjaxResult;
-import com.autuan.project.front.entity.ReturnResult;
 import com.autuan.project.promote.dataBank.domain.DataBank;
 import com.autuan.project.promote.dataBank.domain.TabDataBank;
 import com.autuan.project.promote.dataBank.service.IDataBankCustomService;
-import com.autuan.project.system.user.domain.User;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,17 +23,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static com.autuan.project.promote.base.constant.Constant.*;
 
 /**
  * @className: DataBankCustomController
@@ -59,8 +48,6 @@ public class DataBankCustomController {
     @Autowired
     private IDataBankCustomService dataBankCustomService;
 
-    //    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
-//    @RequiresPermissions("system:user:import")
     @PostMapping("/importData")
     @ResponseBody
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
@@ -70,7 +57,6 @@ public class DataBankCustomController {
         return AjaxResult.success(message);
     }
 
-    //    @RequiresPermissions("system:user:view")
     @GetMapping("/importTemplate")
     @ResponseBody
     public AjaxResult importTemplate() {
@@ -126,7 +112,6 @@ public class DataBankCustomController {
             return AjaxResult.error(e.getMessage());
         }
 
-
         //获取管理员id
         //对导入的集合进行处理,第一行为标题
         if (!CollectionUtils.isEmpty(inputList) && inputList.size() > 1) {
@@ -145,19 +130,16 @@ public class DataBankCustomController {
                     String cName =ExcelRead.getStr(j++);
                     String channelCode = ExcelRead.getStr(j++);
                     String customFlagStr = ExcelRead.getStr(j++);
-                    // todo magic val
                     list.add(TabDataBank.builder()
                             .applyDate(applyDate)
                             .verifyDate(verifyDate)
                             .applyId(applyId)
-                            .approveStatus("通过".equals(approveStatusStr) ? 1 : 0)
+                            .approveStatus("通过".equals(approveStatusStr) ? YES : NO)
                             .bankName(bankName)
                             .cMobile(cMobile)
                             .cName(cName)
                             .channelCode(channelCode)
-                            .customFlag("是".equals(customFlagStr) ? 1 : 0)
-//                            .taskId(taskId)
-//                            .salesmanId(salesmanId)
+                            .customFlag("是".equals(customFlagStr) ? YES : NO)
                             .build());
                 }
             }

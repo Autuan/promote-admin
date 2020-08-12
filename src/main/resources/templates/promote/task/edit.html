@@ -159,8 +159,6 @@
                     url:ctx+'promote/article/custom/list',
                     data:param,
                     successParse:function (data) {
-                        console.info(data)
-                        // return;
                         let str = '<option value="">---请选择文章---</option>';
                         for (let i=0;i<data.length;i++) {
                             str += `<option value="${data[i].id}">${data[i].title}</option>`
@@ -169,7 +167,7 @@
                         $('#articleSelect').append($(str));
                     }
                 })
-            })
+            });
 
             let assignTypeSelect = $('#assignTypeSelect').val()
             if(assignTypeSelect === 1 || assignTypeSelect === '1') {

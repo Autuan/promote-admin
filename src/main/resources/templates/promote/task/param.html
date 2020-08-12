@@ -101,7 +101,7 @@
             param.value = val
             param.taskId = $('#taskId').val();
             list.push(param)
-        })
+        });
         return list;
     }
 
@@ -125,7 +125,7 @@
     function submitHandler() {
         let param = {
             list :  getParamList(),
-        }
+        };
         Base.Network.post({
             url:ctx+'promote/task/custom/setTaskParam',
             data:param,
@@ -180,13 +180,11 @@
         $('#searchArticle').click(function () {
             let param = {
                 'title': $('#articleTitleInput').val(),
-            }
+            };
             Base.Network.post({
                 url: ctx + 'promote/article/custom/list',
                 data: param,
                 successParse: function (data) {
-                    console.info(data)
-                    // return;
                     let str = '<option value="">---请选择文章---</option>';
                     for (let i = 0; i < data.length; i++) {
                         str += `<option value="${data[i].id}">${data[i].title}</option>`
@@ -195,7 +193,7 @@
                     $('#articleSelect').append($(str));
                 }
             })
-        })
+        });
 
         $('#testParamUrlBtn').click(function () {
             let hrefPrefix = $('#prefix').val();

@@ -66,11 +66,10 @@
                     console.info(data)
                     $('#salesmanIdShow').val(data.name)
                 }
-            })
+            });
             Base.Network.post({
                 url: ctx + 'promote/task/custom/get/'+$('#taskId').val(),
                 successParse: function (data) {
-                    console.info(data)
                     $('#taskIdShow').val(data.name)
                 }
             })
