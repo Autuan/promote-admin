@@ -58,6 +58,8 @@ public class TabTask {
 
     private String indexName;
 
+    private Integer isHidden;
+
     public enum Column {
         id("id", "id", "VARCHAR", false),
         name("name", "name", "VARCHAR", false),
@@ -80,7 +82,8 @@ public class TabTask {
         codePrefix("code_prefix", "codePrefix", "VARCHAR", false),
         codePrefixDigit("code_prefix_digit", "codePrefixDigit", "INTEGER", false),
         assignType("assign_type", "assignType", "INTEGER", false),
-        indexName("index_name", "indexName", "VARCHAR", false);
+        indexName("index_name", "indexName", "VARCHAR", false),
+        isHidden("is_hidden", "isHidden", "INTEGER", false);
 
         private static final String BEGINNING_DELIMITER = "\"";
 

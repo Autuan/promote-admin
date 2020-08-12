@@ -131,7 +131,9 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
     public List<TabTask> getIndexTask() {
         TabTaskExample example = new TabTaskExample();
         example.setOrderByClause("priority desc");
-        example.limit(20);
+        example.limit(100);
+        example.createCriteria()
+                .andIsHiddenEqualTo(0);
         return tabTaskMapper.selectByExample(example);
     }
 
@@ -398,6 +400,22 @@ public class TaskCustomServiceImpl implements ITaskCustomService {
         }
         List<TabSalesman> salesmen = salesmanMapper.selectByExample(salesmanExample);
         return salesmen;
+    }
+
+    @Override
+    public int changeHiddenVal(ChangeHiddenValReq req) {
+        if(CollectionUtil.isEmpty(req.getIds())) {
+            throw new CustomRespondException("没有要修改的数据");
+        }
+        TabTaskExample example = new TabTaskExample();
+        example.createCriteria()
+                .andIdIn(req.getIds());
+        TabTask bean = TabTask.builder()
+.isHidden(req.getVal())
+                .build();
+
+        int i = tabTaskMapper.updateByExampleSelective(bean, example);
+        return i;
     }
 
 }

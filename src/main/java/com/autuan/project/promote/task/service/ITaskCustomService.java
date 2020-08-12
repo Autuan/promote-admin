@@ -132,4 +132,15 @@ public interface ITaskCustomService {
      * @since : 2020/7/7 15:38
      */
     List<TabSalesman> getNotReceiveSalesmanByTaskId(String id);
+
+    /***
+     * 设置隐藏值
+     * @param req
+     * @throws Throwable
+     * @description:
+     * @author: sen.zhou
+     * @return : com.autuan.project.promote.task.domain.Task
+     * @since: 19:53 2020/8/4
+     */
+    int changeHiddenVal(ChangeHiddenValReq req);
 }

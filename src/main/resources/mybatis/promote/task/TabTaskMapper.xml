@@ -24,6 +24,7 @@
     <result column="code_prefix_digit" jdbcType="INTEGER" property="codePrefixDigit" />
     <result column="assign_type" jdbcType="INTEGER" property="assignType" />
     <result column="index_name" jdbcType="VARCHAR" property="indexName" />
+    <result column="is_hidden" jdbcType="INTEGER" property="isHidden" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -86,7 +87,7 @@
   <sql id="Base_Column_List">
     id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, 
     update_time, create_by, update_by, tags, article_id, priority, article_title, image, 
-    bg_img, summary, code_prefix, code_prefix_digit, assign_type, index_name
+    bg_img, summary, code_prefix, code_prefix_digit, assign_type, index_name, is_hidden
   </sql>
   <select id="selectByExample" parameterType="com.autuan.project.promote.task.domain.TabTaskExample" resultMap="BaseResultMap">
     select
@@ -134,7 +135,7 @@
       article_id, priority, article_title, 
       image, bg_img, summary, 
       code_prefix, code_prefix_digit, assign_type, 
-      index_name)
+      index_name, is_hidden)
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{prefix,jdbcType=VARCHAR}, 
       #{paramId,jdbcType=VARCHAR}, #{reward,jdbcType=DECIMAL}, #{rewardBeginTime,jdbcType=TIMESTAMP}, 
       #{rewardStopTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
@@ -142,7 +143,7 @@
       #{articleId,jdbcType=VARCHAR}, #{priority,jdbcType=INTEGER}, #{articleTitle,jdbcType=VARCHAR}, 
       #{image,jdbcType=VARCHAR}, #{bgImg,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
       #{codePrefix,jdbcType=VARCHAR}, #{codePrefixDigit,jdbcType=INTEGER}, #{assignType,jdbcType=INTEGER}, 
-      #{indexName,jdbcType=VARCHAR})
+      #{indexName,jdbcType=VARCHAR}, #{isHidden,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="map">
     insert into tab_task
@@ -219,6 +220,9 @@
           </if>
           <if test="record.indexName != null">
             index_name,
+          </if>
+          <if test="record.isHidden != null">
+            is_hidden,
           </if>
         </trim>
         <trim prefix="(" suffix=")" suffixOverrides="," />
@@ -298,6 +302,9 @@
           </if>
           <if test="record.indexName != null">
             #{record.indexName,jdbcType=VARCHAR},
+          </if>
+          <if test="record.isHidden != null">
+            #{record.isHidden,jdbcType=INTEGER},
           </if>
         </trim>
       </otherwise>
@@ -386,6 +393,9 @@
           <if test="record.indexName != null">
             index_name = #{record.indexName,jdbcType=VARCHAR},
           </if>
+          <if test="record.isHidden != null">
+            is_hidden = #{record.isHidden,jdbcType=INTEGER},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -416,7 +426,8 @@
       code_prefix = #{record.codePrefix,jdbcType=VARCHAR},
       code_prefix_digit = #{record.codePrefixDigit,jdbcType=INTEGER},
       assign_type = #{record.assignType,jdbcType=INTEGER},
-      index_name = #{record.indexName,jdbcType=VARCHAR}
+      index_name = #{record.indexName,jdbcType=VARCHAR},
+      is_hidden = #{record.isHidden,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -495,6 +506,9 @@
           <if test="record.indexName != null">
             index_name = #{record.indexName,jdbcType=VARCHAR},
           </if>
+          <if test="record.isHidden != null">
+            is_hidden = #{record.isHidden,jdbcType=INTEGER},
+          </if>
         </trim>
       </otherwise>
     </choose>
@@ -522,7 +536,8 @@
       code_prefix = #{codePrefix,jdbcType=VARCHAR},
       code_prefix_digit = #{codePrefixDigit,jdbcType=INTEGER},
       assign_type = #{assignType,jdbcType=INTEGER},
-      index_name = #{indexName,jdbcType=VARCHAR}
+      index_name = #{indexName,jdbcType=VARCHAR},
+      is_hidden = #{isHidden,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <select id="selectOneByExample" parameterType="com.autuan.project.promote.task.domain.TabTaskExample" resultMap="BaseResultMap">
@@ -541,7 +556,8 @@
     insert into tab_task
     (id, name, prefix, param_id, reward, reward_begin_time, reward_stop_time, create_time, 
       update_time, create_by, update_by, tags, article_id, priority, article_title, image, 
-      bg_img, summary, code_prefix, code_prefix_digit, assign_type, index_name)
+      bg_img, summary, code_prefix, code_prefix_digit, assign_type, index_name, is_hidden
+      )
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, #{item.prefix,jdbcType=VARCHAR}, 
@@ -551,7 +567,8 @@
         #{item.tags,jdbcType=VARCHAR}, #{item.articleId,jdbcType=VARCHAR}, #{item.priority,jdbcType=INTEGER}, 
         #{item.articleTitle,jdbcType=VARCHAR}, #{item.image,jdbcType=VARCHAR}, #{item.bgImg,jdbcType=VARCHAR}, 
         #{item.summary,jdbcType=VARCHAR}, #{item.codePrefix,jdbcType=VARCHAR}, #{item.codePrefixDigit,jdbcType=INTEGER}, 
-        #{item.assignType,jdbcType=INTEGER}, #{item.indexName,jdbcType=VARCHAR})
+        #{item.assignType,jdbcType=INTEGER}, #{item.indexName,jdbcType=VARCHAR}, #{item.isHidden,jdbcType=INTEGER}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -629,6 +646,9 @@
         </if>
         <if test="'index_name'.toString() == column.value">
           #{item.indexName,jdbcType=VARCHAR}
+        </if>
+        <if test="'is_hidden'.toString() == column.value">
+          #{item.isHidden,jdbcType=INTEGER}
         </if>
       </foreach>
       )

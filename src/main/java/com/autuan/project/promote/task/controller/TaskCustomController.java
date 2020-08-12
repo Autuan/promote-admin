@@ -119,4 +119,12 @@ public class TaskCustomController extends BaseController {
         taskCustomService.batchReceive(req);
         return ReturnResult.ok();
     }
+
+
+    @RequestMapping("/changeHiddenVal")
+    @ResponseBody
+    public ReturnResult changeHiddenVal(@RequestBody ChangeHiddenValReq req) {
+        taskCustomService.changeHiddenVal(req);
+        return ReturnResult.ok();
+    }
 }

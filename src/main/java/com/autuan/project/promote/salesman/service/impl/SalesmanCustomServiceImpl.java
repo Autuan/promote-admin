@@ -605,7 +605,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         LocalDateTime endTime = Optional.ofNullable(req.getEndTime()).orElse(LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)));
 
         ExcelWriter writer = ExcelUtil.getWriter(true);
-        List<List<String>> rows = new ArrayList<>();
+        List<List<Object>> rows = new ArrayList<>();
         // 查出业务员
         TabSalesmanExample salesmanExample = new TabSalesmanExample();
         salesmanExample.createCriteria()
@@ -625,8 +625,8 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                 .andIdIn(tabSalesmanTasks.stream().map(TabSalesmanTask::getTaskId).collect(Collectors.toList()));
         List<TabTask> taskList = taskMapper.selectByExample(taskExample);
         // 生成表头
-        List<String> row1 = new ArrayList<>();
-        List<String> row2 = new ArrayList<>();
+        List<Object> row1 = new ArrayList<>();
+        List<Object> row2 = new ArrayList<>();
         row1.add("");
         row1.add("业务类型");
         row2.add("");
@@ -654,10 +654,6 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                     .andVerifyDateBetween(startTime, endTime);
         }
         List<TabDataBank> dataBanks = dataBankMapper.selectByExample(dataBankExample);
-//        Map<String, TabDataBank> dataBankMap = dataBanks.stream()
-//                .collect(toMap(item -> item.getSalesmanId() + "-" + item.getTaskId(),
-//                        Function.identity(),
-//                        (existing, replacement) -> existing));
         // 京东
         TabDataJdExample dataJdExample = new TabDataJdExample();
         for (TabSalesmanTask bean : tabSalesmanTasks) {
@@ -674,9 +670,13 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         // 以业务员划分
 //        List<String> usedSalesman = new ArrayList<>();
         int rowNum = 1;
+        // 增加求和
+        List<String> endRow = new ArrayList<>();
+        endRow.add("总计");
+
         for (TabSalesman salesman : salesmen) {
             String salesmanId = salesman.getId();
-            List<String> row = new ArrayList<>();
+            List<Object> row = new ArrayList<>();
             row.add(String.valueOf(rowNum++));
             row.add(salesman.getName());
 
@@ -684,15 +684,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
             for (int i = 0; i < taskList.size(); i++) {
                 TabTask task = taskList.get(i);
                 String taskId = task.getId();
-//                row.add(String.valueOf(i+1));
-//                String salesmanId = tabSalesmanTasks.stream()
-//                        .filter(item -> item.getTaskId().equals(task.getId()))
-//                        .filter(item -> usedSalesman.stream().noneMatch(obj -> obj.equals(item.getSalesmanId())))
-//                        .map(TabSalesmanTask::getSalesmanId)
-//                        .findFirst().orElse(null);
-//
-//                TabSalesman salesman = salesmanMap.get(salesmanId);
-//                dataJdMap.get(salesmanId+"-"+taskId)
+
                 // 数量  dataBanks
                 long countNumJd = dataJds.stream()
                         .filter(item -> salesmanId.equals(item.getSalesmanId()))
@@ -716,11 +708,11 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 BigDecimal taskReward = sumJd.add(sumBank);
-                row.add(String.valueOf(countNumJd + countNumBank));
-                row.add(String.valueOf(taskReward));
+                row.add(countNumJd + countNumBank);
+                row.add(taskReward);
                 allSum = allSum.add(taskReward);
             }
-            row.add(String.valueOf(allSum));
+            row.add(allSum);
             rows.add(row);
         }
 

@@ -1604,6 +1604,66 @@ public class TabTaskExample {
             addCriterion("index_name not between", value1, value2, "indexName");
             return (Criteria) this;
         }
+
+        public Criteria andIsHiddenIsNull() {
+            addCriterion("is_hidden is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenIsNotNull() {
+            addCriterion("is_hidden is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenEqualTo(Integer value) {
+            addCriterion("is_hidden =", value, "isHidden");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenNotEqualTo(Integer value) {
+            addCriterion("is_hidden <>", value, "isHidden");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenGreaterThan(Integer value) {
+            addCriterion("is_hidden >", value, "isHidden");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_hidden >=", value, "isHidden");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenLessThan(Integer value) {
+            addCriterion("is_hidden <", value, "isHidden");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenLessThanOrEqualTo(Integer value) {
+            addCriterion("is_hidden <=", value, "isHidden");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenIn(List<Integer> values) {
+            addCriterion("is_hidden in", values, "isHidden");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenNotIn(List<Integer> values) {
+            addCriterion("is_hidden not in", values, "isHidden");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenBetween(Integer value1, Integer value2) {
+            addCriterion("is_hidden between", value1, value2, "isHidden");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHiddenNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_hidden not between", value1, value2, "isHidden");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

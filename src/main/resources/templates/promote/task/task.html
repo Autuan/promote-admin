@@ -40,6 +40,12 @@
                 <a class="btn btn-info" onclick="receiveTask()" shiro:hasPermission="promote:task:edit">
                     <i class="fa"></i> 任务领取
                 </a>
+                <a class="btn btn-info" onclick="changeHiddenVal(0)" shiro:hasPermission="promote:salesman:export">
+                    上架
+                </a>
+                <a class="btn btn-info" onclick="changeHiddenVal(1)" shiro:hasPermission="promote:salesman:export">
+                    下架
+                </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
@@ -51,6 +57,29 @@
         var editFlag = [[${@permission.hasPermi('promote:task:edit')}]];
         var removeFlag = [[${@permission.hasPermi('promote:task:remove')}]];
         var prefix = ctx + "promote/task";
+
+        function changeHiddenVal(val) {
+            var rows = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+            if (rows.length == 0) {
+                $.modal.alertWarning("请至少选择一条记录");
+                return;
+            }
+            console.info(rows)
+            Base.Network.post({
+                url: ctx + "promote/task/custom/changeHiddenVal",
+                data: {
+                    ids: rows,
+                    val: val,
+                    endTime: $('#endTime').val() + " 23:59:59",
+                },
+                contentType: 'application/json',
+                successParse: function (data) {
+                    console.info(data)
+                    $.table.refresh();
+                }
+            })
+        }
+
 
         function setCode(id){
             $.modal.open("配置code" + $.table._option.modalName, ctx+'promote/task/custom/code/'+id);
@@ -118,7 +147,6 @@
                     title : '奖励额',
                     width:150,
                     formatter: function(value, row, index) {
-                        console.info(row.assignType)
                         if(row.assignType === 1) {
                             return '京东多级奖励';
                         } else {
@@ -135,6 +163,17 @@
                     field : 'priority',
                     title : '优先级'
                 },
+                    {
+                        field : 'isHidden',
+                        title : '下架/隐藏',
+                        formatter: function(value, row, index) {
+                            if (value == 1) {
+                                return '是'
+                            } else {
+                                return '否'
+                            }
+                        }
+                    },
                 {
                     title: '操作',
                     align: 'center',

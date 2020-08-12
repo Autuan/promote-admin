@@ -80,5 +80,5 @@ public class Task extends BaseEntity
     @Excel(name = "索引名")
     private String indexName;
 
-
+    private Integer isHidden;
 }

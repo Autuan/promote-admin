@@ -132,11 +132,9 @@
                 for (let j = 0; j < trList.length; j++) {
                     let trAppend = "<tr class='dataTr'>";
                     trAppend += `<td>${trList[j].userName}</td>`;
-                    // let allReward = 0;
                     for (let i = 0; i < taskList.length; i++) {
                         let num = trList[j].list.filter(item => item.taskId === taskList[i].id).map(item => item.num)[0];
                         let reward = trList[j].list.filter(item => item.taskId === taskList[i].id).map(item => item.reward)[0];
-                        // allReward = allReward + reward;
                         trAppend += `<td>${num}</td>`;
                         trAppend += `<td>${reward}</td>`;
                     }
