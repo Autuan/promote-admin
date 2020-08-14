@@ -61,7 +61,8 @@
             taskId: $('#taskId').val(),
             num: $('#num').val(),
             allNum: $('#allNum').val(),
-            inputCode: $('#inputCode').val(),
+            // inputCode: $('#inputCode').val(),
+            inputCode: Bee.StringUtils.trim($('#inputCode').val()),
         };
         Base.Network.post({
             url: ctx + 'promote/task/custom/setCode',

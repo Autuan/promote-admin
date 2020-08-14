@@ -116,6 +116,9 @@ public class SalesmanTaskCustomServiceImpl implements ISalesmanTaskCustomService
         example.clear();
         example.createCriteria()
                 .andTaskIdEqualTo(req.getTaskId())
+                .andSalesmanIdIsNull()
+                .andStatusEqualTo(0)
+                .andTypeEqualTo(0)
                 .andCodeEqualTo(req.getCode());
         TabSalesmanTask bean = tabSalesmanTaskMapper.selectOneByExample(example);
         bean.setSalesmanId(req.getSalesmanId());
