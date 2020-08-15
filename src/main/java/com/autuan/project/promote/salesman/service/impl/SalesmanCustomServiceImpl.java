@@ -578,7 +578,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         if (StrUtil.isNotBlank(salesman.getIdentifyNumber())) {
             criteria.andIdentifyNumberLike("%" + salesman.getIdentifyNumber() + "%");
         }
-        if (StrUtil.isNotBlank(salesman.getGroupId())) {
+        if (StrUtil.isNotBlank(salesman.getGroupId()) && !"-1".equals(salesman.getGroupId())) {
             criteria.andGroupIdEqualTo(salesman.getGroupId());
         }
         if (null != salesman.getQueryApplyTimeStart()) {
@@ -586,6 +586,9 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         }
         if (null != salesman.getQueryApplyTimeEnd()) {
             criteria.andApplyTimeLessThan(LocalDateTime.of(salesman.getQueryApplyTimeEnd(),LocalTime.of(23,59,59)));
+        }
+        if(StrUtil.isNotBlank(salesman.getGroupId()) && "-1".equals(salesman.getGroupId())) {
+            criteria.andGroupIdIsNull();
         }
         return tabSalesmanMapper.selectByExample(example);
     }
