@@ -84,6 +84,15 @@ public class SalesmanCustomController extends BaseController {
         return getDataTable(list);
     }
 
+    /**
+     * 查询业务员列表
+     */
+    @PostMapping("/listForSelect")
+    @ResponseBody
+    public ReturnResult listForSelect(SalesmanQueryReq salesman) {
+        List<TabSalesman> list = salesmanCustomService.list(salesman);
+        return ReturnResult.ok(list);
+    }
 
     @RequiresPermissions("promote:salesman:edit")
     @PostMapping("/resetPwd")
@@ -169,7 +178,6 @@ public class SalesmanCustomController extends BaseController {
             HttpServletResponse response) {
         try {
             List<String> idList = Arrays.asList(ids.split(","));
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate start = LocalDate.parse(startTime, FORMATTER_YMD);
             LocalDate end = LocalDate.parse(endTime, FORMATTER_YMD);
             DataDownReq req = DataDownReq.builder()

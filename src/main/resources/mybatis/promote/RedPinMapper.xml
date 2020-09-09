@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.redPin.mapper.RedPinMapper">
+    
+    <resultMap type="RedPin" id="RedPinResult">
+        <result property="id"    column="id"    />
+        <result property="salesmanId"    column="salesman_id"    />
+        <result property="salesmanName"    column="salesman_name"    />
+        <result property="redPin"    column="red_pin"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectRedPinVo">
+        select id, salesman_id, salesman_name, red_pin, create_time, update_time, create_by, update_by from tab_red_pin
+    </sql>
+
+    <select id="selectRedPinList" parameterType="RedPin" resultMap="RedPinResult">
+        <include refid="selectRedPinVo"/>
+        <where>  
+            <if test="salesmanId != null  and salesmanId != ''"> and salesman_id = #{salesmanId}</if>
+            <if test="salesmanName != null  and salesmanName != ''"> and salesman_name like concat('%', #{salesmanName}, '%')</if>
+            <if test="redPin != null  and redPin != ''"> and red_pin like concat('%', #{redPin}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectRedPinById" parameterType="String" resultMap="RedPinResult">
+        <include refid="selectRedPinVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRedPin" parameterType="RedPin">
+        insert into tab_red_pin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="salesmanId != null  and salesmanId != ''">salesman_id,</if>
+            <if test="salesmanName != null  and salesmanName != ''">salesman_name,</if>
+            <if test="redPin != null  and redPin != ''">red_pin,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="salesmanId != null  and salesmanId != ''">#{salesmanId},</if>
+            <if test="salesmanName != null  and salesmanName != ''">#{salesmanName},</if>
+            <if test="redPin != null  and redPin != ''">#{redPin},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRedPin" parameterType="RedPin">
+        update tab_red_pin
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="salesmanId != null  and salesmanId != ''">salesman_id = #{salesmanId},</if>
+            <if test="salesmanName != null  and salesmanName != ''">salesman_name = #{salesmanName},</if>
+            <if test="redPin != null  and redPin != ''">red_pin = #{redPin},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRedPinById" parameterType="String">
+        delete from tab_red_pin where id = #{id}
+    </delete>
+
+    <delete id="deleteRedPinByIds" parameterType="String">
+        delete from tab_red_pin where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.autuan.project.promote.dataRed.mapper.DataRedMapper">
+    
+    <resultMap type="DataRed" id="DataRedResult">
+        <result property="id"    column="id"    />
+        <result property="redPin"    column="red_pin"    />
+        <result property="reward"    column="reward"    />
+        <result property="recordTime"    column="record_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectDataRedVo">
+        select id, red_pin, reward, record_time, create_time, update_time, create_by, update_by from tab_data_red
+    </sql>
+
+    <select id="selectDataRedList" parameterType="DataRed" resultMap="DataRedResult">
+        <include refid="selectDataRedVo"/>
+        <where>  
+            <if test="redPin != null  and redPin != ''"> and red_pin like concat('%', #{redPin}, '%')</if>
+            <if test="params.beginReward != null and params.beginReward != '' and params.endReward != null and params.endReward != ''"> and reward between #{params.beginReward} and #{params.endReward}</if>
+            <if test="params.beginRecordTime != null and params.beginRecordTime != '' and params.endRecordTime != null and params.endRecordTime != ''"> and record_time between #{params.beginRecordTime} and #{params.endRecordTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectDataRedById" parameterType="String" resultMap="DataRedResult">
+        <include refid="selectDataRedVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDataRed" parameterType="DataRed">
+        insert into tab_data_red
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">id,</if>
+            <if test="redPin != null  and redPin != ''">red_pin,</if>
+            <if test="reward != null ">reward,</if>
+            <if test="recordTime != null ">record_time,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != ''">#{id},</if>
+            <if test="redPin != null  and redPin != ''">#{redPin},</if>
+            <if test="reward != null ">#{reward},</if>
+            <if test="recordTime != null ">#{recordTime},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDataRed" parameterType="DataRed">
+        update tab_data_red
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="redPin != null  and redPin != ''">red_pin = #{redPin},</if>
+            <if test="reward != null ">reward = #{reward},</if>
+            <if test="recordTime != null ">record_time = #{recordTime},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDataRedById" parameterType="String">
+        delete from tab_data_red where id = #{id}
+    </delete>
+
+    <delete id="deleteDataRedByIds" parameterType="String">
+        delete from tab_data_red where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

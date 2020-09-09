@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('文章列表')" />
+    <th:block th:include="include :: header('红包码京东和业务员关联列表')" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -11,21 +11,16 @@
                     <div class="select-list">
                         <ul>
                             <li>
-                                <p>标题：</p>
-                                <input type="text" name="title"/>
+                                <p>业务员ID：</p>
+                                <input type="text" name="salesmanId"/>
                             </li>
                             <li>
-                                <p>标签：</p>
-                                <input type="text" name="tags"/>
+                                <p>业务员名称(冗余)：</p>
+                                <input type="text" name="salesmanName"/>
                             </li>
                             <li>
-                                <p>展示方式：</p>
-                                <select name="type" th:with="type=${@dict.getType('')}">
-                                    <option value="">所有</option>
-                                    <option value="0">不展示</option>
-                                    <option value="1">首页轮播</option>
-                                    <option value="2">首页推荐</option>
-                                </select>
+                                <p>京东红包码值：</p>
+                                <input type="text" name="redPin"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -37,16 +32,16 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.addFull()" shiro:hasPermission="promote:article:add">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="promote:redPin:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.editFull()" shiro:hasPermission="promote:article:edit">
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="promote:redPin:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:article:remove">
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="promote:redPin:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:article:export">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="promote:redPin:export">
                     <i class="fa fa-download"></i> 导出
                  </a>
             </div>
@@ -57,9 +52,9 @@
     </div>
     <th:block th:include="include :: footer" />
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('promote:article:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('promote:article:remove')}]];
-        var prefix = ctx + "promote/article";
+        var editFlag = [[${@permission.hasPermi('promote:redPin:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('promote:redPin:remove')}]];
+        var prefix = ctx + "promote/redPin";
 
         $(function() {
             var options = {
@@ -68,7 +63,7 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                modalName: "文章",
+                modalName: "红包码京东和业务员关联",
                 columns: [{
                     checkbox: true
                 },
@@ -78,38 +73,23 @@
                     visible: false
                 },
                 {
-                    field : 'title', 
-                    title : '标题'
+                    field : 'salesmanId', 
+                    title : '业务员ID'
                 },
                 {
-                    field : 'image', 
-                    title : '缩略图',
-                    formatter: function(value, row, index) {
-                        return $.table.imageView(value);
-                    }
+                    field : 'salesmanName', 
+                    title : '业务员名称(冗余)'
                 },
                 {
-                    field : 'tags', 
-                    title : '标签'
-                },
-                {
-                    field : 'type', 
-                    title : '展示方式',
-                    formatter: function(value, row, index) {
-                        switch (value) {
-                            case 0: {return '不展示';break;}
-                            case 1: {return '首页轮播';break;}
-                            case 2: {return '首页推荐';break;}
-                            default : return '未定义';break;
-                        }
-                    }
+                    field : 'redPin', 
+                    title : '京东红包码值'
                 },
                 {
                     title: '操作',
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editFull(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
@@ -117,7 +97,6 @@
             };
             $.table.init(options);
         });
-
     </script>
 </body>
 </html>
