@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 /**
- * 红包码京东和业务员关联对象 tab_red_pin
+ * 红包码信息对象 tab_red_pin
  * 
  * @author autuan
  * @date 2020-09-09

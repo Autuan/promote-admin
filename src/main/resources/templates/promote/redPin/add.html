@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <th:block th:include="include :: header('新增红包码京东和业务员关联')" />
+    <th:block th:include="include :: header('新增红包码信息')" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
@@ -36,6 +36,22 @@
         });
 
         function submitHandler() {
+            if ($.validate.form()) {
+                let param = Base.Form.serializeObject('form-redPin-add')
+                Base.Network.post({
+                    url:ctx+'promote/redPin/custom/add',
+                    data:param,
+                    contentType:'application/json',
+                    successParse:function (data) {
+                        $.modal.close();
+                        parent.$.modal.msgSuccess('操作成功');
+                        parent.$.table.refresh();
+                    }
+                })
+            }
+        }
+
+        function submitHandler3() {
             if ($.validate.form()) {
                 $.operate.save(prefix + "/add", $('#form-redPin-add').serialize());
             }

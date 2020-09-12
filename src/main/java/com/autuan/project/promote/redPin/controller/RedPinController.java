@@ -20,7 +20,7 @@ import com.autuan.common.utils.poi.ExcelUtil;
 import com.autuan.framework.web.page.TableDataInfo;
 
 /**
- * 红包码京东和业务员关联Controller
+ * 红包码信息Controller
  * 
  * @author autuan
  * @date 2020-09-09
@@ -42,7 +42,7 @@ public class RedPinController extends BaseController
     }
 
     /**
-     * 查询红包码京东和业务员关联列表
+     * 查询红包码信息列表
      */
     @RequiresPermissions("promote:redPin:list")
     @PostMapping("/list")
@@ -55,7 +55,7 @@ public class RedPinController extends BaseController
     }
 
     /**
-     * 导出红包码京东和业务员关联列表
+     * 导出红包码信息列表
      */
     @RequiresPermissions("promote:redPin:export")
     @PostMapping("/export")
@@ -68,7 +68,7 @@ public class RedPinController extends BaseController
     }
 
     /**
-     * 新增红包码京东和业务员关联
+     * 新增红包码信息
      */
     @GetMapping("/add")
     public String add()
@@ -77,10 +77,10 @@ public class RedPinController extends BaseController
     }
 
     /**
-     * 新增保存红包码京东和业务员关联
+     * 新增保存红包码信息
      */
     @RequiresPermissions("promote:redPin:add")
-    @Log(title = "红包码京东和业务员关联", businessType = BusinessType.INSERT)
+    @Log(title = "红包码信息", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(RedPin redPin)
@@ -89,7 +89,7 @@ public class RedPinController extends BaseController
     }
 
     /**
-     * 修改红包码京东和业务员关联
+     * 修改红包码信息
      */
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") String id, ModelMap mmap)
@@ -100,10 +100,10 @@ public class RedPinController extends BaseController
     }
 
     /**
-     * 修改保存红包码京东和业务员关联
+     * 修改保存红包码信息
      */
     @RequiresPermissions("promote:redPin:edit")
-    @Log(title = "红包码京东和业务员关联", businessType = BusinessType.UPDATE)
+    @Log(title = "红包码信息", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(RedPin redPin)
@@ -112,10 +112,10 @@ public class RedPinController extends BaseController
     }
 
     /**
-     * 删除红包码京东和业务员关联
+     * 删除红包码信息
      */
     @RequiresPermissions("promote:redPin:remove")
-    @Log(title = "红包码京东和业务员关联", businessType = BusinessType.DELETE)
+    @Log(title = "红包码信息", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
     public AjaxResult remove(String ids)
