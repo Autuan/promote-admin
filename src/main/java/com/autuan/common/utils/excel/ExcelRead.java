@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -46,7 +47,6 @@ public class ExcelRead {
         Sheet sheet = workbook.getSheetAt(sheetNum);
         FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
         List<List<Object>> list = new ArrayList();
-//        List<String> list = new ArrayList();
         int minRowIx = sheet.getFirstRowNum();
         int maxRowIx = sheet.getLastRowNum();
 
@@ -116,6 +116,12 @@ public class ExcelRead {
             return def;
         }
         return String.valueOf(objList.get(i));
+    }
+    public static BigDecimal getBigDecimalDef(int i, BigDecimal def){
+        if(objListSize <= i){
+            return def;
+        }
+        return new BigDecimal(String.valueOf(objList.get(i)));
     }
     public static LocalDateTime getLocalDateTime(int i){
         if(objListSize <= i){
