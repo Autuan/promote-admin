@@ -16,6 +16,7 @@ import com.autuan.project.promote.link.linkSalesmanTask.mapper.TabSalesmanTaskMa
 import com.autuan.project.promote.salesman.domain.TabSalesmanExample;
 import com.autuan.project.promote.task.domain.TabTask;
 import com.autuan.project.promote.task.domain.TabTaskExample;
+import com.autuan.project.promote.task.domain.TaskEnum;
 import com.autuan.project.promote.task.mapper.TabTaskMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,10 +71,12 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
         // salesmanId
         TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
         for (TabDataBank dataBank : list) {
+
             TabTask task = taskMap.get(dataBank.getBankName());
             if (null != task) {
                 String taskId = task.getId();
                 salesmanTaskExample.or()
+                        .andStatusEqualTo(TaskEnum.STATUS_PASS.val())
                         .andSalesmanIdIsNotNull()
                         .andCodeEqualTo(dataBank.getChannelCode())
                         .andTaskIdEqualTo(taskId);
@@ -88,7 +91,7 @@ public class DataBankServiceCustomImpl implements IDataBankCustomService {
                 .filter(item -> StrUtil.isNotBlank(item.getSalesmanId()))
                 .collect(Collectors.toMap(
                         item-> item.getCode()+"-"+item.getTaskId(),
-                        TabSalesmanTask::getSalesmanId, (existing, replacement) -> existing));
+                        TabSalesmanTask::getSalesmanId ));
         // 插入
         List<TabDataBank> insertList = new ArrayList<>();
         int line = 0;

@@ -10,9 +10,9 @@ public interface ISalesmanTaskCustomService {
     SalesmanTaskListDTO listSalesmanAndTask();
 
     /**
-     * 修改审核闫
+     * 修改审核
      * @param ids
- * @param i
+     * @param i
      * @throws
      * @author : Autuan.Yu
      * @return: void

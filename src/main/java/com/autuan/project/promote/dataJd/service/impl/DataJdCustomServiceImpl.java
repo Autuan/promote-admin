@@ -16,6 +16,7 @@ import com.autuan.project.promote.link.linkSalesmanTask.domain.TabSalesmanTaskEx
 import com.autuan.project.promote.link.linkSalesmanTask.mapper.TabSalesmanTaskMapper;
 import com.autuan.project.promote.task.domain.TabTask;
 import com.autuan.project.promote.task.domain.TabTaskExample;
+import com.autuan.project.promote.task.domain.TaskEnum;
 import com.autuan.project.promote.task.mapper.TabTaskMapper;
 import com.autuan.project.system.dict.domain.DictData;
 import com.autuan.project.system.dict.domain.DictType;
@@ -83,6 +84,7 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
             String taskId = taskMap.get(data.getOrderName());
             if(StrUtil.isNotBlank(taskId)) {
                 salesmanTaskExample.or()
+                        .andStatusEqualTo(TaskEnum.STATUS_PASS.val())
                         .andSalesmanIdIsNotNull()
                         .andCodeEqualTo(data.getJoinLink())
                         .andTaskIdEqualTo(taskId);
@@ -95,7 +97,7 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
         Map<String, String> linkMap = tabSalesmanTaskList.stream()
                 .collect(Collectors.toMap(
                         item-> item.getCode()+"-"+item.getTaskId(),
-                        TabSalesmanTask::getSalesmanId,(existing, replacement) -> existing));
+                        TabSalesmanTask::getSalesmanId));
 
         List<TabDataJd> insertList = new ArrayList<>();
         int line = 0;
@@ -117,7 +119,6 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
             }
 
             List<DictData> dictDatas = dictDataService.selectDictDataByType("JD_REWARD_" + taskId);
-            // todo magic val
             BigDecimal rewardNewbie = dictDatas.stream().filter(item -> "新手礼包".equals(item.getDictLabel()))
                     .map(DictData::getDictValue)
                     .findFirst().map(BigDecimal::new).orElse(BigDecimal.ZERO);
