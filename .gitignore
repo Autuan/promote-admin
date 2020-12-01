@@ -45,3 +45,4 @@ nbdist/
 #/src/main/resources/application.yml
 /src/main/resources/application-druid.yml
 src/main/resources/application-druid.yml
+/src/main/resources/generator/
