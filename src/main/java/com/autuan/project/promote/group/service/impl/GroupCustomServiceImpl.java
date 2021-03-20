@@ -164,7 +164,7 @@ public class GroupCustomServiceImpl implements IGroupCustomService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dateStart = LocalDate.parse(req.getDateStart()+"-01", formatter);
         LocalDate dateEndTemp = LocalDate.parse(req.getDateEnd()+"-01", formatter);
-        LocalDate dateEnd = LocalDate.of(dateEndTemp.getYear(),dateEndTemp.getMonth(),dateEndTemp.getMonth().maxLength());
+        LocalDate dateEnd = LocalDate.of(dateEndTemp.getYear(),dateEndTemp.getMonth(),dateEndTemp.getMonth().length(dateEndTemp.isLeapYear()));
         // 查出当前小组信息
         TabGroupExample groupExample = new TabGroupExample();
         groupExample.createCriteria()

@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -188,23 +189,7 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     public CalcuRewardRes calcuReward(CalcuRewardReq req) {
         String salesmanId = req.getSalesmanId();
         // 该业务员领取的所有任务
-//        TabSalesmanTaskExample salesmanTaskExample = new TabSalesmanTaskExample();
-//        salesmanTaskExample.createCriteria()
-//                .andSalesmanIdEqualTo(salesmanId);
-//        List<TabSalesmanTask> receiveList = tabSalesmanTaskMapper.selectByExample(salesmanTaskExample);
-//        if (CollectionUtil.isEmpty(receiveList)) {
-//            return CalcuRewardRes.zero();
-//        }
-        // 所有业务
-//        TabTaskExample taskExample = new TabTaskExample();
-//        taskExample.createCriteria()
-//                .andIdIn(receiveList.stream().map(TabSalesmanTask::getTaskId).collect(toList()));
-//        List<TabTask> allTasks = taskMapper.selectByExample(taskExample);
-
-
         LocalDate queryMoon = Optional.ofNullable(req.getQueryMoon()).orElse(LocalDate.now());
-//        LocalDateTime startTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), 1, 0, 0, 0);
-//        LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getMonth().maxLength(), 23, 59, 59);
 
         // 开卡订单
         // todo magic val
@@ -289,19 +274,16 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
 
     @Override
     public List<RewardCount> historyReward(HistoryRewardReq req) {
-        // 查询所有月
-//        TabSalesmanExample salesmanExample = new TabSalesmanExample();
-//        salesmanExample.createCriteria()
-//                .andIdEqualTo(req.getSalesmanId());
-//        TabSalesman salesman = tabSalesmanMapper.selectOneByExample(salesmanExample);
         // 可能导入更早的数据,写死开始月
         LocalDateTime queryTime = LocalDateTime.of(2020, 6, 1, 0, 0);
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getMonth().maxLength(), 23, 59, 59);
+        LocalDate now = LocalDate.now();
+        LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getMonth().length(now.isLeapYear()), 23, 59, 59);
         List<RewardCount> result = new ArrayList<>();
         while (queryTime.isBefore(endTime)) {
+            LocalDate queryDate = queryTime.toLocalDate();
             LocalDateTime queryStartTime = LocalDateTime.of(queryTime.getYear(), queryTime.getMonthValue(), 1, 0, 0, 0);
-            LocalDateTime queryEndTime = LocalDateTime.of(queryStartTime.getYear(), queryStartTime.getMonthValue(), queryStartTime.getMonth().maxLength(), 23, 59, 59);
+            LocalDateTime queryEndTime = LocalDateTime.of(queryStartTime.getYear(), queryStartTime.getMonthValue(),
+                    queryDate.getMonth().length(queryDate.isLeapYear()), 23, 59, 59);
 
             req.setQueryDateStart(queryStartTime);
             req.setQueryDateEnd(queryEndTime);
@@ -324,8 +306,9 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     @Override
     public List<HistoryRewardRes> thisMoonReward(HistoryRewardReq req) {
         String[] dateStrArray = req.getQueryDateStr().split("-");
-        LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1, 0, 0, 0);
-        LocalDateTime endTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getMonth().maxLength(), 23, 59, 59);
+        LocalDate date = LocalDate.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1);
+        LocalDateTime startTime = LocalDateTime.of(date, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getMonth().length(date.isLeapYear()), 23, 59, 59);
 
         req.setQueryDateStart(startTime);
         req.setQueryDateEnd(endTime);
@@ -337,15 +320,15 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     public List<HistoryRewardRes> bankList(HistoryRewardReq req) {
         String salesmanId = req.getSalesmanId();
         String[] dateStrArray = req.getQueryDateStr().split("-");
-        LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1, 0, 0, 0);
-        LocalDateTime endTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getMonth().maxLength(), 23, 59, 59);
+        LocalDate date = LocalDate.of(Integer.valueOf(dateStrArray[0]), Integer.valueOf(dateStrArray[1]), 1);
+        LocalDateTime startTime = LocalDateTime.of(date, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getMonth().length(date.isLeapYear()), 23, 59, 59);
 
 
         // 开卡订单
         TabDataBankExample dataBankExample = new TabDataBankExample();
         dataBankExample.createCriteria()
                 .andTaskIdIsNotNull()
-//                .andTaskIdIn(allTasks.stream().map(TabTask::getId).collect(toList()))
                 .andChannelCodeIsNotNull()
                 .andSalesmanIdEqualTo(salesmanId)
                 .andVerifyDateBetween(startTime, endTime)
@@ -843,10 +826,16 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     @Override
     public Integer lastMoonCount() {
         TabSalesmanExample salesmanExample = new TabSalesmanExample();
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime lastMonth = now.minusMonths(1);
+        LocalDate now = LocalDate.now();
+        LocalDate lastMonth = now.minusMonths(1);
         LocalDate queryStart = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), 1);
-        LocalDate queryEnd = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().maxLength());
+
+        int year = lastMonth.getYear();
+        Month month = lastMonth.getMonth();
+        int monthMaxLen = lastMonth.getMonth().length(lastMonth.isLeapYear());
+        log.info("last moon count -. year -> {} month -> {} maxLength -> {}",year,month,monthMaxLen);
+
+        LocalDate queryEnd = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().length(lastMonth.isLeapYear()));
         salesmanExample.createCriteria()
                 .andApplyTimeBetween(
                         LocalDateTime.of(queryStart, LocalTime.of(0,0,0)),
@@ -867,9 +856,9 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
     @Override
     public Integer thisMoonCount() {
         TabSalesmanExample salesmanExample = new TabSalesmanExample();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         LocalDate queryStart = LocalDate.of(now.getYear(), now.getMonth(), 1);
-        LocalDate queryEnd = LocalDate.of(now.getYear(), now.getMonth(), now.getMonth().maxLength());
+        LocalDate queryEnd = LocalDate.of(now.getYear(), now.getMonth(), now.getMonth().length(now.isLeapYear()));
         salesmanExample.createCriteria()
                 .andApplyTimeBetween(
                         LocalDateTime.of(queryStart, LocalTime.of(0,0,0)),
@@ -937,13 +926,11 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         LocalDate now = LocalDate.now();
         LocalDate lastMonth = now.minusMonths(1);
         LocalDate queryStart = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), 1);
-        LocalDate queryEnd = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().maxLength());
+        LocalDate queryEnd = LocalDate.of(lastMonth.getYear(), lastMonth.getMonth(), lastMonth.getMonth().length(lastMonth.isLeapYear()));
 
         DataDownReq req = DataDownReq.builder()
                 .ids(list.stream().map(TabSalesman::getId).collect(toList()))
-//                .startTime(LocalDateTime.of(queryStart, LocalTime.MIN))
                 .startTime(LocalDateTime.of(queryStart, LocalTime.of(0,0,0)))
-//                .endTime(LocalDateTime.of(queryEnd, LocalTime.MAX))
                 .endTime(LocalDateTime.of(queryEnd, LocalTime.of(23,59,59)))
                 .build();
         DataDownRes dataDownRes = this.querySalesmanReward(req);
@@ -958,12 +945,10 @@ public class SalesmanCustomServiceImpl implements ISalesmanCustomService {
         List<TabSalesman> list = tabSalesmanMapper.selectByExample(example);
         LocalDate now = LocalDate.now();
         LocalDate queryStart = LocalDate.of(now.getYear(), now.getMonth(), 1);
-        LocalDate queryEnd = LocalDate.of(now.getYear(), now.getMonth(), now.getMonth().maxLength());
 
         DataDownReq req = DataDownReq.builder()
                 .ids(list.stream().map(TabSalesman::getId).collect(toList()))
                 .startTime(LocalDateTime.of(queryStart, LocalTime.of(0,0,0)))
-//                .endTime(LocalDateTime.of(queryEnd, LocalTime.MAX))
                 .endTime(LocalDateTime.now())
                 .build();
         DataDownRes dataDownRes = this.querySalesmanReward(req);

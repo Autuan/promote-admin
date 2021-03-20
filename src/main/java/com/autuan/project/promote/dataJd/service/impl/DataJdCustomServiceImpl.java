@@ -27,7 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -226,8 +228,9 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
     public List<HistoryRewardRes> jdList(HistoryRewardReq req) {
         String salesmanId = req.getSalesmanId();
         String[] dateStrArray = req.getQueryDateStr().split("-");
-        LocalDateTime startTime = LocalDateTime.of(Integer.parseInt(dateStrArray[0]), Integer.parseInt(dateStrArray[1]), 1, 0, 0, 0);
-        LocalDateTime endTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getMonth().maxLength(), 23, 59, 59);
+        LocalDate date = LocalDate.of(Integer.parseInt(dateStrArray[0]), Integer.parseInt(dateStrArray[1]), 1);
+        LocalDateTime startTime = LocalDateTime.of(date, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(date.getYear(), date.getMonthValue(), date.getMonth().length(date.isLeapYear()), 23, 59, 59);
 
         // 开卡订单
         TabDataJdExample example = new TabDataJdExample();
@@ -238,10 +241,10 @@ public class DataJdCustomServiceImpl implements IDataJdCustomService {
                 .andOpenJdCreditTimeBetween(startTime, endTime);
         List<TabDataJd> dataJds = dataJdMapper.selectByExample(example);
 
-        Set<String> taskIdSet = dataJds.stream()
-                .map(TabDataJd::getTaskId)
-                .collect(Collectors.toSet());
-        Map<String, BigDecimal> rewardOption = getRewardOption(taskIdSet);
+//        Set<String> taskIdSet = dataJds.stream()
+//                .map(TabDataJd::getTaskId)
+//                .collect(Collectors.toSet());
+//        Map<String, BigDecimal> rewardOption = getRewardOption(taskIdSet);
 
         List<HistoryRewardRes> resList = new ArrayList<>();
         for(TabDataJd data : dataJds){
